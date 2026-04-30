@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMNIBUS ARCHIVE | 公式サイト</title>
+    <title>代表者の挨拶 | OMNIBUS ARCHIVE</title>
     <style>
         /* 全体のリセットとカラー変数 */
         :root {
@@ -44,12 +44,6 @@
             border-radius: 12px;
             aspect-ratio: 1536 / 1024; 
             object-fit: cover;
-        }
-
-        /* サービスカード用画像（下側の角丸を消す） */
-        .service-img {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
         }
 
         /* ヘッダー */
@@ -128,9 +122,7 @@
             background-color: #004494;
         }
 
-        /* =========================================
-           展開式ドロワーメニュー（ハンバーガー）
-           ========================================= */
+        /* 展開式ドロワーメニュー（ハンバーガー） */
         .menu-checkbox {
             display: none;
         }
@@ -154,7 +146,6 @@
             transition: all 0.3s ease;
         }
 
-        /* メニュー開閉時のアイコンアニメーション */
         .menu-checkbox:checked ~ header .menu-button span:nth-child(1) {
             transform: translateY(10.5px) rotate(45deg);
         }
@@ -165,7 +156,6 @@
             transform: translateY(-10.5px) rotate(-45deg);
         }
 
-        /* スライドインしてくるメニュー本体 */
         .drawer-menu {
             position: fixed;
             top: 0;
@@ -214,7 +204,6 @@
             transform: translateX(5px);
         }
 
-        /* メニューの後ろの半透明の黒背景 */
         .menu-overlay {
             position: fixed;
             top: 0;
@@ -229,7 +218,6 @@
             cursor: pointer;
         }
 
-        /* チェックが入った時（開いた時）の処理 */
         .menu-checkbox:checked ~ .drawer-menu {
             right: 0;
         }
@@ -291,8 +279,8 @@
             flex: 1;
         }
 
-        /* 企業理念セクション */
-        .philosophy-content {
+        /* メッセージ用レイアウト（画像を多用しスッキリ見せるための交互配置用） */
+        .message-content {
             display: flex;
             align-items: center;
             gap: 50px;
@@ -300,67 +288,49 @@
             padding: 50px;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            margin-bottom: 50px;
         }
 
-        .philosophy-image {
+        .message-content.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .message-image {
             flex: 1;
         }
 
-        .philosophy-text {
+        .message-text {
             flex: 1;
         }
 
-        .philosophy-text h3 {
+        .message-text h3 {
             font-size: 1.6rem;
             margin-bottom: 20px;
             color: var(--primary-color);
         }
 
-        .philosophy-text p {
+        .message-text p {
             color: var(--text-light);
             margin-bottom: 15px;
         }
 
-        /* サービス概要セクション */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
+        /* 代表者サイン用 */
+        .signature {
+            text-align: right;
+            margin-top: 30px;
         }
 
-        .service-card {
-            background: var(--white);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-            transition: transform 0.3s, box-shadow 0.3s;
+        .signature-img {
+            max-width: 180px;
+            height: auto;
+            display: inline-block;
         }
 
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
-        }
-
-        .service-card-body {
-            padding: 30px;
-        }
-
-        .service-card-body h3 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: var(--text-main);
-        }
-
-        .service-card-body p {
-            color: var(--text-light);
-            font-size: 0.95rem;
-        }
-
-        /* フッター（修正箇所：縦幅の余裕確保・フォントサイズ調整） */
+        /* フッター */
         footer {
             background-color: #2c3e50;
             color: #ecf0f1;
-            padding: 30px 5%; /* 縦幅に適度な余裕を持たせる */
+            padding: 30px 5%; 
             margin-top: 80px;
         }
 
@@ -370,7 +340,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap; /* デバイス幅に応じて折り返す */
+            flex-wrap: wrap; 
             gap: 20px;
         }
 
@@ -383,21 +353,24 @@
         }
 
         .footer-right {
-            font-size: 1rem; /* ページ番号のサイズを少し大きく */
+            font-size: 1rem; 
             font-family: 'Courier New', Courier, monospace;
             color: #bdc3c7;
             letter-spacing: 0.05em;
-            white-space: nowrap; /* ページ番号自体は改行させない */
+            white-space: nowrap; 
         }
 
-        /* レスポンシブ対応（タブレット・スマホ向け） */
+        /* レスポンシブ対応 */
         @media (max-width: 992px) {
-            .hero, .philosophy-content {
+            .hero, .message-content, .message-content.reverse {
                 flex-direction: column;
                 text-align: center;
             }
-            .philosophy-text h3 {
+            .message-text h3 {
                 margin-top: 30px;
+            }
+            .signature {
+                text-align: center;
             }
         }
 
@@ -414,19 +387,17 @@
             .drawer-menu {
                 width: 100%;
             }
-            /* フッターのスマホ用調整 */
             .footer-content {
                 flex-direction: column;
                 text-align: center;
                 gap: 15px;
             }
             .disclaimer {
-                font-size: 0.75rem; /* スマホでは少し小さくして画面幅にフィット */
+                font-size: 0.75rem; 
             }
             .footer-right {
-                font-size: 0.9rem; /* スマホでも見やすい大きさを保持 */
+                font-size: 0.9rem; 
             }
-            /* PC用の意図的な改行をスマホでは無効化して自然に流し込む */
             .pc-br {
                 display: none;
             }
@@ -483,78 +454,94 @@
         </div>
     </header>
 
-    <!-- メインビジュアル -->
+    <!-- メインビジュアル（ヒーローセクション） -->
     <section class="hero">
         <div class="hero-text">
             <h1>
-                <span class="ib">すべての記憶を、</span><br>
-                <span class="ib">未来の資産へ。</span>
+                <span class="ib">代表者の挨拶</span>
             </h1>
             <p>
-                <span class="ib">私たちは、</span><span class="ib">形のない情報を</span><span class="ib">美しく整理し、</span><br>
-                <span class="ib">誰もがアクセスできる</span><span class="ib">クリーンなアーカイブを</span><span class="ib">提供します。</span>
+                <span class="ib">すべての情報を</span><span class="ib">守り抜く。</span><br>
+                <span class="ib">それが私たちの</span><span class="ib">揺るぎない</span><span class="ib">信念です。</span>
             </p>
         </div>
         <div class="hero-image">
-            <img src="images/network.png" alt="すべての記憶を、未来の資産へ" class="responsive-img">
+            <!-- 【画像のご用意：代表者の清潔感のあるポートレート写真。明るくクリーンなオフィスを背景に、信頼感のある笑顔のスーツ姿を推奨】 -->
+            <img src="images/ceo_portrait.png" alt="代表者ポートレート" class="responsive-img">
         </div>
     </section>
 
-    <!-- 企業理念 -->
-    <section id="philosophy">
-        <h2 class="section-title">企業理念</h2>
-        <div class="philosophy-content">
-            <div class="philosophy-image">
-                <img src="images/discuss.png" alt="「記録」を「価値」に変える" class="responsive-img">
+    <!-- 代表者のメッセージ群（画像を交互に配置して視覚情報を増やしつつスッキリさせる） -->
+    <section id="message-sections">
+        
+        <!-- 設立の理由 -->
+        <div class="message-content">
+            <div class="message-image">
+                <!-- 【画像のご用意：創業のきっかけを想起させる、光の差し込むクリーンなオフィスデスク、またはクリアな青空とビルの風景など】 -->
+                <img src="images/foundation_reason.png" alt="設立の理由イメージ" class="responsive-img">
             </div>
-            <div class="philosophy-text">
-                <h3><span class="ib">「記録」を</span><span class="ib">「価値」に</span><span class="ib">変える</span></h3>
+            <div class="message-text">
+                <h3><span class="ib">なぜ、この会社を</span><span class="ib">立ち上げたのか</span></h3>
                 <p>
-                    <span class="ib">OMNIBUS ARCHIVEは、</span><span class="ib">世界中に散らばる</span><span class="ib">膨大な情報を収集・整理し、</span><span class="ib">後世へ遺すための</span><span class="ib">プラットフォームを構築しています。</span>
+                    <span class="ib">かつて</span><span class="ib">私自身が、</span><span class="ib">かけがえのない</span><span class="ib">データを失うという</span><span class="ib">経験をしました。</span>
                 </p>
                 <p>
-                    <span class="ib">情報の透明性と</span><span class="ib">安全性を第一に考え、</span><span class="ib">利用者が直感的に</span><span class="ib">求める知識へ到達できる</span><span class="ib">社会の実現を目指します。</span>
+                    <span class="ib">その時の</span><span class="ib">喪失感と、</span><span class="ib">何としても</span><span class="ib">取り戻したいという</span><span class="ib">痛切な思いが、</span><span class="ib">OMNIBUS ARCHIVEの</span><span class="ib">原点です。</span>
+                </p>
+                <p>
+                    <span class="ib">誰もが</span><span class="ib">安心して</span><span class="ib">情報を預け、</span><span class="ib">必要な時に</span><span class="ib">確実に取り出せる</span><span class="ib">環境を作りたい。</span><br>
+                    <span class="ib">その強い願いから、</span><span class="ib">私はこの会社を</span><span class="ib">設立いたしました。</span>
                 </p>
             </div>
         </div>
-    </section>
 
-    <!-- サービス概要 -->
-    <section id="services">
-        <h2 class="section-title">サービス概要</h2>
-        <div class="services-grid">
-            
-            <div class="service-card">
-                <img src="images/server.png" alt="データ・アーカイブ事業" class="responsive-img service-img">
-                <div class="service-card-body">
-                    <h3>データ・アーカイブ事業</h3>
-                    <p>
-                        <span class="ib">企業や個人の</span><span class="ib">重要データを、</span><span class="ib">最新のセキュリティで</span><span class="ib">保護しながら</span><span class="ib">長期保存します。</span>
-                    </p>
-                </div>
+        <!-- データ復旧への思い（左右反転レイアウト） -->
+        <div class="message-content reverse">
+            <div class="message-image">
+                <!-- 【画像のご用意：データ復旧をイメージさせる、青い光に包まれたクリーンなサーバールームや、デジタルデータの復元を抽象化したスタイリッシュなCG画像】 -->
+                <img src="images/data_recovery.png" alt="データ復旧イメージ" class="responsive-img">
             </div>
-
-            <div class="service-card">
-                <img src="images/searching.png" alt="オムニバス・サーチ" class="responsive-img service-img">
-                <div class="service-card-body">
-                    <h3>オムニバス・サーチ</h3>
-                    <p>
-                        <span class="ib">独自のアルゴリズムにより、</span><span class="ib">膨大なアーカイブから</span><span class="ib">必要な情報を瞬時に</span><span class="ib">抽出・視覚化します。</span>
-                    </p>
-                </div>
+            <div class="message-text">
+                <h3><span class="ib">失われたデータを取り戻す、</span><span class="ib">その使命</span></h3>
+                <p>
+                    <span class="ib">デジタルデータは、</span><span class="ib">単なる</span><span class="ib">0と1の羅列では</span><span class="ib">ありません。</span><br>
+                    <span class="ib">そこには、</span><span class="ib">人々の大切な想い出や、</span><span class="ib">企業が積み上げてきた</span><span class="ib">歴史が</span><span class="ib">込められています。</span>
+                </p>
+                <p>
+                    <span class="ib">私たちは、</span><span class="ib">失われかけた</span><span class="ib">「記憶」を復旧させる</span><span class="ib">技術に対して、</span><span class="ib">並々ならぬ</span><span class="ib">誇りを持っています。</span>
+                </p>
+                <p>
+                    <span class="ib">困難な状況であっても、</span><span class="ib">決して諦めることなく、</span><span class="ib">お客様の大切な資産を</span><span class="ib">救い出すことが、</span><span class="ib">私たちの使命です。</span>
+                </p>
             </div>
-
-            <div class="service-card">
-                <img src="images/cloud.png" alt="デジタル遺産管理" class="responsive-img service-img">
-                <div class="service-card-body">
-                    <h3>デジタル遺産管理</h3>
-                    <p>
-                        <span class="ib">法人・個人の</span><span class="ib">デジタル上の足跡を整理し、</span><span class="ib">適切な形で次世代へ</span><span class="ib">継承するソリューションです。</span>
-                    </p>
-                </div>
-            </div>
-
         </div>
+
+        <!-- 社会に与える影響 -->
+        <div class="message-content">
+            <div class="message-image">
+                <!-- 【画像のご用意：社会への貢献をイメージさせる、緑と調和したクリーンな未来都市の風景や、人々の笑顔とデジタルデバイスが共存する画像】 -->
+                <img src="images/social_impact.png" alt="社会に与える影響イメージ" class="responsive-img">
+            </div>
+            <div class="message-text">
+                <h3><span class="ib">未来の社会への</span><span class="ib">責任と貢献</span></h3>
+                <p>
+                    <span class="ib">高度に情報化された</span><span class="ib">現代社会において、</span><span class="ib">信頼できる</span><span class="ib">データの保存と復元は、</span><span class="ib">もはや</span><span class="ib">社会のインフラそのものです。</span>
+                </p>
+                <p>
+                    <span class="ib">私たちが提供する</span><span class="ib">クリーンな</span><span class="ib">アーカイブ技術は、</span><span class="ib">情報の消失リスクを</span><span class="ib">極限まで減らします。</span>
+                </p>
+                <p>
+                    <span class="ib">それは、</span><span class="ib">次世代へと</span><span class="ib">正確な知識と記録を</span><span class="ib">継承するための、</span><span class="ib">最も強固な</span><span class="ib">基盤となると</span><span class="ib">確信しています。</span>
+                </p>
+                
+                <!-- 代表者署名エリア -->
+                <div class="signature">
+                    <!-- 【画像のご用意：代表者の直筆サイン風の透過画像。黒または濃いブルーのインクで書かれたスタイリッシュなもの】 -->
+                    <img src="images/signature.png" alt="代表者署名" class="signature-img">
+                </div>
+            </div>
+        </div>
+
     </section>
 
     <!-- フッター -->
@@ -565,9 +552,9 @@
                 このサイトの内容はフィクションです。<br class="pc-br">
                 登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
             </p>
-            <!-- ページ番号のサイズを少し大きく変更 -->
+            <!-- ページ番号を2に変更 -->
             <div class="footer-right">
-                &lt; 1/35 &gt; (Lv.0)
+                &lt; 2/35 &gt; (Lv.0)
             </div>
         </div>
     </footer>

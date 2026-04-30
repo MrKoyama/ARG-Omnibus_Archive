@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>検索結果 | OMNIBUS SEARCH</title>
+    <style>
+        /* 全体のリセットとカラー変数 */
+        :root {
+            --primary-color: #0056b3;
+            --text-main: #333333;
+            --text-light: #666666;
+            --bg-color: #f8f9fa;
+            --white: #ffffff;
+            --border-color: #e0e0e0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            line-height: 1.8;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        .ib {
+            display: inline-block;
+        }
+
+        /* ヘッダー・メニュー関連（共通） */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: 0.08em;
+        }
+
+        .logo-icon {
+            height: 48px; 
+            width: 48px;  
+            object-fit: contain;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        /* 検索フォーム化 */
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            width: 200px;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        .search-container button {
+            padding: 8px 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #004494;
+        }
+
+        /* メニュー開閉ギミック */
+        .menu-checkbox { display: none; }
+        .menu-button {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 24px;
+            cursor: pointer;
+            z-index: 2000;
+        }
+        .menu-button span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(1) { transform: translateY(10.5px) rotate(45deg); }
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(2) { opacity: 0; }
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(3) { transform: translateY(-10.5px) rotate(-45deg); }
+
+        .drawer-menu {
+            position: fixed;
+            top: 0; right: -350px; 
+            width: 350px; height: 100vh;
+            background-color: var(--white);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+            z-index: 1500;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+        .drawer-inner { padding: 100px 40px 40px; }
+        .drawer-title { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 20px; letter-spacing: 0.1em; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+        .drawer-menu ul { list-style: none; }
+        .drawer-menu ul li { margin-bottom: 15px; }
+        .drawer-menu ul li a { text-decoration: none; color: var(--text-main); font-weight: bold; font-size: 1.05rem; transition: color 0.3s, transform 0.3s; display: inline-block; }
+        .drawer-menu ul li a:hover { color: var(--primary-color); transform: translateX(5px); }
+
+        .menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background-color: rgba(0,0,0,0.4); z-index: 1400;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease; cursor: pointer;
+        }
+        .menu-checkbox:checked ~ .drawer-menu { right: 0; }
+        .menu-checkbox:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
+
+        /* =========================================
+            OMNIBUS SEARCH 結果セクション
+           ========================================= */
+        section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 5%;
+            min-height: calc(100vh - 250px);
+        }
+
+        .search-sys-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .sys-title {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2rem;
+            color: var(--primary-color);
+            letter-spacing: 0.1em;
+            display: inline-block;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .sys-desc {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* 検索結果エリア */
+        .result-summary {
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .result-summary .highlight {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+
+        /* ヒット時のカードデザイン */
+        .search-result-card {
+            background: var(--white);
+            border-left: 4px solid var(--primary-color);
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: block;
+            color: var(--text-main);
+        }
+
+        .search-result-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .search-result-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .search-result-card p {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+
+        /* ノーヒット時のコンテナ */
+        .no-result-container {
+            background: var(--white);
+            padding: 50px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            text-align: center;
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .no-result-container .query-highlight {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-main);
+            margin-bottom: 30px;
+        }
+
+        .no-result-container p {
+            margin-bottom: 12px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .no-result-container .notice {
+            color: #d9534f; /* 注意書き用の赤みを持たせた色 */
+            font-size: 0.95rem;
+            margin-top: 30px;
+            font-weight: bold;
+            display: inline-block;
+            background-color: #fdf2f2;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        /* フッター */
+        footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 30px 5%;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #bdc3c7;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .header-top { padding: 10px 5%; }
+            .search-container input[type="text"] { width: 120px; }
+            .drawer-menu { width: 100%; }
+            .pc-br { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+    <label for="menu-toggle" class="menu-overlay"></label>
+
+    <nav class="drawer-menu">
+        <div class="drawer-inner">
+            <h2 class="drawer-title">MENU</h2>
+            <ul>
+                <li><a href="toppage.html">ホーム</a></li>
+                <li><a href="toppage.html#philosophy">企業理念</a></li>
+                <li><a href="ceo.html">代表者の挨拶</a></li>
+                <li><a href="toppage.html#services">サービス概要</a></li>
+                <li><a href="#">サービス価格表</a></li>
+                <li><a href="#">お客様の声</a></li>
+                <li><a href="#">会社概要</a></li>
+                <li><a href="#">会社公式ブログ</a></li>
+                <li><a href="#">お問い合わせフォーム</a></li>
+                <li><a href="#">プライバシーポリシー</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-top">
+            <a href="toppage.html" class="logo">
+                <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                OMNIBUS ARCHIVE
+            </a>
+            <div class="header-right">
+                <!-- ここから再度検索した際も、このページ自身(search.html)へ遷移して結果を更新します -->
+                <form class="search-container" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="サイト内検索..." required>
+                    <button type="submit">検索</button>
+                </form>
+                <label for="menu-toggle" class="menu-button">
+                    <span></span><span></span><span></span>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- 検索結果表示セクション -->
+    <section id="search-result-section">
+        <div class="search-sys-header">
+            <h2 class="sys-title">OMNIBUS SEARCH</h2>
+            <p class="sys-desc"><span class="ib">アーカイブ検索システム</span> <span class="ib">実行結果</span></p>
+        </div>
+
+        <div id="result-display-area">
+            <!-- JavaScriptにより、ここに動的に結果が生成されます -->
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br class="pc-br">
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+        </div>
+    </footer>
+
+    <!-- 検索ロジック (ページ読み込み時にURLパラメータを取得して描画) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const resultArea = document.getElementById("result-display-area");
+
+            // URLのクエリパラメータ（?q=xxx）を取得
+            const params = new URLSearchParams(window.location.search);
+            const query = params.get("q");
+
+            // XSS対策のエスケープ関数
+            function escapeHTML(str) {
+                return String(str).replace(/[&<>'"]/g, 
+                    tag => ({
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        "'": '&#39;',
+                        '"': '&quot;'
+                    }[tag] || tag)
+                );
+            }
+
+            // 検索辞書（ギミックとして特定のワードにのみ反応）
+            const searchDB = {
+                "代表":[
+                    { title: "代表者の挨拶", url: "greeting.html", desc: "すべての情報を守り抜く。それが私たちの揺るぎない信念です。株式会社オムニバス・アーカイブ代表からのメッセージ。" }
+                ],
+                "データ復旧":[
+                    { title: "データ・アーカイブ事業", url: "services.html#data", desc: "企業や個人の重要データを、最新のセキュリティで保護しながら長期保存します。失われたデータの復元にも対応。" },
+                    { title: "サービス価格表", url: "pricing.html", desc: "データ復旧・アーカイブ保存に関する料金プランのシミュレーションをご案内します。" }
+                ],
+                "山田太郎":[
+                    { title: "【極秘】アーカイブファイル：山田 太郎", url: "secret_file.html", desc: "アクセス権限レベル4。対象者の全デジタル履歴、思考パターン、および生体情報のバックアップデータ。" }
+                ]
+            };
+
+            // 描画ロジック
+            if (query && query.trim() !== "") {
+                const safeQuery = escapeHTML(query.trim());
+                const results = searchDB[safeQuery]; // 完全一致でのみヒットする仕組み
+
+                // このページの検索窓に、現在検索しているワードを入力済みの状態にしておく
+                const searchInput = document.querySelector('input[name="q"]');
+                if (searchInput) searchInput.value = safeQuery;
+
+                if (results) {
+                    // ヒットした場合
+                    let html = `
+                        <div class="result-summary">
+                            <span class="ib">「<span class="highlight">${safeQuery}</span>」の</span><span class="ib">検索結果</span>
+                        </div>
+                    `;
+                    
+                    results.forEach(item => {
+                        html += `
+                            <a href="${item.url}" class="search-result-card">
+                                <h3>${escapeHTML(item.title)}</h3>
+                                <p>${escapeHTML(item.desc)}</p>
+                            </a>
+                        `;
+                    });
+                    resultArea.innerHTML = html;
+
+                } else {
+                    // ヒットしなかった場合の指定メッセージ
+                    resultArea.innerHTML = `
+                        <div class="no-result-container">
+                            <p class="query-highlight"><span class="ib">「${safeQuery}」の</span><span class="ib">検索結果</span></p>
+                            <p><span class="ib">お探しのページは</span><span class="ib">見つかりませんでした。</span></p>
+                            <p><span class="ib">入力したキーワードに</span><span class="ib">誤りがないか</span><span class="ib">ご確認ください。</span></p>
+                            
+                            <p class="notice"><span class="ib">※人名を検索する際は、</span><span class="ib">苗字と名前の間に</span><span class="ib">スペースを入れないでください。</span></p>
+                        </div>
+                    `;
+                }
+            } else {
+                // キーワードが空で直接アクセスされた場合
+                resultArea.innerHTML = `
+                    <div class="no-result-container">
+                        <p><span class="ib">検索キーワードが</span><span class="ib">入力されていません。</span></p>
+                        <p><span class="ib">右上の検索欄から、</span><span class="ib">検索したいワードを</span><span class="ib">入力してください。</span></p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
