@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>サービス価格表 | OMNIBUS ARCHIVE</title>
+    <title>会社概要 | OMNIBUS ARCHIVE</title>
     <style>
         /* =========================================
            全体のリセットとカラー変数
@@ -16,7 +16,6 @@
             --bg-color: #f8f9fa;
             --white: #ffffff;
             --border-color: #e0e0e0;
-            --highlight-color: #d9534f; /* 納期などの強調用カラー */
         }
         
         * {
@@ -30,17 +29,15 @@
             color: var(--text-main);
             background-color: var(--bg-color);
             line-height: 1.8;
-            /* 単語の途中での改行を防ぐベース設定 */
             word-break: keep-all;
             overflow-wrap: break-word;
         }
 
-        /* 文節の折り返し制御用クラス */
         .ib {
             display: inline-block;
         }
 
-        /* 共通画像スタイル */
+        /* 画像共通スタイル */
         .responsive-img {
             width: 100%;
             height: auto;
@@ -92,7 +89,6 @@
             gap: 30px;
         }
 
-        /* サイト内検索（フォーム化・autocompleteオフ対応） */
         .search-container {
             display: flex;
         }
@@ -125,7 +121,7 @@
             background-color: #004494;
         }
 
-        /* 展開式ドロワーメニュー（ハンバーガー） */
+        /* ドロワーメニュー */
         .menu-checkbox { display: none; }
 
         .menu-button {
@@ -180,7 +176,7 @@
         .menu-checkbox:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
 
         /* =========================================
-           価格表セクション (見やすさ重視のカード型リスト)
+           共通セクション設定
            ========================================= */
         section {
             max-width: 1200px;
@@ -211,154 +207,134 @@
             margin-bottom: 60px;
         }
 
-        .pricing-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: stretch;
-            gap: 30px;
-            flex-wrap: wrap;
+        /* =========================================
+           ヒーローバナー
+           ========================================= */
+        .hero-banner {
+            max-width: 1200px;
+            margin: 40px auto 0;
+            padding: 0 5%;
         }
 
-        /* 基本のカードデザイン */
-        .pricing-card {
+        .hero-banner img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        /* =========================================
+           会社概要 テーブルレイアウト
+           ========================================= */
+        .company-profile-wrapper {
+            display: flex;
+            gap: 50px;
+            background: var(--white);
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            align-items: flex-start;
+        }
+
+        /* テーブル部分 */
+        .company-table-container {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .company-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .company-table th, .company-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .company-table tr:last-child th,
+        .company-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .company-table th {
+            width: 30%;
+            color: var(--primary-color);
+            font-weight: bold;
+            white-space: nowrap;
+            letter-spacing: 0.05em;
+        }
+
+        .company-table td {
+            color: var(--text-main);
+            line-height: 1.8;
+        }
+
+        /* サイド画像部分 */
+        .company-side-images {
             flex: 1;
             min-width: 300px;
-            background: var(--white);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 40px 30px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            position: relative;
-            transition: transform 0.3s, box-shadow 0.3s;
             display: flex;
             flex-direction: column;
+            gap: 20px;
         }
 
-        .pricing-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
-        }
-
-        /* 強く推薦する「特急プラン」の専用デザイン */
-        .pricing-card.recommended {
-            border: 3px solid var(--primary-color);
-            transform: scale(1.05); /* 他のプランより少し大きくする */
-            box-shadow: 0 15px 40px rgba(0, 86, 179, 0.15);
-            z-index: 10;
-            background: linear-gradient(to bottom, var(--white), var(--primary-light) 500%);
-        }
-
-        .pricing-card.recommended:hover {
-            transform: scale(1.05) translateY(-5px);
-        }
-
-        .recommend-badge {
-            position: absolute;
-            top: -18px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary-color);
-            color: var(--white);
-            padding: 8px 25px;
-            border-radius: 30px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            letter-spacing: 0.1em;
-            white-space: nowrap;
-            box-shadow: 0 4px 10px rgba(0, 86, 179, 0.3);
-        }
-
-        /* カード内のテキスト要素 */
-        .plan-name {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: var(--text-main);
-            margin-bottom: 15px;
-        }
-
-        .plan-price {
-            font-size: 2.6rem;
-            color: var(--primary-color);
-            font-weight: bold;
-            margin-bottom: 25px;
-            font-family: Arial, sans-serif;
-        }
-
-        .plan-price span {
-            font-size: 1.1rem;
-            color: var(--text-light);
-            font-weight: normal;
-        }
-
-        /* サービス内容のリスト表示 */
-        .plan-features {
-            list-style: none;
-            margin-bottom: 40px;
-            flex-grow: 1; /* ボタンを最下部に揃えるための余白調整 */
-            text-align: left;
-        }
-
-        .plan-features li {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px dashed var(--border-color);
-            color: var(--text-light);
-            font-size: 0.95rem;
-            position: relative;
-            padding-left: 20px;
-        }
-
-        /* リストの先頭にクリーンなチェックマークを付与 */
-        .plan-features li::before {
-            content: "✔";
-            color: var(--primary-color);
-            position: absolute;
-            left: 0;
-            top: 0;
-            font-size: 0.9rem;
-        }
-
-        .plan-features li:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .feature-highlight {
-            color: var(--highlight-color);
-            font-weight: bold;
-            font-size: 1.05rem;
-            border-bottom: 2px solid #f9c2c1;
-        }
-
-        /* ボタンデザイン */
-        .btn-apply {
-            display: inline-block;
+        .company-side-images img {
             width: 100%;
-            padding: 16px;
-            background: var(--bg-color);
-            color: var(--text-main);
-            text-decoration: none;
+            height: auto;
             border-radius: 8px;
-            font-weight: bold;
-            transition: background 0.3s, color 0.3s;
-            border: 1px solid var(--border-color);
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
-        .btn-apply:hover {
-            background: #e2e6ea;
+        /* =========================================
+           事業所・拠点紹介 (画像多用ギャラリー)
+           ========================================= */
+        .facilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-top: 20px;
         }
 
-        .pricing-card.recommended .btn-apply {
-            background: var(--primary-color);
-            color: var(--white);
-            border: none;
-            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
+        .facility-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .pricing-card.recommended .btn-apply:hover {
-            background: #004494;
+        .facility-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        }
+
+        .facility-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .facility-info {
+            padding: 30px;
+        }
+
+        .facility-info h3 {
+            font-size: 1.3rem;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .facility-info p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 0;
+            line-height: 1.6;
         }
 
         /* =========================================
@@ -368,7 +344,6 @@
             background-color: #2c3e50;
             color: #ecf0f1;
             padding: 30px 5%; 
-            margin-top: 80px;
         }
 
         .footer-content {
@@ -401,11 +376,15 @@
            レスポンシブ対応
            ========================================= */
         @media (max-width: 992px) {
-            .pricing-card.recommended {
-                transform: scale(1); /* タブレット以下ではスケール拡大を解除 */
+            .company-profile-wrapper {
+                flex-direction: column;
             }
-            .pricing-card.recommended:hover {
-                transform: translateY(-5px);
+            .company-side-images {
+                flex-direction: row;
+                width: 100%;
+            }
+            .company-side-images img {
+                width: calc(50% - 10px);
             }
         }
 
@@ -414,7 +393,12 @@
             .header-right { gap: 15px; }
             .search-container input[type="text"] { width: 120px; }
             .drawer-menu { width: 100%; }
-            .pricing-wrapper { flex-direction: column; gap: 40px; }
+            .hero-banner img { height: 200px; }
+            .company-table th, .company-table td { display: block; width: 100%; }
+            .company-table th { padding-bottom: 5px; border-bottom: none; }
+            .company-table td { padding-top: 0; padding-bottom: 20px; }
+            .company-side-images { flex-direction: column; }
+            .company-side-images img { width: 100%; }
             .footer-content {
                 flex-direction: column;
                 text-align: center;
@@ -428,13 +412,10 @@
 </head>
 <body>
 
-    <!-- メニュー開閉用チェックボックス -->
+    <!-- メニュー開閉用チェックボックス・オーバーレイ・ドロワー -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
-
-    <!-- メニューオーバーレイ -->
     <label for="menu-toggle" class="menu-overlay"></label>
-
-    <!-- ドロワーメニュー本体 -->
+    
     <nav class="drawer-menu">
         <div class="drawer-inner">
             <h2 class="drawer-title">MENU</h2>
@@ -461,93 +442,145 @@
                 OMNIBUS ARCHIVE
             </a>
             <div class="header-right">
-                <!-- サイト内検索（autocomplete="off"を追加・他ページから検索結果ページへ遷移） -->
                 <form class="search-container" action="search.html" method="GET">
                     <input type="text" name="q" placeholder="サイト内検索..." required autocomplete="off">
                     <button type="submit">検索</button>
                 </form>
-                <!-- ハンバーガーメニューボタン -->
                 <label for="menu-toggle" class="menu-button">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span></span><span></span><span></span>
                 </label>
             </div>
         </div>
     </header>
 
-    <!-- データ復旧サービス 価格一覧表 セクション -->
-    <section id="pricing">
-        <h2 class="section-title">データ復旧サービス 価格表</h2>
+    <!-- ヒーローバナー画像（ページ上部） -->
+    <div class="hero-banner">
+        <img src="images/about_hero_building.png" alt="株式会社オムニバス・アーカイブ 本社ビル外観">
+    </div>
+
+    <!-- 会社概要 セクション -->
+    <section id="company-profile">
+        <h2 class="section-title">会社概要</h2>
         <p class="section-desc">
-            <span class="ib">お客様の大切な情報を守るため、</span><span class="ib">透明性の高い</span><span class="ib">クリーンな料金体系をご用意しております。</span><br class="pc-br">
-            <span class="ib">状況に応じた</span><span class="ib">最適なプランをお選びください。</span>
+            <span class="ib">すべての記憶を、未来の資産へ。</span><br class="pc-br">
+            <span class="ib">私たちは、情報社会の基盤を支える</span><span class="ib">データ・アーカイブ企業です。</span>
         </p>
 
-        <div class="pricing-wrapper">
+        <div class="company-profile-wrapper">
             
-            <!-- スタンダードプラン -->
-            <div class="pricing-card">
-                <h3 class="plan-name">スタンダードプラン</h3>
-                <div class="plan-price">50,000<span>円〜</span></div>
-                <ul class="plan-features">
-                    <li>
-                        <span class="ib"><strong>提供サービス：</strong></span><br>
-                        <span class="ib">軽度〜中度の</span><span class="ib">論理障害・物理障害からの</span><span class="ib">基本データ復元作業</span>
-                    </li>
-                    <li>
-                        <span class="ib"><strong>目安納期：</strong></span><br>
-                        <span class="ib">約1週間〜2週間程度</span>
-                    </li>
-                    <li>
-                        <span class="ib">セキュア環境での</span><span class="ib">安全な抽出・一時保管</span>
-                    </li>
-                </ul>
-                <a href="#" class="btn-apply">詳細・お見積り</a>
+            <!-- 会社情報テーブル -->
+            <div class="company-table-container">
+                <table class="company-table">
+                    <tbody>
+                        <tr>
+                            <th>社名</th>
+                            <td>
+                                株式会社オムニバス・アーカイブ<br>
+                                （英語表記：OMNIBUS ARCHIVE Co., Ltd.）
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>代表者</th>
+                            <td>代表取締役社長　九条 誠</td>
+                        </tr>
+                        <tr>
+                            <th>設立年月日</th>
+                            <td>2010年 4月 1日</td>
+                        </tr>
+                        <tr>
+                            <th>本社所在地</th>
+                            <td>
+                                〒100-0000<br>
+                                東京都千代田区神田〇〇 1-2-3<br>
+                                オムニバス・タワー 35F
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>資本金</th>
+                            <td>1億5,000万円</td>
+                        </tr>
+                        <tr>
+                            <th>売上高</th>
+                            <td>52億円（2025年度実績）</td>
+                        </tr>
+                        <tr>
+                            <th>従業員数</th>
+                            <td>185名（2026年4月現在）</td>
+                        </tr>
+                        <tr>
+                            <th>事業内容</th>
+                            <td>
+                                <span class="ib">1. 法人・個人向けデータ復旧サービス</span><br>
+                                <span class="ib">2. 大規模データ・アーカイブシステムの構築・運用</span><br>
+                                <span class="ib">3. 次世代検索エンジン「オムニバス・サーチ」の開発</span><br>
+                                <span class="ib">4. デジタル遺産管理ソリューションの提供</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>関連会社</th>
+                            <td>
+                                オムニバス・テクノロジーズ株式会社<br>
+                                OMNIBUS SECURITY Inc.（米国法人）
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>取引先銀行</th>
+                            <td>
+                                みずほ銀行 〇〇支店<br>
+                                三井住友銀行 △△支店<br>
+                                三菱UFJ銀行 ××支店
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <!-- 特急プラン（強く推薦・強調デザイン） -->
-            <div class="pricing-card recommended">
-                <div class="recommend-badge">おすすめ</div>
-                <h3 class="plan-name">特急プラン</h3>
-                <div class="plan-price">150,000<span>円〜</span></div>
-                <ul class="plan-features">
-                    <li>
-                        <span class="ib"><strong>提供サービス：</strong></span><br>
-                        <span class="ib">専用エンジニアの</span><span class="ib">優先アサインと、</span><span class="ib">重度物理障害を含む</span><span class="ib">すべての障害への対応</span>
-                    </li>
-                    <li>
-                        <span class="ib"><strong>目安納期：</strong></span><br>
-                        <span class="ib feature-highlight">最短即日〜48時間以内納品</span>
-                    </li>
-                    <li>
-                        <span class="ib">24時間体制での</span><span class="ib">復旧作業および</span><span class="ib">専任担当者による進捗報告</span>
-                    </li>
-                    <li>
-                        <span class="ib">割高となりますが、</span><span class="ib">企業の要となる</span><span class="ib">ビジネスの停滞リスクを</span><span class="ib">最小限に防ぎます。</span>
-                    </li>
-                </ul>
-                <a href="#" class="btn-apply">特急プランで申し込む</a>
+            <!-- サイド画像（オフィスの雰囲気を伝える） -->
+            <div class="company-side-images">
+                <img src="images/office_entrance.png" alt="オフィス エントランス">
+                
+                <img src="images/office_workspace.png" alt="執務室・ワークスペース">
             </div>
 
-            <!-- エンタープライズ（法人高度復旧）プラン -->
-            <div class="pricing-card">
-                <h3 class="plan-name">エンタープライズ</h3>
-                <div class="plan-price">都度お見積り</div>
-                <ul class="plan-features">
-                    <li>
-                        <span class="ib"><strong>提供サービス：</strong></span><br>
-                        <span class="ib">大規模サーバー・</span><span class="ib">RAID崩壊対応、</span><span class="ib">出張対応を含む高度復元作業</span>
-                    </li>
-                    <li>
-                        <span class="ib"><strong>目安納期：</strong></span><br>
-                        <span class="ib">障害状況や</span><span class="ib">システム規模により変動</span>
-                    </li>
-                    <li>
-                        <span class="ib">機密保持契約（NDA）締結、</span><span class="ib">最高水準の</span><span class="ib">隔離セキュリティ環境での作業</span>
-                    </li>
-                </ul>
-                <a href="#" class="btn-apply">法人様のご相談</a>
+        </div>
+    </section>
+
+    <!-- 事業所紹介（画像多用ギャラリー） -->
+    <section id="facilities">
+        <h2 class="section-title">事業所・拠点</h2>
+        <div class="facilities-grid">
+            
+            <div class="facility-card">
+                <img src="images/facility_hq.png" alt="東京本社">
+                <div class="facility-info">
+                    <h3>東京本社</h3>
+                    <p>
+                        経営企画、システム開発の中枢を担うヘッドクォーターです。最先端のセキュリティエリアを完備しています。<br>
+                        （東京都千代田区）
+                    </p>
+                </div>
+            </div>
+
+            <div class="facility-card">
+                <img src="images/facility_kansai.png" alt="関西支社">
+                <div class="facility-info">
+                    <h3>関西支社</h3>
+                    <p>
+                        西日本エリアの法人顧客サポートおよび、営業統括を行う拠点です。迅速な出張データ復旧にも対応します。<br>
+                        （大阪府大阪市北区）
+                    </p>
+                </div>
+            </div>
+
+            <div class="facility-card">
+                <img src="images/facility_datacenter.png" alt="オムニバス・データセンター">
+                <div class="facility-info">
+                    <h3>第一データセンター</h3>
+                    <p>
+                        最高レベルの耐震・免震構造を備え、生体認証を用いた厳格な入退室管理のもと、お客様のアーカイブを保護します。<br>
+                        （所在地非公開）
+                    </p>
+                </div>
             </div>
 
         </div>
@@ -560,9 +593,9 @@
                 このサイトの内容はフィクションです。<br class="pc-br">
                 登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
             </p>
-            <!-- ページ番号を3に変更 -->
+            <!-- ページ番号を5に変更 -->
             <div class="footer-right">
-                &lt; 3/35 &gt; (Lv.0)
+                &lt; 5/35 &gt; (Lv.0)
             </div>
         </div>
     </footer>

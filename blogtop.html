@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会社公式ブログ | OMNIBUS ARCHIVE</title>
+    <style>
+        /* =========================================
+           全体のリセットとカラー変数
+           ========================================= */
+        :root {
+            --primary-color: #0056b3; /* クリーンなブルー */
+            --primary-light: #e6f0fa;
+            --text-main: #333333;
+            --text-light: #666666;
+            --bg-color: #f8f9fa;
+            --white: #ffffff;
+            --border-color: #e0e0e0;
+            --category-tech: #17a2b8; /* 技術情報用カラー */
+            --category-news: #28a745; /* お知らせ用カラー */
+            --category-interview: #f39c12; /* インタビュー用カラー */
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            line-height: 1.8;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        .ib {
+            display: inline-block;
+        }
+
+        .responsive-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        /* =========================================
+           ヘッダー・検索・メニュー
+           ========================================= */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: 0.08em;
+        }
+
+        .logo-icon {
+            height: 48px; 
+            width: 48px;  
+            object-fit: contain;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            width: 200px;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        .search-container button {
+            padding: 8px 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #004494;
+        }
+
+        /* ドロワーメニュー */
+        .menu-checkbox { display: none; }
+
+        .menu-button {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 24px;
+            cursor: pointer;
+            z-index: 2000;
+        }
+
+        .menu-button span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(1) { transform: translateY(10.5px) rotate(45deg); }
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(2) { opacity: 0; }
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(3) { transform: translateY(-10.5px) rotate(-45deg); }
+
+        .drawer-menu {
+            position: fixed;
+            top: 0; right: -350px; 
+            width: 350px; height: 100vh;
+            background-color: var(--white);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+            z-index: 1500;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .drawer-inner { padding: 100px 40px 40px; }
+        .drawer-title { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 20px; letter-spacing: 0.1em; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+        .drawer-menu ul { list-style: none; }
+        .drawer-menu ul li { margin-bottom: 15px; }
+        .drawer-menu ul li a { text-decoration: none; color: var(--text-main); font-weight: bold; font-size: 1.05rem; transition: color 0.3s, transform 0.3s; display: inline-block; }
+        .drawer-menu ul li a:hover { color: var(--primary-color); transform: translateX(5px); }
+
+        .menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background-color: rgba(0,0,0,0.4); z-index: 1400;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease; cursor: pointer;
+        }
+
+        .menu-checkbox:checked ~ .drawer-menu { right: 0; }
+        .menu-checkbox:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
+
+        /* =========================================
+           ブログセクション 共通設定
+           ========================================= */
+        section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 5%;
+        }
+
+        h2.section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            letter-spacing: 0.1em;
+        }
+
+        h2.section-title::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-color);
+            margin: 15px auto 0;
+        }
+
+        .section-desc {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 60px;
+        }
+
+        /* =========================================
+           ブログカード グリッドレイアウト
+           ========================================= */
+        .blog-page {
+            /* JSで切り替えるためのラッパー。フェードインアニメーションを追加 */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+        }
+
+        .blog-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            border-color: var(--primary-light);
+        }
+
+        .blog-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .blog-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .blog-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .blog-card:hover .blog-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .category-label {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: var(--white);
+            padding: 5px 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .category-tech { background-color: var(--category-tech); }
+        .category-news { background-color: var(--category-news); }
+        .category-interview { background-color: var(--category-interview); }
+
+        .blog-content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .blog-date {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .blog-title {
+            font-size: 1.3rem;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            line-height: 1.5;
+            transition: color 0.3s;
+        }
+
+        .blog-card:hover .blog-title {
+            color: var(--primary-color);
+        }
+
+        .blog-excerpt {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .read-more {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: right;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .read-more::after {
+            content: "→";
+            transition: transform 0.3s;
+        }
+
+        .blog-card:hover .read-more::after {
+            transform: translateX(5px);
+        }
+
+        /* =========================================
+           ページネーション (機能するボタン)
+           ========================================= */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 60px;
+        }
+
+        .page-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background: var(--white);
+            color: var(--text-main);
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .page-btn.active {
+            background: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+            cursor: default;
+        }
+
+        .page-btn:hover:not(.active) {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 30px 5%; 
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #bdc3c7;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            color: #bdc3c7;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+        }
+
+        /* =========================================
+           レスポンシブ対応
+           ========================================= */
+        @media (max-width: 768px) {
+            .header-top { padding: 10px 5%; }
+            .header-right { gap: 15px; }
+            .search-container input[type="text"] { width: 120px; }
+            .drawer-menu { width: 100%; }
+            .blog-thumbnail { height: 180px; }
+            .footer-content { flex-direction: column; text-align: center; gap: 15px; }
+            .disclaimer { font-size: 0.75rem; }
+            .footer-right { font-size: 0.9rem; }
+            .pc-br { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- メニュー開閉用チェックボックス・オーバーレイ・ドロワー -->
+    <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+    <label for="menu-toggle" class="menu-overlay"></label>
+    
+    <nav class="drawer-menu">
+        <div class="drawer-inner">
+            <h2 class="drawer-title">MENU</h2>
+            <ul>
+                <li><a href="toppage.html">ホーム</a></li>
+                <li><a href="toppage.html#philosophy">企業理念</a></li>
+                <li><a href="ceo.html">代表者の挨拶</a></li>
+                <li><a href="toppage.html#services">サービス概要</a></li>
+                <li><a href="pricing.html">サービス価格表</a></li>
+                <li><a href="voc.html">お客様の声</a></li>
+                <li><a href="about.html">会社概要</a></li>
+                <li><a href="blogtop.html">会社公式ブログ</a></li>
+                <li><a href="form.html">お問い合わせフォーム</a></li>
+                <li><a href="privacy.html">プライバシーポリシー</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-top">
+            <a href="toppage.html" class="logo">
+                <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                OMNIBUS ARCHIVE
+            </a>
+            <div class="header-right">
+                <form class="search-container" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="サイト内検索..." required autocomplete="off">
+                    <button type="submit">検索</button>
+                </form>
+                <label for="menu-toggle" class="menu-button">
+                    <span></span><span></span><span></span>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- ブログトップ セクション -->
+    <section id="blog-list">
+        <h2 class="section-title">公式ブログ</h2>
+        <p class="section-desc">
+            <span class="ib">オムニバス・アーカイブからの最新情報や、</span><span class="ib">データ復旧に関する技術的な取り組み、</span><br class="pc-br">
+            <span class="ib">社内の様子などを</span><span class="ib">お届けします。</span>
+        </p>
+
+        <!-- =========================================
+             ページ 1 (記事1〜3)
+             ========================================= -->
+        <div class="blog-page" id="page-1" style="display: block;">
+            <div class="blog-grid">
+                
+                <!-- 記事1 -->
+                <article class="blog-card">
+                    <a href="blog_01.html" class="blog-card-link">
+                        <div class="blog-thumbnail">
+                            <!-- 【推奨画像: サーバーラックが並ぶ青い光のデータセンター風景 (800x500px)】 -->
+                            <img src="images/blog_thumb_01.png" alt="次世代アーカイブ技術の紹介">
+                            <span class="category-label category-tech">技術情報</span>
+                        </div>
+                        <div class="blog-content">
+                            <time class="blog-date" datetime="2026-04-20">2026.04.20</time>
+                            <h3 class="blog-title"><span class="ib">次世代データ復旧アルゴリズム</span><span class="ib">「オムニバス・コア」の実装について</span></h3>
+                            <p class="blog-excerpt">従来の物理復旧では限界とされていた破損領域に踏み込む、弊社の新たな解析アルゴリズムについて、開発チームのチーフエンジニアが解説します。</p>
+                            <div class="read-more">記事を読む</div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- 記事2 -->
+                <article class="blog-card">
+                    <a href="blog_02.html" class="blog-card-link">
+                        <div class="blog-thumbnail">
+                            <!-- 【推奨画像: 日本地図のグラフィック、またはクリーンなオフィス風景 (800x500px)】 -->
+                            <img src="images/blog_thumb_02.png" alt="特急プラン対応エリア拡大">
+                            <span class="category-label category-news">お知らせ</span>
+                        </div>
+                        <div class="blog-content">
+                            <time class="blog-date" datetime="2026-04-10">2026.04.10</time>
+                            <h3 class="blog-title"><span class="ib">【重要】</span><span class="ib">エンタープライズ特急プランの</span><span class="ib">出張対応エリア拡大のお知らせ</span></h3>
+                            <p class="blog-excerpt">ご好評いただいております法人様向けの「特急プラン」につきまして、出張での緊急復旧対応エリアを全国主要都市に拡大いたしました。</p>
+                            <div class="read-more">記事を読む</div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- 記事3 -->
+                <article class="blog-card">
+                    <a href="blog_03.html" class="blog-card-link">
+                        <div class="blog-thumbnail">
+                            <!-- 【推奨画像: ラボ環境でハードディスクに向かうエンジニアの横顔 (800x500px)】 -->
+                            <img src="images/blog_thumb_03.png" alt="エンジニアへのインタビュー">
+                            <span class="category-label category-interview">社員インタビュー</span>
+                        </div>
+                        <div class="blog-content">
+                            <time class="blog-date" datetime="2026-03-25">2026.03.25</time>
+                            <h3 class="blog-title"><span class="ib">「失われた記憶に命を吹き込む」</span><span class="ib">データ復旧エンジニアの舞台裏</span></h3>
+                            <p class="blog-excerpt">どのような想いで絶望的なデータ破損に立ち向かっているのか。入社5年目となるフロントラインエンジニアに、日々の業務とやりがいをインタビューしました。</p>
+                            <div class="read-more">記事を読む</div>
+                        </div>
+                    </a>
+                </article>
+
+            </div>
+        </div>
+
+        <!-- =========================================
+             ページ 2 (記事4〜6) - 初期状態は非表示
+             ========================================= -->
+        <div class="blog-page" id="page-2" style="display: none;">
+            <div class="blog-grid">
+                
+                <!-- 記事4 -->
+                <article class="blog-card">
+                    <a href="blog_04.html" class="blog-card-link">
+                        <div class="blog-thumbnail">
+                            <!-- 【推奨画像: 建設中または新設された近代的な建物の外観 (800x500px)】 -->
+                            <img src="images/blog_thumb_04.png" alt="新データセンター稼働">
+                            <span class="category-label category-news">お知らせ</span>
+                        </div>
+                        <div class="blog-content">
+                            <time class="blog-date" datetime="2026-02-28">2026.02.28</time>
+                            <h3 class="blog-title"><span class="ib">新データセンター</span><span class="ib">「オムニバス・アーカイブ 第2サイト」</span><span class="ib">稼働開始のお知らせ</span></h3>
+                            <p class="blog-excerpt">増大する法人・個人のお客様のアーカイブ需要にお応えするため、最新の免震設備と生体認証セキュリティを備えた新データセンターが稼働を開始しました。</p>
+                            <div class="read-more">記事を読む</div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- 記事5 -->
+                <article class="blog-card">
+                    <a href="blog_05.html" class="blog-card-link">
+                        <div class="blog-thumbnail">
+                            <!-- 【推奨画像: 基盤が露出したSSDや、顕微鏡越しの精密基盤の画像 (800x500px)】 -->
+                            <img src="images/blog_thumb_05.png" alt="SSDの復旧技術">
+                            <span class="category-label category-tech">技術情報</span>
+                        </div>
+                        <div class="blog-content">
+                            <time class="blog-date" datetime="2026-02-15">2026.02.15</time>
+                            <h3 class="blog-title"><span class="ib">物理的破壊からのデータサルベージ：</span><span class="ib">フラッシュメモリ（SSD）の復旧技術</span></h3>
+                            <p class="blog-excerpt">物理的な破損によりコントローラーチップが認識しなくなったSSDから、いかにしてメモリチップを直接読み取りデータを再構築するか、その技術の片鱗をご紹介します。</p>
+                            <div class="read-more">記事を読む</div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- 記事6 -->
+                <article class="blog-card">
+                    <a href="blog_06.html" class="blog-card-link">
+                        <div class="blog-thumbnail">
+                            <!-- 【推奨画像: セキュリティ担当のスーツ姿の男性社員のポートレート (800x500px)】 -->
+                            <img src="images/blog_thumb_06.png" alt="情報セキュリティ部インタビュー">
+                            <span class="category-label category-interview">社員インタビュー</span>
+                        </div>
+                        <div class="blog-content">
+                            <time class="blog-date" datetime="2026-01-30">2026.01.30</time>
+                            <h3 class="blog-title"><span class="ib">「絶対の機密保持をお約束します」</span><span class="ib">情報セキュリティ部マネージャーが語る体制</span></h3>
+                            <p class="blog-excerpt">お客様からお預かりした機密データを外部の脅威からどう守るか。完全隔離された復旧環境と、当社独自のデータアクセス管理の裏側に迫ります。</p>
+                            <div class="read-more">記事を読む</div>
+                        </div>
+                    </a>
+                </article>
+
+            </div>
+        </div>
+
+        <!-- =========================================
+             ページ 3 (記事7〜9) - 初期状態は非表示
+             ========================================= -->
+        <div class="blog-page" id="page-3" style="display: none;">
+            <div class="blog-grid">
+                
+                <!-- 記事7 -->
+                <article class="blog-card">
+                    <a href="blog_07.html" class="blog-card-link">
+                        <div class="blog-thumbnail">
+                            <!-- 【推奨画像: モニターに映し出されたアルゴリズムのグラフや検索画面のCG (800x500px)】 -->
+                            <img src="images/blog_thumb_07.png" alt="オムニバス・サーチ検索精度向上">
+                            <span class="category-label category-tech">技術情報</span>
+                        </div>
+                        <div class="blog-content">
+                            <time class="blog-date" datetime="2025-12-12">2025.12.12</time>
+                            <h3 class="blog-title"><span class="ib">次世代検索エンジン</span><span class="ib">「オムニバス・サーチ」の検索精度が</span><span class="ib">大幅に向上しました</span></h3>
+                            <p class="blog-excerpt">独自のAIアルゴリズムのアップデートにより、断片化されたアーカイブデータからの情報抽出速度および精度が前バージョン比で40%向上しました。</p>
+                            <div class="read-more">記事を読む</div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- 記事8 -->
+                <article class="blog-card">
+                    <a href="blog_08.html" class="blog-card-link">
+                        <div class="blog-thumbnail">
+                            <!-- 【推奨画像: ヘッドセットを付けて笑顔で電話対応する女性オペレーター (800x500px)】 -->
+                            <img src="images/blog_thumb_08.png" alt="カスタマーサポートインタビュー">
+                            <span class="category-label category-interview">社員インタビュー</span>
+                        </div>
+                        <div class="blog-content">
+                            <time class="blog-date" datetime="2025-11-20">2025.11.20</time>
+                            <h3 class="blog-title"><span class="ib">カスタマーサポート部門の1日：</span><span class="ib">お客様の不安にどう寄り添うか</span></h3>
+                            <p class="blog-excerpt">突然のデータ喪失でパニックになられているお客様からのお電話に対し、私たちがどのような心構えでサポートを行っているかをご紹介します。</p>
+                            <div class="read-more">記事を読む</div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- 記事9 -->
+                <article class="blog-card">
+                    <a href="blog_09.html" class="blog-card-link">
+                        <div class="blog-thumbnail">
+                            <!-- 【推奨画像: クリーンなオフィスのエントランスに置かれたカレンダーなどの静物写真 (800x500px)】 -->
+                            <img src="images/blog_thumb_09.png" alt="年末年始休業のお知らせ">
+                            <span class="category-label category-news">お知らせ</span>
+                        </div>
+                        <div class="blog-content">
+                            <time class="blog-date" datetime="2025-11-05">2025.11.05</time>
+                            <h3 class="blog-title"><span class="ib">年末年始期間中の</span><span class="ib">データ復旧対応および休業日について</span></h3>
+                            <p class="blog-excerpt">誠に勝手ながら、年末年始の一般窓口は休業とさせていただきます。なお、法人向けの「特急プラン」につきましては期間中も24時間体制で対応いたします。</p>
+                            <div class="read-more">記事を読む</div>
+                        </div>
+                    </a>
+                </article>
+
+            </div>
+        </div>
+
+        <!-- ページネーション（1,2,3のボタン） -->
+        <div class="pagination">
+            <button class="page-btn active" data-page="1">1</button>
+            <button class="page-btn" data-page="2">2</button>
+            <button class="page-btn" data-page="3">3</button>
+        </div>
+
+    </section>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br class="pc-br">
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            <div class="footer-right">
+                &lt; 6/35 &gt; (Lv.0)
+            </div>
+        </div>
+    </footer>
+
+    <!-- ページネーション動作用のJavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const pageButtons = document.querySelectorAll('.page-btn');
+            const blogPages = document.querySelectorAll('.blog-page');
+
+            pageButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    // 現在のアクティブなボタンからクラスを削除
+                    pageButtons.forEach(btn => btn.classList.remove('active'));
+                    // クリックされたボタンにアクティブクラスを追加
+                    e.target.classList.add('active');
+
+                    // 表示すべきページ番号を取得
+                    const targetPageId = e.target.getAttribute('data-page');
+
+                    // すべてのブログページを非表示にする
+                    blogPages.forEach(page => {
+                        page.style.display = 'none';
+                    });
+
+                    // 対象のブログページのみ表示する
+                    document.getElementById(`page-${targetPageId}`).style.display = 'block';
+
+                    // 切り替え時に「公式ブログ」のタイトル位置へスムーズにスクロール
+                    document.getElementById('blog-list').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

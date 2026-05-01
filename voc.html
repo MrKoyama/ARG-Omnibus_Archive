@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>サービス価格表 | OMNIBUS ARCHIVE</title>
+    <title>お客様の声 | OMNIBUS ARCHIVE</title>
     <style>
         /* =========================================
            全体のリセットとカラー変数
@@ -16,7 +16,6 @@
             --bg-color: #f8f9fa;
             --white: #ffffff;
             --border-color: #e0e0e0;
-            --highlight-color: #d9534f; /* 納期などの強調用カラー */
         }
         
         * {
@@ -30,23 +29,12 @@
             color: var(--text-main);
             background-color: var(--bg-color);
             line-height: 1.8;
-            /* 単語の途中での改行を防ぐベース設定 */
             word-break: keep-all;
             overflow-wrap: break-word;
         }
 
-        /* 文節の折り返し制御用クラス */
         .ib {
             display: inline-block;
-        }
-
-        /* 共通画像スタイル */
-        .responsive-img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 12px;
-            object-fit: cover;
         }
 
         /* =========================================
@@ -92,7 +80,7 @@
             gap: 30px;
         }
 
-        /* サイト内検索（フォーム化・autocompleteオフ対応） */
+        /* サイト内検索（autocomplete="off"・アクション先をsearch.htmlに変更） */
         .search-container {
             display: flex;
         }
@@ -125,7 +113,7 @@
             background-color: #004494;
         }
 
-        /* 展開式ドロワーメニュー（ハンバーガー） */
+        /* ドロワーメニュー（ハンバーガー） */
         .menu-checkbox { display: none; }
 
         .menu-button {
@@ -180,9 +168,9 @@
         .menu-checkbox:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
 
         /* =========================================
-           価格表セクション (見やすさ重視のカード型リスト)
+           お客様の声 セクション
            ========================================= */
-        section {
+        .reviews-section {
             max-width: 1200px;
             margin: 0 auto;
             padding: 80px 5%;
@@ -211,154 +199,107 @@
             margin-bottom: 60px;
         }
 
-        .pricing-wrapper {
+        /* レビューカードデザイン */
+        .review-card {
             display: flex;
-            justify-content: center;
-            align-items: stretch;
-            gap: 30px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            margin-bottom: 60px;
+            overflow: hidden;
             flex-wrap: wrap;
+            transition: box-shadow 0.3s;
         }
 
-        /* 基本のカードデザイン */
-        .pricing-card {
+        .review-card:hover {
+            box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+        }
+
+        /* 左右交互に配置するためのクラス */
+        .review-card.reverse {
+            flex-direction: row-reverse;
+        }
+
+        /* 画像エリア */
+        .review-images {
             flex: 1;
             min-width: 300px;
-            background: var(--white);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 40px 30px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
             position: relative;
-            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .main-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 顔写真用の丸いアイコン */
+        .face-img {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            object-fit: cover;
+        }
+
+        .review-card.reverse .face-img {
+            right: auto;
+            left: 20px;
+        }
+
+        /* テキストエリア */
+        .review-content {
+            flex: 1;
+            min-width: 300px;
+            padding: 50px;
             display: flex;
             flex-direction: column;
+            justify-content: center;
         }
 
-        .pricing-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
-        }
-
-        /* 強く推薦する「特急プラン」の専用デザイン */
-        .pricing-card.recommended {
-            border: 3px solid var(--primary-color);
-            transform: scale(1.05); /* 他のプランより少し大きくする */
-            box-shadow: 0 15px 40px rgba(0, 86, 179, 0.15);
-            z-index: 10;
-            background: linear-gradient(to bottom, var(--white), var(--primary-light) 500%);
-        }
-
-        .pricing-card.recommended:hover {
-            transform: scale(1.05) translateY(-5px);
-        }
-
-        .recommend-badge {
-            position: absolute;
-            top: -18px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary-color);
-            color: var(--white);
-            padding: 8px 25px;
-            border-radius: 30px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            letter-spacing: 0.1em;
-            white-space: nowrap;
-            box-shadow: 0 4px 10px rgba(0, 86, 179, 0.3);
-        }
-
-        /* カード内のテキスト要素 */
-        .plan-name {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: var(--text-main);
-            margin-bottom: 15px;
-        }
-
-        .plan-price {
-            font-size: 2.6rem;
-            color: var(--primary-color);
-            font-weight: bold;
-            margin-bottom: 25px;
-            font-family: Arial, sans-serif;
-        }
-
-        .plan-price span {
-            font-size: 1.1rem;
-            color: var(--text-light);
-            font-weight: normal;
-        }
-
-        /* サービス内容のリスト表示 */
-        .plan-features {
-            list-style: none;
-            margin-bottom: 40px;
-            flex-grow: 1; /* ボタンを最下部に揃えるための余白調整 */
-            text-align: left;
-        }
-
-        .plan-features li {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px dashed var(--border-color);
-            color: var(--text-light);
-            font-size: 0.95rem;
-            position: relative;
-            padding-left: 20px;
-        }
-
-        /* リストの先頭にクリーンなチェックマークを付与 */
-        .plan-features li::before {
-            content: "✔";
-            color: var(--primary-color);
-            position: absolute;
-            left: 0;
-            top: 0;
-            font-size: 0.9rem;
-        }
-
-        .plan-features li:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .feature-highlight {
-            color: var(--highlight-color);
-            font-weight: bold;
-            font-size: 1.05rem;
-            border-bottom: 2px solid #f9c2c1;
-        }
-
-        /* ボタンデザイン */
-        .btn-apply {
+        .plan-tag {
             display: inline-block;
-            width: 100%;
-            padding: 16px;
-            background: var(--bg-color);
-            color: var(--text-main);
-            text-decoration: none;
-            border-radius: 8px;
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: bold;
-            transition: background 0.3s, color 0.3s;
-            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+            align-self: flex-start;
         }
 
-        .btn-apply:hover {
-            background: #e2e6ea;
+        .review-content h3 {
+            font-size: 1.4rem;
+            color: var(--text-main);
+            margin-bottom: 25px;
+            line-height: 1.4;
         }
 
-        .pricing-card.recommended .btn-apply {
-            background: var(--primary-color);
-            color: var(--white);
-            border: none;
-            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
+        .review-text {
+            color: var(--text-light);
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
         }
 
-        .pricing-card.recommended .btn-apply:hover {
-            background: #004494;
+        .line-block {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* レビュアー情報 */
+        .reviewer-info {
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            font-weight: bold;
+            color: var(--text-main);
+            font-size: 0.95rem;
         }
 
         /* =========================================
@@ -368,7 +309,6 @@
             background-color: #2c3e50;
             color: #ecf0f1;
             padding: 30px 5%; 
-            margin-top: 80px;
         }
 
         .footer-content {
@@ -401,11 +341,21 @@
            レスポンシブ対応
            ========================================= */
         @media (max-width: 992px) {
-            .pricing-card.recommended {
-                transform: scale(1); /* タブレット以下ではスケール拡大を解除 */
+            .review-card, .review-card.reverse {
+                flex-direction: column;
             }
-            .pricing-card.recommended:hover {
-                transform: translateY(-5px);
+            .review-images {
+                height: 250px;
+            }
+            .face-img {
+                bottom: -30px;
+                right: 20px !important;
+                left: auto !important;
+                width: 80px;
+                height: 80px;
+            }
+            .review-content {
+                padding: 50px 30px 40px; 
             }
         }
 
@@ -414,7 +364,6 @@
             .header-right { gap: 15px; }
             .search-container input[type="text"] { width: 120px; }
             .drawer-menu { width: 100%; }
-            .pricing-wrapper { flex-direction: column; gap: 40px; }
             .footer-content {
                 flex-direction: column;
                 text-align: center;
@@ -428,13 +377,11 @@
 </head>
 <body>
 
-    <!-- メニュー開閉用チェックボックス -->
+    <!-- メニュー開閉用チェックボックス・オーバーレイ・ドロワー -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
-
-    <!-- メニューオーバーレイ -->
     <label for="menu-toggle" class="menu-overlay"></label>
-
-    <!-- ドロワーメニュー本体 -->
+    
+    <!-- メニューリンクを指示通りに変更 -->
     <nav class="drawer-menu">
         <div class="drawer-inner">
             <h2 class="drawer-title">MENU</h2>
@@ -456,101 +403,93 @@
     <!-- ヘッダー -->
     <header>
         <div class="header-top">
+            <!-- ロゴクリックでtoppage.htmlへ遷移 -->
             <a href="toppage.html" class="logo">
                 <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
                 OMNIBUS ARCHIVE
             </a>
             <div class="header-right">
-                <!-- サイト内検索（autocomplete="off"を追加・他ページから検索結果ページへ遷移） -->
+                <!-- アクション先をsearch.htmlに変更 -->
                 <form class="search-container" action="search.html" method="GET">
                     <input type="text" name="q" placeholder="サイト内検索..." required autocomplete="off">
                     <button type="submit">検索</button>
                 </form>
-                <!-- ハンバーガーメニューボタン -->
                 <label for="menu-toggle" class="menu-button">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span></span><span></span><span></span>
                 </label>
             </div>
         </div>
     </header>
 
-    <!-- データ復旧サービス 価格一覧表 セクション -->
-    <section id="pricing">
-        <h2 class="section-title">データ復旧サービス 価格表</h2>
+    <!-- お客様の声 セクション -->
+    <section class="reviews-section">
+        <h2 class="section-title">お客様の声</h2>
         <p class="section-desc">
-            <span class="ib">お客様の大切な情報を守るため、</span><span class="ib">透明性の高い</span><span class="ib">クリーンな料金体系をご用意しております。</span><br class="pc-br">
-            <span class="ib">状況に応じた</span><span class="ib">最適なプランをお選びください。</span>
+            <span class="ib">個人のお客様から</span><span class="ib">大企業まで、</span><span class="ib">多くの皆様から</span><span class="ib">信頼の声をいただいております。</span>
         </p>
 
-        <div class="pricing-wrapper">
-            
-            <!-- スタンダードプラン -->
-            <div class="pricing-card">
-                <h3 class="plan-name">スタンダードプラン</h3>
-                <div class="plan-price">50,000<span>円〜</span></div>
-                <ul class="plan-features">
-                    <li>
-                        <span class="ib"><strong>提供サービス：</strong></span><br>
-                        <span class="ib">軽度〜中度の</span><span class="ib">論理障害・物理障害からの</span><span class="ib">基本データ復元作業</span>
-                    </li>
-                    <li>
-                        <span class="ib"><strong>目安納期：</strong></span><br>
-                        <span class="ib">約1週間〜2週間程度</span>
-                    </li>
-                    <li>
-                        <span class="ib">セキュア環境での</span><span class="ib">安全な抽出・一時保管</span>
-                    </li>
-                </ul>
-                <a href="#" class="btn-apply">詳細・お見積り</a>
+        <!-- レビュー1：スタンダードプラン（一般ユーザー向け） -->
+        <div class="review-card">
+            <div class="review-images">
+                <img src="images/review1_scene.png" alt="個人利用の復旧シーン" class="main-img">
+                <img src="images/review1_face.png" alt="個人のお客様" class="face-img">
             </div>
-
-            <!-- 特急プラン（強く推薦・強調デザイン） -->
-            <div class="pricing-card recommended">
-                <div class="recommend-badge">おすすめ</div>
-                <h3 class="plan-name">特急プラン</h3>
-                <div class="plan-price">150,000<span>円〜</span></div>
-                <ul class="plan-features">
-                    <li>
-                        <span class="ib"><strong>提供サービス：</strong></span><br>
-                        <span class="ib">専用エンジニアの</span><span class="ib">優先アサインと、</span><span class="ib">重度物理障害を含む</span><span class="ib">すべての障害への対応</span>
-                    </li>
-                    <li>
-                        <span class="ib"><strong>目安納期：</strong></span><br>
-                        <span class="ib feature-highlight">最短即日〜48時間以内納品</span>
-                    </li>
-                    <li>
-                        <span class="ib">24時間体制での</span><span class="ib">復旧作業および</span><span class="ib">専任担当者による進捗報告</span>
-                    </li>
-                    <li>
-                        <span class="ib">割高となりますが、</span><span class="ib">企業の要となる</span><span class="ib">ビジネスの停滞リスクを</span><span class="ib">最小限に防ぎます。</span>
-                    </li>
-                </ul>
-                <a href="#" class="btn-apply">特急プランで申し込む</a>
+            <div class="review-content">
+                <span class="plan-tag">スタンダードプラン</span>
+                <h3>「形のない大切な思い出を、無事に取り戻せました」</h3>
+                <div class="review-text">
+                    <span class="line-block">突然パソコンが起動しなくなり、中に保存していた家族の大切な写真がすべて見られなくなってしまいました。</span>
+                    <span class="line-block">パニックになりかけましたが、オムニバス・アーカイブさんのスタンダードプランにお願いしたところ、無事にデータを取り出していただけました。</span>
+                    <span class="line-block">納期は2週間ほどかかりましたが、定期的に進捗を報告してくださり、最後まで安心して任せることができました。</span>
+                    <span class="line-block">本当に感謝しています。</span>
+                </div>
+                <div class="reviewer-info">
+                    30代 男性 / 個人ユーザー
+                </div>
             </div>
-
-            <!-- エンタープライズ（法人高度復旧）プラン -->
-            <div class="pricing-card">
-                <h3 class="plan-name">エンタープライズ</h3>
-                <div class="plan-price">都度お見積り</div>
-                <ul class="plan-features">
-                    <li>
-                        <span class="ib"><strong>提供サービス：</strong></span><br>
-                        <span class="ib">大規模サーバー・</span><span class="ib">RAID崩壊対応、</span><span class="ib">出張対応を含む高度復元作業</span>
-                    </li>
-                    <li>
-                        <span class="ib"><strong>目安納期：</strong></span><br>
-                        <span class="ib">障害状況や</span><span class="ib">システム規模により変動</span>
-                    </li>
-                    <li>
-                        <span class="ib">機密保持契約（NDA）締結、</span><span class="ib">最高水準の</span><span class="ib">隔離セキュリティ環境での作業</span>
-                    </li>
-                </ul>
-                <a href="#" class="btn-apply">法人様のご相談</a>
-            </div>
-
         </div>
+
+        <!-- レビュー2：特急プラン（期待以上の復旧。異常なアクセス範囲への違和感） -->
+        <div class="review-card reverse">
+            <div class="review-images">
+                <img src="images/review2_scene.png" alt="緊急のサーバー復旧シーン" class="main-img">
+                <img src="images/review2_face.png" alt="企業担当者" class="face-img">
+            </div>
+            <div class="review-content">
+                <span class="plan-tag">特急プラン</span>
+                <h3>「期待を遥かに超える、完璧すぎる復旧作業でした」</h3>
+                <div class="review-text">
+                    <span class="line-block">サーバーが物理的に大破した際は絶望しましたが、特急プランを依頼した翌日にはすべての業務データが復元され、本当に期待以上のサービスでした。</span>
+                    <span class="line-block">ただ復旧するだけでなく、依頼したサーバーとは別のネットワークに隔離していたはずの役員専用の暗号化フォルダや、数年前に完全に消去した極秘のM&A資料、さらには社員の個人的なメッセージ履歴まで、すべてが綺麗に紐付けられ整理された状態で納品されました。</span>
+                    <span class="line-block">どのような技術を使えばこれほど完璧に情報を抽出できるのか見当もつきませんが、圧倒的なスピードに大変感謝しております。</span>
+                </div>
+                <div class="reviewer-info">
+                    40代 男性 / IT企業 システム管理者
+                </div>
+            </div>
+        </div>
+
+        <!-- レビュー3：エンタープライズプラン（大企業向け） -->
+        <div class="review-card">
+            <div class="review-images">
+                <img src="images/review3_scene.png" alt="エンタープライズデータ復旧シーン" class="main-img">
+                <img src="images/review3_face.png" alt="大企業のエグゼクティブ" class="face-img">
+            </div>
+            <div class="review-content">
+                <span class="plan-tag">エンタープライズプラン</span>
+                <h3>「圧倒的な技術力と、徹底されたセキュリティに感銘を受けました」</h3>
+                <div class="review-text">
+                    <span class="line-block">弊社の大規模な基幹システムで致命的な障害が発生し、膨大な顧客データへのアクセスが遮断されました。</span>
+                    <span class="line-block">高度なセキュリティ要件と複雑なRAID構成のため他社では対応を断られましたが、こちらのエンタープライズプランで対応可能との回答をいただきました。</span>
+                    <span class="line-block">徹底された隔離環境とNDA締結のもと、熟練のエンジニアチームが迅速かつ完璧にデータを復元してくれました。</span>
+                    <span class="line-block">企業の信頼に関わる重大な危機を救っていただき、非常に頼もしいパートナーだと感じています。</span>
+                </div>
+                <div class="reviewer-info">
+                    50代 女性 / 金融機関 CIO（最高情報責任者）
+                </div>
+            </div>
+        </div>
+
     </section>
 
     <!-- フッター -->
@@ -560,9 +499,8 @@
                 このサイトの内容はフィクションです。<br class="pc-br">
                 登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
             </p>
-            <!-- ページ番号を3に変更 -->
             <div class="footer-right">
-                &lt; 3/35 &gt; (Lv.0)
+                &lt; 4/35 &gt; (Lv.0)
             </div>
         </div>
     </footer>
