@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お問い合わせフォーム | OMNIBUS ARCHIVE</title>
+    <style>
+        /* =========================================
+           全体のリセットとカラー変数
+           ========================================= */
+        :root {
+            --primary-color: #0056b3; /* クリーンなブルー */
+            --primary-light: #e6f0fa;
+            --text-main: #333333;
+            --text-light: #666666;
+            --bg-color: #f8f9fa;
+            --white: #ffffff;
+            --border-color: #e0e0e0;
+            --bg-th: #f1f4f8; /* フォーム見出し用の薄いブルーグレー */
+            --required-color: #d9534f; /* 必須ラベル用の赤 */
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            line-height: 1.8;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        .ib {
+            display: inline-block;
+        }
+
+        /* =========================================
+           ヘッダー・検索・メニュー
+           ========================================= */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: 0.08em;
+        }
+
+        .logo-icon {
+            height: 48px; 
+            width: 48px;  
+            object-fit: contain;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            width: 200px;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        .search-container button {
+            padding: 8px 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #004494;
+        }
+
+        /* ドロワーメニュー */
+        .menu-checkbox { display: none; }
+
+        .menu-button {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 24px;
+            cursor: pointer;
+            z-index: 2000;
+        }
+
+        .menu-button span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(1) { transform: translateY(10.5px) rotate(45deg); }
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(2) { opacity: 0; }
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(3) { transform: translateY(-10.5px) rotate(-45deg); }
+
+        .drawer-menu {
+            position: fixed;
+            top: 0; right: -350px; 
+            width: 350px; height: 100vh;
+            background-color: var(--white);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+            z-index: 1500;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .drawer-inner { padding: 100px 40px 40px; }
+        .drawer-title { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 20px; letter-spacing: 0.1em; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+        .drawer-menu ul { list-style: none; }
+        .drawer-menu ul li { margin-bottom: 15px; }
+        .drawer-menu ul li a { text-decoration: none; color: var(--text-main); font-weight: bold; font-size: 1.05rem; transition: color 0.3s, transform 0.3s; display: inline-block; }
+        .drawer-menu ul li a:hover { color: var(--primary-color); transform: translateX(5px); }
+
+        .menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background-color: rgba(0,0,0,0.4); z-index: 1400;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease; cursor: pointer;
+        }
+
+        .menu-checkbox:checked ~ .drawer-menu { right: 0; }
+        .menu-checkbox:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
+
+        /* =========================================
+           お問い合わせフォーム セクション
+           ========================================= */
+        section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 5%;
+        }
+
+        h2.section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            letter-spacing: 0.1em;
+        }
+
+        h2.section-title::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-color);
+            margin: 15px auto 0;
+        }
+
+        .section-desc {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+
+        /* フォームのコンテナ（事務的でクリーンな白枠） */
+        .form-container {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.02);
+            padding: 40px 50px;
+        }
+
+        /* テーブルレイアウト */
+        .form-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .form-table th, .form-table td {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        .form-table tr:first-child th,
+        .form-table tr:first-child td {
+            border-top: 1px solid var(--border-color);
+        }
+
+        .form-table th {
+            width: 30%;
+            background-color: var(--bg-th);
+            text-align: left;
+            color: var(--text-main);
+            font-weight: bold;
+        }
+
+        /* 必須・任意ラベル */
+        .req-label {
+            background-color: var(--required-color);
+            color: var(--white);
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 10px;
+            vertical-align: middle;
+            font-weight: normal;
+        }
+
+        .opt-label {
+            background-color: #999;
+            color: var(--white);
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 10px;
+            vertical-align: middle;
+            font-weight: normal;
+        }
+
+        /* 入力要素のスタイリング */
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text-main);
+            background-color: #fafafa;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: var(--white);
+            box-shadow: 0 0 5px rgba(0, 86, 179, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .short-input {
+            width: 150px !important;
+        }
+
+        .medium-input {
+            width: 300px !important;
+        }
+
+        /* ラジオボタン用 */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            height: 100%;
+            padding-top: 10px;
+        }
+
+        .radio-group label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 送信ボタンエリア */
+        .submit-area {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 16px 60px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            letter-spacing: 0.1em;
+        }
+
+        .submit-btn:hover {
+            background-color: #004494;
+            transform: translateY(-2px);
+        }
+
+        /* =========================================
+           カスタムモーダルダイアログ (送信完了用)
+           ========================================= */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 3000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        /* チェックマークのアイコン */
+        .modal-icon {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            font-size: 2rem;
+            line-height: 60px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            letter-spacing: 0.05em;
+        }
+
+        .modal-text {
+            font-size: 1rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .modal-notice {
+            font-size: 0.85rem;
+            color: var(--required-color);
+            background-color: #fdf2f2;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            font-weight: bold;
+        }
+
+        .modal-close-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 12px 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .modal-close-btn:hover {
+            background-color: #004494;
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 30px 5%; 
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #bdc3c7;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            color: #bdc3c7;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+        }
+
+        /* =========================================
+           レスポンシブ対応
+           ========================================= */
+        @media (max-width: 768px) {
+            .header-top { padding: 10px 5%; }
+            .header-right { gap: 15px; }
+            .search-container input[type="text"] { width: 120px; }
+            .drawer-menu { width: 100%; }
+            
+            .form-container { padding: 20px; }
+            .form-table th, .form-table td { display: block; width: 100%; }
+            .form-table th { border-bottom: none; padding-bottom: 10px; }
+            .form-table td { border-top: none; padding-top: 0; padding-bottom: 25px; }
+            .short-input, .medium-input { width: 100% !important; }
+            
+            .footer-content { flex-direction: column; text-align: center; gap: 15px; }
+            .disclaimer { font-size: 0.75rem; }
+            .footer-right { font-size: 0.9rem; }
+            .pc-br { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- メニュー開閉用チェックボックス・オーバーレイ・ドロワー -->
+    <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+    <label for="menu-toggle" class="menu-overlay"></label>
+    
+    <nav class="drawer-menu">
+        <div class="drawer-inner">
+            <h2 class="drawer-title">MENU</h2>
+            <ul>
+                <li><a href="toppage.html">ホーム</a></li>
+                <li><a href="toppage.html#philosophy">企業理念</a></li>
+                <li><a href="ceo.html">代表者の挨拶</a></li>
+                <li><a href="toppage.html#services">サービス概要</a></li>
+                <li><a href="pricing.html">サービス価格表</a></li>
+                <li><a href="voc.html">お客様の声</a></li>
+                <li><a href="about.html">会社概要</a></li>
+                <li><a href="blogtop.html">会社公式ブログ</a></li>
+                <li><a href="form.html">お問い合わせフォーム</a></li>
+                <li><a href="privacy.html">プライバシーポリシー</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-top">
+            <a href="toppage.html" class="logo">
+                <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                OMNIBUS ARCHIVE
+            </a>
+            <div class="header-right">
+                <form class="search-container" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="サイト内検索..." required autocomplete="off">
+                    <button type="submit">検索</button>
+                </form>
+                <label for="menu-toggle" class="menu-button">
+                    <span></span><span></span><span></span>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- お問い合わせフォーム セクション -->
+    <section id="contact">
+        <h2 class="section-title">お問い合わせ</h2>
+        <p class="section-desc">
+            <span class="ib">データ復旧のご相談、お見積り、その他サービスに関するご質問など、</span><br class="pc-br">
+            <span class="ib">以下のフォームよりお気軽にお問い合わせください。</span>
+        </p>
+
+        <div class="form-container">
+            <!-- 送信時にJSで処理をインターセプトするため、idを付与 -->
+            <form id="dummy-contact-form">
+                <table class="form-table">
+                    <tbody>
+                        <tr>
+                            <th>お問い合わせの種類 <span class="req-label">必須</span></th>
+                            <td>
+                                <select name="inquiry_type" required>
+                                    <option value="" disabled selected>選択してください</option>
+                                    <option value="データ復旧についてのご相談">データ復旧についてのご相談</option>
+                                    <option value="特急プラン・エンタープライズ版のお見積り">特急プラン・エンタープライズ版のお見積り</option>
+                                    <option value="デジタル遺産管理サービスについて">デジタル遺産管理サービスについて</option>
+                                    <option value="協業・アライアンスについて">協業・アライアンスについて</option>
+                                    <option value="採用に関するお問い合わせ">採用に関するお問い合わせ</option>
+                                    <option value="その他">その他</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>件名 <span class="req-label">必須</span></th>
+                            <td>
+                                <input type="text" name="subject" placeholder="例：〇〇サーバーの物理障害による復旧について" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>お問い合わせ内容 <span class="req-label">必須</span></th>
+                            <td>
+                                <textarea name="message" placeholder="ご相談内容や障害の状況などを詳しくご記入ください。" required></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>氏名 <span class="req-label">必須</span></th>
+                            <td>
+                                <input type="text" name="name" class="medium-input" placeholder="例：山田 太郎" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>ふりがな <span class="opt-label">任意</span></th>
+                            <td>
+                                <input type="text" name="kana" class="medium-input" placeholder="例：やまだ たろう">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>メールアドレス <span class="req-label">必須</span></th>
+                            <td>
+                                <input type="email" name="email" placeholder="例：info@omnibus-archive.co.jp" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>電話番号 <span class="opt-label">任意</span></th>
+                            <td>
+                                <input type="tel" name="phone" class="medium-input" placeholder="例：03-1234-5678">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>年齢 <span class="opt-label">任意</span></th>
+                            <td>
+                                <input type="number" name="age" class="short-input" min="0" max="150" placeholder="例：35"> 歳
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>性別 <span class="opt-label">任意</span></th>
+                            <td>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="gender" value="男性"> 男性</label>
+                                    <label><input type="radio" name="gender" value="女性"> 女性</label>
+                                    <label><input type="radio" name="gender" value="回答しない"> 回答しない</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>郵便番号 <span class="opt-label">任意</span></th>
+                            <td>
+                                <input type="text" name="zipcode" class="short-input" placeholder="例：100-0000">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>都道府県 <span class="opt-label">任意</span></th>
+                            <td>
+                                <select name="pref" class="short-input">
+                                    <option value="" selected>選択してください</option>
+                                    <option value="北海道">北海道</option>
+                                    <option value="青森県">青森県</option>
+                                    <option value="岩手県">岩手県</option>
+                                    <option value="宮城県">宮城県</option>
+                                    <option value="秋田県">秋田県</option>
+                                    <option value="山形県">山形県</option>
+                                    <option value="福島県">福島県</option>
+                                    <option value="茨城県">茨城県</option>
+                                    <option value="栃木県">栃木県</option>
+                                    <option value="群馬県">群馬県</option>
+                                    <option value="埼玉県">埼玉県</option>
+                                    <option value="千葉県">千葉県</option>
+                                    <option value="東京都">東京都</option>
+                                    <option value="神奈川県">神奈川県</option>
+                                    <option value="新潟県">新潟県</option>
+                                    <option value="富山県">富山県</option>
+                                    <option value="石川県">石川県</option>
+                                    <option value="福井県">福井県</option>
+                                    <option value="山梨県">山梨県</option>
+                                    <option value="長野県">長野県</option>
+                                    <option value="岐阜県">岐阜県</option>
+                                    <option value="静岡県">静岡県</option>
+                                    <option value="愛知県">愛知県</option>
+                                    <option value="三重県">三重県</option>
+                                    <option value="滋賀県">滋賀県</option>
+                                    <option value="京都府">京都府</option>
+                                    <option value="大阪府">大阪府</option>
+                                    <option value="兵庫県">兵庫県</option>
+                                    <option value="奈良県">奈良県</option>
+                                    <option value="和歌山県">和歌山県</option>
+                                    <option value="鳥取県">鳥取県</option>
+                                    <option value="島根県">島根県</option>
+                                    <option value="岡山県">岡山県</option>
+                                    <option value="広島県">広島県</option>
+                                    <option value="山口県">山口県</option>
+                                    <option value="徳島県">徳島県</option>
+                                    <option value="香川県">香川県</option>
+                                    <option value="愛媛県">愛媛県</option>
+                                    <option value="高知県">高知県</option>
+                                    <option value="福岡県">福岡県</option>
+                                    <option value="佐賀県">佐賀県</option>
+                                    <option value="長崎県">長崎県</option>
+                                    <option value="熊本県">熊本県</option>
+                                    <option value="大分県">大分県</option>
+                                    <option value="宮崎県">宮崎県</option>
+                                    <option value="鹿児島県">鹿児島県</option>
+                                    <option value="沖縄県">沖縄県</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>市区町村・番地・建物名 <span class="opt-label">任意</span></th>
+                            <td>
+                                <input type="text" name="address" placeholder="例：千代田区神田〇〇 1-2-3 オムニバス・タワー 35F">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="submit-area">
+                    <button type="submit" class="submit-btn">入力内容を送信する</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br class="pc-br">
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            <div class="footer-right">
+                &lt; 7/35 &gt; (Lv.0)
+            </div>
+        </div>
+    </footer>
+
+    <!-- カスタムモーダルダイアログ (送信完了用ギミック) -->
+    <div class="modal-overlay" id="success-modal">
+        <div class="modal-content">
+            <div class="modal-icon">✔</div>
+            <h3 class="modal-title">送信完了</h3>
+            <p class="modal-text">
+                <span class="ib">お問い合わせを受け付けました。</span><br>
+                <span class="ib">ご入力いただいたメールアドレス宛に、</span><span class="ib">自動返信メールを送信いたしました。</span>
+            </p>
+            <p class="modal-notice">
+                <span class="ib">※このサイトはフィクションのため、</span><br>
+                <span class="ib">実際のデータ送信や保存は</span><span class="ib">一切行われておりません。</span>
+            </p>
+            <button type="button" class="modal-close-btn" id="modal-close-btn">閉じる</button>
+        </div>
+    </div>
+
+    <!-- フォーム送信をブロックし、カスタムモーダルを表示するJS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contactForm = document.getElementById('dummy-contact-form');
+            const modal = document.getElementById('success-modal');
+            const closeBtn = document.getElementById('modal-close-btn');
+
+            // フォーム送信時の処理
+            contactForm.addEventListener('submit', (e) => {
+                // デフォルトのフォーム送信（ページ遷移・サーバーへのデータ送信）をキャンセル
+                e.preventDefault();
+
+                // カスタムモーダルを表示
+                modal.classList.add('active');
+            });
+
+            // モーダルを閉じる処理
+            const closeModal = () => {
+                modal.classList.remove('active');
+                
+                // 入力内容をリセットして初期状態に戻す
+                contactForm.reset();
+                
+                // 画面上部へスクロールを戻す
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            // 閉じるボタンクリック時
+            closeBtn.addEventListener('click', closeModal);
+
+            // モーダルの背景（黒い半透明部分）をクリックしても閉じるようにする
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
