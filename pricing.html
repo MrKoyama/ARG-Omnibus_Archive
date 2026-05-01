@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>サービス価格表 | OMNIBUS ARCHIVE</title>
+    <style>
+        /* =========================================
+           全体のリセットとカラー変数
+           ========================================= */
+        :root {
+            --primary-color: #0056b3; /* クリーンなブルー */
+            --primary-light: #e6f0fa;
+            --text-main: #333333;
+            --text-light: #666666;
+            --bg-color: #f8f9fa;
+            --white: #ffffff;
+            --border-color: #e0e0e0;
+            --highlight-color: #d9534f; /* 納期などの強調用カラー */
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            line-height: 1.8;
+            /* 単語の途中での改行を防ぐベース設定 */
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        /* 文節の折り返し制御用クラス */
+        .ib {
+            display: inline-block;
+        }
+
+        /* 共通画像スタイル */
+        .responsive-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        /* =========================================
+           ヘッダー・検索・メニュー
+           ========================================= */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: 0.08em;
+        }
+
+        .logo-icon {
+            height: 48px; 
+            width: 48px;  
+            object-fit: contain;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        /* サイト内検索（フォーム化・autocompleteオフ対応） */
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            width: 200px;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        .search-container button {
+            padding: 8px 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #004494;
+        }
+
+        /* 展開式ドロワーメニュー（ハンバーガー） */
+        .menu-checkbox { display: none; }
+
+        .menu-button {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 24px;
+            cursor: pointer;
+            z-index: 2000;
+        }
+
+        .menu-button span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(1) { transform: translateY(10.5px) rotate(45deg); }
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(2) { opacity: 0; }
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(3) { transform: translateY(-10.5px) rotate(-45deg); }
+
+        .drawer-menu {
+            position: fixed;
+            top: 0; right: -350px; 
+            width: 350px; height: 100vh;
+            background-color: var(--white);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+            z-index: 1500;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .drawer-inner { padding: 100px 40px 40px; }
+        .drawer-title { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 20px; letter-spacing: 0.1em; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+        .drawer-menu ul { list-style: none; }
+        .drawer-menu ul li { margin-bottom: 15px; }
+        .drawer-menu ul li a { text-decoration: none; color: var(--text-main); font-weight: bold; font-size: 1.05rem; transition: color 0.3s, transform 0.3s; display: inline-block; }
+        .drawer-menu ul li a:hover { color: var(--primary-color); transform: translateX(5px); }
+
+        .menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background-color: rgba(0,0,0,0.4); z-index: 1400;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease; cursor: pointer;
+        }
+
+        .menu-checkbox:checked ~ .drawer-menu { right: 0; }
+        .menu-checkbox:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
+
+        /* =========================================
+           価格表セクション (見やすさ重視のカード型リスト)
+           ========================================= */
+        section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 5%;
+        }
+
+        h2.section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            letter-spacing: 0.1em;
+        }
+
+        h2.section-title::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-color);
+            margin: 15px auto 0;
+        }
+
+        .section-desc {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 60px;
+        }
+
+        .pricing-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* 基本のカードデザイン */
+        .pricing-card {
+            flex: 1;
+            min-width: 300px;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+        }
+
+        /* 強く推薦する「特急プラン」の専用デザイン */
+        .pricing-card.recommended {
+            border: 3px solid var(--primary-color);
+            transform: scale(1.05); /* 他のプランより少し大きくする */
+            box-shadow: 0 15px 40px rgba(0, 86, 179, 0.15);
+            z-index: 10;
+            background: linear-gradient(to bottom, var(--white), var(--primary-light) 500%);
+        }
+
+        .pricing-card.recommended:hover {
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        .recommend-badge {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0, 86, 179, 0.3);
+        }
+
+        /* カード内のテキスト要素 */
+        .plan-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+
+        .plan-price {
+            font-size: 2.6rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 25px;
+            font-family: Arial, sans-serif;
+        }
+
+        .plan-price span {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-weight: normal;
+        }
+
+        /* サービス内容のリスト表示 */
+        .plan-features {
+            list-style: none;
+            margin-bottom: 40px;
+            flex-grow: 1; /* ボタンを最下部に揃えるための余白調整 */
+            text-align: left;
+        }
+
+        .plan-features li {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
+            color: var(--text-light);
+            font-size: 0.95rem;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        /* リストの先頭にクリーンなチェックマークを付与 */
+        .plan-features li::before {
+            content: "✔";
+            color: var(--primary-color);
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 0.9rem;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .feature-highlight {
+            color: var(--highlight-color);
+            font-weight: bold;
+            font-size: 1.05rem;
+            border-bottom: 2px solid #f9c2c1;
+        }
+
+        /* ボタンデザイン */
+        .btn-apply {
+            display: inline-block;
+            width: 100%;
+            padding: 16px;
+            background: var(--bg-color);
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s, color 0.3s;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-apply:hover {
+            background: #e2e6ea;
+        }
+
+        .pricing-card.recommended .btn-apply {
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
+        }
+
+        .pricing-card.recommended .btn-apply:hover {
+            background: #004494;
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 30px 5%; 
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #bdc3c7;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            color: #bdc3c7;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+        }
+
+        /* =========================================
+           レスポンシブ対応
+           ========================================= */
+        @media (max-width: 992px) {
+            .pricing-card.recommended {
+                transform: scale(1); /* タブレット以下ではスケール拡大を解除 */
+            }
+            .pricing-card.recommended:hover {
+                transform: translateY(-5px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-top { padding: 10px 5%; }
+            .header-right { gap: 15px; }
+            .search-container input[type="text"] { width: 120px; }
+            .drawer-menu { width: 100%; }
+            .pricing-wrapper { flex-direction: column; gap: 40px; }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            .disclaimer { font-size: 0.75rem; }
+            .footer-right { font-size: 0.9rem; }
+            .pc-br { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- メニュー開閉用チェックボックス -->
+    <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+
+    <!-- メニューオーバーレイ -->
+    <label for="menu-toggle" class="menu-overlay"></label>
+
+    <!-- ドロワーメニュー本体 -->
+    <nav class="drawer-menu">
+        <div class="drawer-inner">
+            <h2 class="drawer-title">MENU</h2>
+            <ul>
+                <li><a href="toppage.html">ホーム</a></li>
+                <li><a href="toppage.html#philosophy">企業理念</a></li>
+                <li><a href="ceo.html">代表者の挨拶</a></li>
+                <li><a href="toppage.html#services">サービス概要</a></li>
+                <li><a href="pricing.html">サービス価格表</a></li>
+                <li><a href="#">お客様の声</a></li>
+                <li><a href="#">会社概要</a></li>
+                <li><a href="#">会社公式ブログ</a></li>
+                <li><a href="#">お問い合わせフォーム</a></li>
+                <li><a href="#">プライバシーポリシー</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-top">
+            <a href="toppage.html" class="logo">
+                <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                OMNIBUS ARCHIVE
+            </a>
+            <div class="header-right">
+                <!-- サイト内検索（autocomplete="off"を追加・他ページから検索結果ページへ遷移） -->
+                <form class="search-container" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="サイト内検索..." required autocomplete="off">
+                    <button type="submit">検索</button>
+                </form>
+                <!-- ハンバーガーメニューボタン -->
+                <label for="menu-toggle" class="menu-button">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- データ復旧サービス 価格一覧表 セクション -->
+    <section id="pricing">
+        <h2 class="section-title">データ復旧サービス 価格表</h2>
+        <p class="section-desc">
+            <span class="ib">お客様の大切な情報を守るため、</span><span class="ib">透明性の高い</span><span class="ib">クリーンな料金体系をご用意しております。</span><br class="pc-br">
+            <span class="ib">状況に応じた</span><span class="ib">最適なプランをお選びください。</span>
+        </p>
+
+        <div class="pricing-wrapper">
+            
+            <!-- スタンダードプラン -->
+            <div class="pricing-card">
+                <h3 class="plan-name">スタンダードプラン</h3>
+                <div class="plan-price">50,000<span>円〜</span></div>
+                <ul class="plan-features">
+                    <li>
+                        <span class="ib"><strong>提供サービス：</strong></span><br>
+                        <span class="ib">軽度〜中度の</span><span class="ib">論理障害・物理障害からの</span><span class="ib">基本データ復元作業</span>
+                    </li>
+                    <li>
+                        <span class="ib"><strong>目安納期：</strong></span><br>
+                        <span class="ib">約1週間〜2週間程度</span>
+                    </li>
+                    <li>
+                        <span class="ib">セキュア環境での</span><span class="ib">安全な抽出・一時保管</span>
+                    </li>
+                </ul>
+                <a href="#" class="btn-apply">詳細・お見積り</a>
+            </div>
+
+            <!-- 特急プラン（強く推薦・強調デザイン） -->
+            <div class="pricing-card recommended">
+                <div class="recommend-badge">おすすめ</div>
+                <h3 class="plan-name">特急プラン</h3>
+                <div class="plan-price">150,000<span>円〜</span></div>
+                <ul class="plan-features">
+                    <li>
+                        <span class="ib"><strong>提供サービス：</strong></span><br>
+                        <span class="ib">専用エンジニアの</span><span class="ib">優先アサインと、</span><span class="ib">重度物理障害を含む</span><span class="ib">すべての障害への対応</span>
+                    </li>
+                    <li>
+                        <span class="ib"><strong>目安納期：</strong></span><br>
+                        <span class="ib feature-highlight">最短即日〜48時間以内納品</span>
+                    </li>
+                    <li>
+                        <span class="ib">24時間体制での</span><span class="ib">復旧作業および</span><span class="ib">専任担当者による進捗報告</span>
+                    </li>
+                    <li>
+                        <span class="ib">割高となりますが、</span><span class="ib">企業の要となる</span><span class="ib">ビジネスの停滞リスクを</span><span class="ib">最小限に防ぎます。</span>
+                    </li>
+                </ul>
+                <a href="#" class="btn-apply">特急プランで申し込む</a>
+            </div>
+
+            <!-- エンタープライズ（法人高度復旧）プラン -->
+            <div class="pricing-card">
+                <h3 class="plan-name">エンタープライズ</h3>
+                <div class="plan-price">都度お見積り</div>
+                <ul class="plan-features">
+                    <li>
+                        <span class="ib"><strong>提供サービス：</strong></span><br>
+                        <span class="ib">大規模サーバー・</span><span class="ib">RAID崩壊対応、</span><span class="ib">出張対応を含む高度復元作業</span>
+                    </li>
+                    <li>
+                        <span class="ib"><strong>目安納期：</strong></span><br>
+                        <span class="ib">障害状況や</span><span class="ib">システム規模により変動</span>
+                    </li>
+                    <li>
+                        <span class="ib">機密保持契約（NDA）締結、</span><span class="ib">最高水準の</span><span class="ib">隔離セキュリティ環境での作業</span>
+                    </li>
+                </ul>
+                <a href="#" class="btn-apply">法人様のご相談</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br class="pc-br">
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            <!-- ページ番号を3に変更 -->
+            <div class="footer-right">
+                &lt; 3/35 &gt; (Lv.0)
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
