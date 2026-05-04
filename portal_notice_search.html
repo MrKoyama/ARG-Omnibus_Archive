@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【全体通知】「オムニバス・サーチ」組み込みのお知らせ | OMNIBUS ARCHIVE 社内ポータル</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           カラー変数（ダーク・無機質なシステムカラー）
+           ========================================= */
+        :root {
+            --sys-primary: #3b82f6; /* ダーク背景に映えるブルー */
+            --sys-bg: #121212; /* 深い背景色 */
+            --sys-white: #1e1e1e; /* カード等の背景色 */
+            --sys-text: #e2e8f0; /* 基本のテキストカラー（白系） */
+            --sys-text-light: #94a3b8; /* サブテキスト（グレー系） */
+            --sys-border: #334155; /* 暗いボーダー色 */
+            --sys-header-bg: #0f172a; /* ヘッダーの背景色 */
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--sys-text);
+            background-color: var(--sys-bg);
+            line-height: 1.6;
+            word-break: normal;
+            overflow-wrap: break-word;
+        }
+
+        /* =========================================
+           ヘッダー（ダーク・機能的）
+           ========================================= */
+        header {
+            background-color: var(--sys-header-bg);
+            border-bottom: 2px solid var(--sys-primary);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            max-width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--sys-primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-icon {
+            height: 36px; 
+            width: 36px;  
+            object-fit: contain;
+            /* ロゴが灰色の四角になる原因だったフィルターを削除しました */
+        }
+
+        .system-name {
+            font-size: 0.9rem;
+            color: var(--sys-text-light);
+            border-left: 1px solid var(--sys-border);
+            padding-left: 15px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* 検索欄（ダークUI対応） */
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 6px 12px;
+            background-color: #1e293b;
+            color: var(--sys-text);
+            border: 1px solid var(--sys-border);
+            border-radius: 2px 0 0 2px;
+            outline: none;
+            width: 250px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input[type="text"]::placeholder {
+            color: #64748b;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--sys-primary);
+        }
+
+        .search-container button {
+            padding: 6px 15px;
+            background-color: var(--sys-primary);
+            color: #ffffff;
+            border: 1px solid var(--sys-primary);
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #2563eb;
+        }
+
+        /* =========================================
+           メインコンテンツ（業務連絡 UI）
+           ========================================= */
+        .portal-container {
+            max-width: 1000px;
+            margin: 40px auto 100px;
+            padding: 0 20px;
+        }
+
+        .notice-card {
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        /* 通知ヘッダー（表形式） */
+        .notice-header {
+            border-bottom: 1px solid var(--sys-border);
+            background-color: #252525;
+            padding: 20px 30px;
+        }
+
+        .notice-header-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .notice-header-table th {
+            text-align: left;
+            width: 120px;
+            color: var(--sys-text-light);
+            padding: 5px 0;
+            font-weight: 500;
+        }
+
+        .notice-header-table td {
+            color: var(--sys-text);
+            padding: 5px 0;
+            font-weight: 700;
+        }
+
+        .notice-title {
+            font-size: 1.4rem;
+            color: var(--sys-primary);
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--sys-border);
+        }
+
+        /* 通知本文 */
+        .notice-body {
+            padding: 40px 30px;
+            font-size: 1rem;
+            color: var(--sys-text);
+        }
+
+        .notice-body p {
+            margin-bottom: 20px;
+        }
+
+        .notice-body ul {
+            margin-bottom: 20px;
+            margin-left: 20px;
+            color: var(--sys-text);
+        }
+
+        .notice-body li {
+            margin-bottom: 5px;
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #0f172a; 
+            color: #94a3b8;
+            padding: 20px 30px; 
+            margin-top: auto;
+            border-top: 1px solid var(--sys-border);
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+            color: #94a3b8;
+        }
+
+        /* =========================================
+           レスポンシブ対応
+           ========================================= */
+        @media (max-width: 768px) {
+            .header-inner { flex-direction: column; gap: 15px; padding: 15px; }
+            .system-name { display: none; }
+            .search-container input[type="text"] { width: 200px; }
+            .notice-header, .notice-body { padding: 20px; }
+            .notice-header-table th { width: 80px; }
+            .footer-content { flex-direction: column; text-align: center; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー（社員用ポータルのダーク・事務的デザイン） -->
+    <header>
+        <div class="header-inner">
+            <div class="logo-area">
+                <!-- ロゴクリックで外部向けトップページへ -->
+                <a href="toppage.html" class="logo">
+                    <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                    OMNIBUS ARCHIVE
+                </a>
+                <div class="system-name">社内ポータルシステム（O-PORTAL）</div>
+            </div>
+            
+            <div class="header-right">
+                <!-- 検索フォーム（他のページと同じ機能性） -->
+                <form class="search-container" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="社内情報の検索..." required autocomplete="off">
+                    <button type="submit">検索</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="portal-container">
+        
+        <article class="notice-card">
+            <!-- 事務的な通知ヘッダー -->
+            <div class="notice-header">
+                <table class="notice-header-table">
+                    <tbody>
+                        <tr>
+                            <th>発信日時</th>
+                            <td>2025/12/12 09:00</td>
+                        </tr>
+                        <tr>
+                            <th>発信元</th>
+                            <td>システム管理部 情報基盤課</td>
+                        </tr>
+                        <tr>
+                            <th>対象者</th>
+                            <td>全従業員</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h1 class="notice-title">【全体通知】社内ポータルへの「オムニバス・サーチ」システム組み込みについて</h1>
+            </div>
+
+            <!-- 通知本文 -->
+            <div class="notice-body">
+                <p>各位</p>
+                <p>
+                    お疲れ様です。システム管理部です。<br>
+                    本日（2025年12月12日）より、当社の社内ポータルシステム（O-PORTAL）の検索機能において、当社が開発した次世代検索エンジン「オムニバス・サーチ」のアルゴリズムを統合・実装いたしました。
+                </p>
+                <p>
+                    画面右上の検索欄より、以下の社内情報に対して横断的かつ高速なアクセスが可能となります。
+                </p>
+                <ul>
+                    <li>社内規定および各種業務マニュアル</li>
+                    <li>全社通達、システム管理部からのお知らせ</li>
+                    <li>過去の対応事例データベース（FAQ）</li>
+                    <!-- 指定箇所の削除対応 -->
+                    <li>アーカイブデータ</li>
+                </ul>
+                <p>
+                    本システムでは、入力された検索キーワードの文脈や意図をAIが推論し、断片化されたファイルであっても関連性が高いと判断された情報を自動的に提示します。業務効率の向上に積極的にご活用ください。
+                </p>
+                
+                <p style="margin-top: 40px; text-align: right;">以上</p>
+            </div>
+        </article>
+
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br class="pc-br">
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            <div class="footer-right">
+                &lt; 18/35 &gt; (Lv.1)
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
