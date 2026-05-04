@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>会社公式ブログ | OMNIBUS ARCHIVE</title>
+    
+    <!-- より見やすくクリーンなフォント（Noto Sans JP）の読み込み -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
         /* =========================================
            全体のリセットとカラー変数
@@ -28,14 +34,16 @@
         }
 
         body {
-            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             color: var(--text-main);
             background-color: var(--bg-color);
             line-height: 1.8;
-            word-break: keep-all;
+            /* ベースは自然な折り返しを許可 */
+            word-break: normal;
             overflow-wrap: break-word;
         }
 
+        /* 意図的な文節ブロック化（途中で改行させない） */
         .ib {
             display: inline-block;
         }
@@ -73,7 +81,7 @@
             align-items: center;
             gap: 12px;
             font-size: 1.4rem;
-            font-weight: bold;
+            font-weight: 700;
             color: var(--primary-color);
             text-decoration: none;
             letter-spacing: 0.08em;
@@ -102,6 +110,7 @@
             outline: none;
             width: 200px;
             transition: border-color 0.3s;
+            font-family: inherit;
         }
 
         .search-container input[type="text"]:focus {
@@ -115,8 +124,9 @@
             border: none;
             border-radius: 0 4px 4px 0;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 700;
             transition: background-color 0.3s;
+            font-family: inherit;
         }
 
         .search-container button:hover {
@@ -161,10 +171,10 @@
         }
 
         .drawer-inner { padding: 100px 40px 40px; }
-        .drawer-title { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 20px; letter-spacing: 0.1em; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+        .drawer-title { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 20px; letter-spacing: 0.1em; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; font-weight: 700; }
         .drawer-menu ul { list-style: none; }
         .drawer-menu ul li { margin-bottom: 15px; }
-        .drawer-menu ul li a { text-decoration: none; color: var(--text-main); font-weight: bold; font-size: 1.05rem; transition: color 0.3s, transform 0.3s; display: inline-block; }
+        .drawer-menu ul li a { text-decoration: none; color: var(--text-main); font-weight: 700; font-size: 1.05rem; transition: color 0.3s, transform 0.3s; display: inline-block; }
         .drawer-menu ul li a:hover { color: var(--primary-color); transform: translateX(5px); }
 
         .menu-overlay {
@@ -192,6 +202,7 @@
             margin-bottom: 20px;
             color: var(--text-main);
             letter-spacing: 0.1em;
+            font-weight: 700;
         }
 
         h2.section-title::after {
@@ -213,7 +224,6 @@
            ブログカード グリッドレイアウト
            ========================================= */
         .blog-page {
-            /* JSで切り替えるためのラッパー。フェードインアニメーションを追加 */
             animation: fadeIn 0.5s ease-in-out;
         }
 
@@ -278,7 +288,7 @@
             color: var(--white);
             padding: 5px 15px;
             font-size: 0.85rem;
-            font-weight: bold;
+            font-weight: 700;
             border-radius: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
@@ -288,7 +298,7 @@
         .category-interview { background-color: var(--category-interview); }
 
         .blog-content {
-            padding: 30px;
+            padding: 25px 30px; /* パディングを少し調整してゆとりを確保 */
             display: flex;
             flex-direction: column;
             flex-grow: 1;
@@ -303,12 +313,22 @@
             align-items: center;
         }
 
+        /* 修正箇所: タイトルがきれいに収まるように調整 */
         .blog-title {
-            font-size: 1.3rem;
+            font-size: 1.15rem; /* サイズを少し小さくして収まりやすく */
             color: var(--text-main);
             margin-bottom: 15px;
-            line-height: 1.5;
+            line-height: 1.6;
+            font-weight: 700;
             transition: color 0.3s;
+            /* 長い単語でも枠を突き抜けないように強制折り返しを許可 */
+            word-break: auto-phrase;
+            overflow-wrap: anywhere; 
+        }
+        
+        /* タイトル内の.ibクラスの改行禁止を緩和（スマホなど幅が狭い場合への対応） */
+        .blog-title .ib {
+            display: inline;
         }
 
         .blog-card:hover .blog-title {
@@ -325,7 +345,7 @@
 
         .read-more {
             font-size: 0.95rem;
-            font-weight: bold;
+            font-weight: 700;
             color: var(--primary-color);
             text-align: right;
             display: flex;
@@ -365,7 +385,7 @@
             border-radius: 4px;
             border: 1px solid var(--border-color);
             transition: all 0.3s;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
             font-size: 1rem;
             font-family: inherit;
@@ -432,6 +452,9 @@
             .disclaimer { font-size: 0.75rem; }
             .footer-right { font-size: 0.9rem; }
             .pc-br { display: none; }
+            
+            /* スマホ時にはタイトルの文字サイズをさらに最適化 */
+            .blog-title { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -482,8 +505,8 @@
     <section id="blog-list">
         <h2 class="section-title">公式ブログ</h2>
         <p class="section-desc">
-            <span class="ib">オムニバス・アーカイブからの最新情報や、</span><span class="ib">データ復旧に関する技術的な取り組み、</span><br class="pc-br">
-            <span class="ib">社内の様子などを</span><span class="ib">お届けします。</span>
+            オムニバス・アーカイブからの最新情報や、データ復旧に関する技術的な取り組み、<br class="pc-br">
+            社内の様子などをお届けします。
         </p>
 
         <!-- =========================================
@@ -496,13 +519,12 @@
                 <article class="blog-card">
                     <a href="blog_01.html" class="blog-card-link">
                         <div class="blog-thumbnail">
-                            <!-- 【推奨画像: サーバーラックが並ぶ青い光のデータセンター風景 (800x500px)】 -->
                             <img src="images/blog_thumb_01.png" alt="次世代アーカイブ技術の紹介">
                             <span class="category-label category-tech">技術情報</span>
                         </div>
                         <div class="blog-content">
                             <time class="blog-date" datetime="2026-04-20">2026.04.20</time>
-                            <h3 class="blog-title"><span class="ib">次世代データ復旧アルゴリズム</span><span class="ib">「オムニバス・コア」の実装について</span></h3>
+                            <h3 class="blog-title">次世代データ復旧アルゴリズム「オムニバス・コア」の実装について</h3>
                             <p class="blog-excerpt">従来の物理復旧では限界とされていた破損領域に踏み込む、弊社の新たな解析アルゴリズムについて、開発チームのチーフエンジニアが解説します。</p>
                             <div class="read-more">記事を読む</div>
                         </div>
@@ -513,13 +535,12 @@
                 <article class="blog-card">
                     <a href="blog_02.html" class="blog-card-link">
                         <div class="blog-thumbnail">
-                            <!-- 【推奨画像: 日本地図のグラフィック、またはクリーンなオフィス風景 (800x500px)】 -->
                             <img src="images/blog_thumb_02.png" alt="特急プラン対応エリア拡大">
                             <span class="category-label category-news">お知らせ</span>
                         </div>
                         <div class="blog-content">
                             <time class="blog-date" datetime="2026-04-10">2026.04.10</time>
-                            <h3 class="blog-title"><span class="ib">【重要】</span><span class="ib">エンタープライズ特急プランの</span><span class="ib">出張対応エリア拡大のお知らせ</span></h3>
+                            <h3 class="blog-title">【重要】エンタープライズ特急プランの出張対応エリア拡大のお知らせ</h3>
                             <p class="blog-excerpt">ご好評いただいております法人様向けの「特急プラン」につきまして、出張での緊急復旧対応エリアを全国主要都市に拡大いたしました。</p>
                             <div class="read-more">記事を読む</div>
                         </div>
@@ -530,13 +551,12 @@
                 <article class="blog-card">
                     <a href="blog_03.html" class="blog-card-link">
                         <div class="blog-thumbnail">
-                            <!-- 【推奨画像: ラボ環境でハードディスクに向かうエンジニアの横顔 (800x500px)】 -->
                             <img src="images/blog_thumb_03.png" alt="エンジニアへのインタビュー">
                             <span class="category-label category-interview">社員インタビュー</span>
                         </div>
                         <div class="blog-content">
                             <time class="blog-date" datetime="2026-03-25">2026.03.25</time>
-                            <h3 class="blog-title"><span class="ib">「失われた記憶に命を吹き込む」</span><span class="ib">データ復旧エンジニアの舞台裏</span></h3>
+                            <h3 class="blog-title">「失われた記憶に命を吹き込む」データ復旧エンジニアの舞台裏</h3>
                             <p class="blog-excerpt">どのような想いで絶望的なデータ破損に立ち向かっているのか。入社5年目となるフロントラインエンジニアに、日々の業務とやりがいをインタビューしました。</p>
                             <div class="read-more">記事を読む</div>
                         </div>
@@ -556,13 +576,12 @@
                 <article class="blog-card">
                     <a href="blog_04.html" class="blog-card-link">
                         <div class="blog-thumbnail">
-                            <!-- 【推奨画像: 建設中または新設された近代的な建物の外観 (800x500px)】 -->
                             <img src="images/blog_thumb_04.png" alt="新データセンター稼働">
                             <span class="category-label category-news">お知らせ</span>
                         </div>
                         <div class="blog-content">
                             <time class="blog-date" datetime="2026-02-28">2026.02.28</time>
-                            <h3 class="blog-title"><span class="ib">新データセンター</span><span class="ib">「オムニバス・アーカイブ 第2サイト」</span><span class="ib">稼働開始のお知らせ</span></h3>
+                            <h3 class="blog-title">新データセンター「オムニバス・アーカイブ 第2サイト」稼働開始のお知らせ</h3>
                             <p class="blog-excerpt">増大する法人・個人のお客様のアーカイブ需要にお応えするため、最新の免震設備と生体認証セキュリティを備えた新データセンターが稼働を開始しました。</p>
                             <div class="read-more">記事を読む</div>
                         </div>
@@ -573,13 +592,12 @@
                 <article class="blog-card">
                     <a href="blog_05.html" class="blog-card-link">
                         <div class="blog-thumbnail">
-                            <!-- 【推奨画像: 基盤が露出したSSDや、顕微鏡越しの精密基盤の画像 (800x500px)】 -->
                             <img src="images/blog_thumb_05.png" alt="SSDの復旧技術">
                             <span class="category-label category-tech">技術情報</span>
                         </div>
                         <div class="blog-content">
                             <time class="blog-date" datetime="2026-02-15">2026.02.15</time>
-                            <h3 class="blog-title"><span class="ib">物理的破壊からのデータサルベージ：</span><span class="ib">フラッシュメモリ（SSD）の復旧技術</span></h3>
+                            <h3 class="blog-title">物理的破壊からのデータサルベージ：フラッシュメモリ（SSD）の復旧技術</h3>
                             <p class="blog-excerpt">物理的な破損によりコントローラーチップが認識しなくなったSSDから、いかにしてメモリチップを直接読み取りデータを再構築するか、その技術の片鱗をご紹介します。</p>
                             <div class="read-more">記事を読む</div>
                         </div>
@@ -590,13 +608,12 @@
                 <article class="blog-card">
                     <a href="blog_06.html" class="blog-card-link">
                         <div class="blog-thumbnail">
-                            <!-- 【推奨画像: セキュリティ担当のスーツ姿の男性社員のポートレート (800x500px)】 -->
                             <img src="images/blog_thumb_06.png" alt="情報セキュリティ部インタビュー">
                             <span class="category-label category-interview">社員インタビュー</span>
                         </div>
                         <div class="blog-content">
                             <time class="blog-date" datetime="2026-01-30">2026.01.30</time>
-                            <h3 class="blog-title"><span class="ib">「絶対の機密保持をお約束します」</span><span class="ib">情報セキュリティ部マネージャーが語る体制</span></h3>
+                            <h3 class="blog-title">「絶対の機密保持をお約束します」情報セキュリティ部マネージャーが語る体制</h3>
                             <p class="blog-excerpt">お客様からお預かりした機密データを外部の脅威からどう守るか。完全隔離された復旧環境と、当社独自のデータアクセス管理の裏側に迫ります。</p>
                             <div class="read-more">記事を読む</div>
                         </div>
@@ -616,13 +633,12 @@
                 <article class="blog-card">
                     <a href="blog_07.html" class="blog-card-link">
                         <div class="blog-thumbnail">
-                            <!-- 【推奨画像: モニターに映し出されたアルゴリズムのグラフや検索画面のCG (800x500px)】 -->
                             <img src="images/blog_thumb_07.png" alt="オムニバス・サーチ検索精度向上">
                             <span class="category-label category-tech">技術情報</span>
                         </div>
                         <div class="blog-content">
                             <time class="blog-date" datetime="2025-12-12">2025.12.12</time>
-                            <h3 class="blog-title"><span class="ib">次世代検索エンジン</span><span class="ib">「オムニバス・サーチ」の検索精度が</span><span class="ib">大幅に向上しました</span></h3>
+                            <h3 class="blog-title">次世代検索エンジン「オムニバス・サーチ」の検索精度が大幅に向上しました</h3>
                             <p class="blog-excerpt">独自のAIアルゴリズムのアップデートにより、断片化されたアーカイブデータからの情報抽出速度および精度が前バージョン比で40%向上しました。</p>
                             <div class="read-more">記事を読む</div>
                         </div>
@@ -633,13 +649,12 @@
                 <article class="blog-card">
                     <a href="blog_08.html" class="blog-card-link">
                         <div class="blog-thumbnail">
-                            <!-- 【推奨画像: ヘッドセットを付けて笑顔で電話対応する女性オペレーター (800x500px)】 -->
                             <img src="images/blog_thumb_08.png" alt="カスタマーサポートインタビュー">
                             <span class="category-label category-interview">社員インタビュー</span>
                         </div>
                         <div class="blog-content">
                             <time class="blog-date" datetime="2025-11-20">2025.11.20</time>
-                            <h3 class="blog-title"><span class="ib">カスタマーサポート部門の1日：</span><span class="ib">お客様の不安にどう寄り添うか</span></h3>
+                            <h3 class="blog-title">カスタマーサポート部門の1日：お客様の不安にどう寄り添うか</h3>
                             <p class="blog-excerpt">突然のデータ喪失でパニックになられているお客様からのお電話に対し、私たちがどのような心構えでサポートを行っているかをご紹介します。</p>
                             <div class="read-more">記事を読む</div>
                         </div>
@@ -650,13 +665,12 @@
                 <article class="blog-card">
                     <a href="blog_09.html" class="blog-card-link">
                         <div class="blog-thumbnail">
-                            <!-- 【推奨画像: クリーンなオフィスのエントランスに置かれたカレンダーなどの静物写真 (800x500px)】 -->
                             <img src="images/blog_thumb_09.png" alt="年末年始休業のお知らせ">
                             <span class="category-label category-news">お知らせ</span>
                         </div>
                         <div class="blog-content">
                             <time class="blog-date" datetime="2025-11-05">2025.11.05</time>
-                            <h3 class="blog-title"><span class="ib">年末年始期間中の</span><span class="ib">データ復旧対応および休業日について</span></h3>
+                            <h3 class="blog-title">年末年始期間中のデータ復旧対応および休業日について</h3>
                             <p class="blog-excerpt">誠に勝手ながら、年末年始の一般窓口は休業とさせていただきます。なお、法人向けの「特急プラン」につきましては期間中も24時間体制で対応いたします。</p>
                             <div class="read-more">記事を読む</div>
                         </div>

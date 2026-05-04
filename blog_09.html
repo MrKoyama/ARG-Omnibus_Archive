@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>年末年始期間中のデータ復旧対応および休業日について | OMNIBUS ARCHIVE</title>
+    
+    <!-- より見やすくクリーンなフォント（Noto Sans JP）の読み込み -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           全体のリセットとカラー変数
+           ========================================= */
+        :root {
+            --primary-color: #0056b3; 
+            --primary-light: #e6f0fa;
+            --text-main: #333333;
+            --text-light: #666666;
+            --bg-color: #f8f9fa;
+            --white: #ffffff;
+            --border-color: #e0e0e0;
+            --category-tech: #17a2b8; 
+            --category-news: #28a745; /* お知らせ用カラー（グリーン） */
+            --category-interview: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            line-height: 1.8;
+            word-break: normal;
+            overflow-wrap: break-word;
+        }
+
+        .ib {
+            display: inline-block;
+        }
+
+        .responsive-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        /* =========================================
+           ヘッダー・検索・メニュー（共通仕様）
+           ========================================= */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: 0.08em;
+        }
+
+        .logo-icon {
+            height: 48px; 
+            width: 48px;  
+            object-fit: contain;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            width: 200px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        .search-container button {
+            padding: 8px 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.3s;
+            font-family: inherit;
+        }
+
+        .search-container button:hover {
+            background-color: #004494;
+        }
+
+        .menu-checkbox { display: none; }
+
+        .menu-button {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 24px;
+            cursor: pointer;
+            z-index: 2000;
+        }
+
+        .menu-button span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(1) { transform: translateY(10.5px) rotate(45deg); }
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(2) { opacity: 0; }
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(3) { transform: translateY(-10.5px) rotate(-45deg); }
+
+        .drawer-menu {
+            position: fixed;
+            top: 0; right: -350px; 
+            width: 350px; height: 100vh;
+            background-color: var(--white);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+            z-index: 1500;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .drawer-inner { padding: 100px 40px 40px; }
+        .drawer-title { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 20px; letter-spacing: 0.1em; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; font-weight: 700; }
+        .drawer-menu ul { list-style: none; }
+        .drawer-menu ul li { margin-bottom: 15px; }
+        .drawer-menu ul li a { text-decoration: none; color: var(--text-main); font-weight: 700; font-size: 1.05rem; transition: color 0.3s, transform 0.3s; display: inline-block; }
+        .drawer-menu ul li a:hover { color: var(--primary-color); transform: translateX(5px); }
+
+        .menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background-color: rgba(0,0,0,0.4); z-index: 1400;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease; cursor: pointer;
+        }
+
+        .menu-checkbox:checked ~ .drawer-menu { right: 0; }
+        .menu-checkbox:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
+
+        /* =========================================
+           ブログ記事レイアウト
+           ========================================= */
+        .article-container {
+            max-width: 900px;
+            margin: 60px auto 100px;
+            padding: 0 5%;
+        }
+
+        .article-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .article-category {
+            display: inline-block;
+            background-color: var(--category-news);
+            color: var(--white);
+            padding: 5px 15px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+
+        .article-title {
+            font-size: 2rem;
+            color: var(--text-main);
+            line-height: 1.4;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .article-meta {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .article-author {
+            font-weight: 700;
+            color: var(--category-news);
+        }
+
+        .article-eyecatch {
+            margin-bottom: 50px;
+        }
+
+        .article-eyecatch img {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        /* 本文スタイル */
+        .article-body {
+            background-color: var(--white);
+            padding: 60px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.02);
+            border: 1px solid var(--border-color);
+        }
+
+        .article-body h2 {
+            font-size: 1.5rem;
+            color: var(--category-news);
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #c3e6cb;
+        }
+
+        .article-body h2:first-child {
+            margin-top: 0;
+        }
+
+        .article-body p {
+            font-size: 1.05rem;
+            color: var(--text-main);
+            margin-bottom: 25px;
+            line-height: 1.9;
+        }
+
+        .article-body strong {
+            color: var(--text-main);
+            background: linear-gradient(transparent 60%, #c3e6cb 60%);
+        }
+
+        .article-body .notice-box {
+            background-color: #fdfdfd;
+            border-left: 4px solid var(--category-news);
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 4px;
+        }
+
+        .article-body .notice-box p {
+            margin-bottom: 10px;
+        }
+
+        .article-body .notice-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* =========================================
+           ブログトップへ戻るボタン
+           ========================================= */
+        .back-nav {
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .btn-back {
+            display: inline-block;
+            background-color: var(--white);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 15px 40px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 86, 179, 0.2);
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 30px 5%; 
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #bdc3c7;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            color: #bdc3c7;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+        }
+
+        /* =========================================
+           レスポンシブ対応
+           ========================================= */
+        @media (max-width: 768px) {
+            .header-top { padding: 10px 5%; }
+            .header-right { gap: 15px; }
+            .search-container input[type="text"] { width: 120px; }
+            .drawer-menu { width: 100%; }
+            .article-title { font-size: 1.5rem; }
+            .article-body { padding: 30px 20px; }
+            .footer-content { flex-direction: column; text-align: center; gap: 15px; }
+            .disclaimer { font-size: 0.75rem; }
+            .footer-right { font-size: 0.9rem; }
+            .pc-br { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- メニュー開閉用チェックボックス・オーバーレイ・ドロワー -->
+    <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+    <label for="menu-toggle" class="menu-overlay"></label>
+    
+    <nav class="drawer-menu">
+        <div class="drawer-inner">
+            <h2 class="drawer-title">MENU</h2>
+            <ul>
+                <li><a href="toppage.html">ホーム</a></li>
+                <li><a href="toppage.html#philosophy">企業理念</a></li>
+                <li><a href="ceo.html">代表者の挨拶</a></li>
+                <li><a href="toppage.html#services">サービス概要</a></li>
+                <li><a href="pricing.html">サービス価格表</a></li>
+                <li><a href="voc.html">お客様の声</a></li>
+                <li><a href="about.html">会社概要</a></li>
+                <li><a href="blogtop.html">会社公式ブログ</a></li>
+                <li><a href="form.html">お問い合わせフォーム</a></li>
+                <li><a href="privacy.html">プライバシーポリシー</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-top">
+            <a href="toppage.html" class="logo">
+                <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                OMNIBUS ARCHIVE
+            </a>
+            <div class="header-right">
+                <form class="search-container" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="サイト内検索..." required autocomplete="off">
+                    <button type="submit">検索</button>
+                </form>
+                <label for="menu-toggle" class="menu-button">
+                    <span></span><span></span><span></span>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- ブログ記事 セクション -->
+    <main class="article-container">
+        
+        <!-- 記事のヘッダー情報 -->
+        <div class="article-header">
+            <span class="article-category">お知らせ</span>
+            <h1 class="article-title">
+                <span class="ib">年末年始期間中の</span><span class="ib">データ復旧対応および休業日について</span>
+            </h1>
+            <div class="article-meta">
+                <span class="article-date">2025.11.05</span>
+                <span class="article-author">広報部</span>
+            </div>
+        </div>
+
+        <div class="article-eyecatch">
+            <img src="images/blog_thumb_09.png" alt="年末年始休業のお知らせ">
+        </div>
+
+        <article class="article-body">
+            <p>
+                平素は株式会社オムニバス・アーカイブのデータ復旧サービスをご利用いただき、誠にありがとうございます。
+            </p>
+            <p>
+                誠に勝手ながら、当社の一般窓口およびスタンダードプラン等の通常サービスにつきましては、下記の期間を年末年始の休業とさせていただきます。
+            </p>
+
+            <div class="notice-box">
+                <p><strong>【一般窓口 休業期間】</strong></p>
+                <p>2025年12月27日（土） ～ 2026年1月4日（日）</p>
+            </div>
+
+            <p>
+                ※休業期間中にウェブサイトの「お問い合わせフォーム」よりいただいたご相談につきましては、2026年1月5日（月）以降、順次対応させていただきます。
+            </p>
+
+            <h2>エンタープライズ「特急プラン」は期間中も24時間対応いたします</h2>
+            <p>
+                年末年始の期間中であっても、企業活動を支える重要な基幹システムやサーバーのトラブルはいつ発生するか予測できません。
+            </p>
+            <p>
+                そのため、法人様向けの緊急データ復旧ソリューションである<strong>「特急プラン」および「エンタープライズプラン」につきましては、年末年始も通常通り24時間体制で受付・復旧対応を実施</strong>いたします。
+            </p>
+            <p>
+                緊急のトラブルが発生した際は、休業期間中であっても専用の緊急ホットラインよりご連絡ください。待機している専任のエンジニアチームおよびサポートチームが迅速に対応し、お客様の大切なデータをお守りいたします。
+            </p>
+
+            <h2>本件に関するお問い合わせ</h2>
+            <p>
+                休業期間前後のデータ復旧のお申し込みや、特急プランに関する事前のご相談については、お早めにサポート窓口までご連絡くださいますようお願い申し上げます。
+            </p>
+            <p>
+                お客様にはご不便とご迷惑をおかけいたしますが、何卒ご理解とご協力を賜りますよう、よろしくお願い申し上げます。
+            </p>
+        </article>
+
+        <!-- ブログトップへ戻るボタン -->
+        <div class="back-nav">
+            <a href="blogtop.html" class="btn-back">← ブログトップへ戻る</a>
+        </div>
+
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br class="pc-br">
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            <!-- ページ番号を17に設定 -->
+            <div class="footer-right">
+                &lt; 17/35 &gt; (Lv.0)
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
