@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データセンター稼働状況 | OMNIBUS ARCHIVE 社内ポータル</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           カラー変数（ダーク・無機質なシステムカラー）
+           ========================================= */
+        :root {
+            --sys-primary: #3b82f6; 
+            --sys-accent: #60a5fa;  
+            --sys-bg: #121212; 
+            --sys-white: #1e1e1e; 
+            --sys-text: #e2e8f0; 
+            --sys-text-light: #94a3b8; 
+            --sys-border: #334155; 
+            --sys-header-bg: #0f172a; 
+            
+            /* ステータス用カラー */
+            --status-online: #22c55e; /* 緑：正常 */
+            --status-warning: #f59e0b; /* 橙：注意・高負荷 */
+            --status-offline: #ef4444; /* 赤：停止・異常 */
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--sys-text);
+            background-color: var(--sys-bg);
+            line-height: 1.6;
+            word-break: normal;
+            overflow-wrap: break-word;
+        }
+
+        /* 数値等のシステムフォント */
+        .mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* =========================================
+           ヘッダー（ダーク・機能的）
+           ========================================= */
+        header {
+            background-color: var(--sys-header-bg);
+            border-bottom: 2px solid var(--sys-primary);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            max-width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--sys-primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-icon {
+            height: 36px; 
+            width: 36px;  
+            object-fit: contain;
+        }
+
+        .system-name {
+            font-size: 0.9rem;
+            color: var(--sys-text-light);
+            border-left: 1px solid var(--sys-border);
+            padding-left: 15px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* 検索欄（ダークUI対応） */
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 6px 12px;
+            background-color: #1e293b;
+            color: var(--sys-text);
+            border: 1px solid var(--sys-border);
+            border-radius: 2px 0 0 2px;
+            outline: none;
+            width: 250px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input[type="text"]::placeholder {
+            color: #64748b;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--sys-primary);
+        }
+
+        .search-container button {
+            padding: 6px 15px;
+            background-color: var(--sys-primary);
+            color: #ffffff;
+            border: 1px solid var(--sys-primary);
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #2563eb;
+        }
+
+        /* =========================================
+           メインコンテンツ（システム稼働状況 UI）
+           ========================================= */
+        .portal-container {
+            max-width: 1000px;
+            margin: 40px auto 100px;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            color: var(--sys-text);
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--sys-border);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .last-update {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
+            font-weight: 400;
+        }
+
+        /* データセンター稼働状況カード */
+        .dc-card {
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            border-radius: 4px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+
+        .dc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background-color: #252525;
+            border-bottom: 1px solid var(--sys-border);
+        }
+
+        .dc-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--sys-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dc-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        /* ステータスランプ */
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .status-dot.online {
+            background-color: var(--status-online);
+            box-shadow: 0 0 8px var(--status-online);
+        }
+        .status-dot.warning {
+            background-color: var(--status-warning);
+            box-shadow: 0 0 8px var(--status-warning);
+        }
+
+        .status-text.online { color: var(--status-online); }
+        .status-text.warning { color: var(--status-warning); }
+
+        .dc-body {
+            padding: 25px;
+        }
+
+        .dc-desc {
+            font-size: 0.9rem;
+            color: var(--sys-text-light);
+            margin-bottom: 20px;
+        }
+
+        /* 黒塗り（検閲）スタイル */
+        .redacted {
+            background-color: #000000;
+            color: transparent;
+            user-select: none;
+            padding: 0 4px;
+            border-radius: 2px;
+            display: inline-block;
+            vertical-align: middle;
+            /* 選択してもコピー・判読できないように制御 */
+            pointer-events: none; 
+        }
+
+        /* 詳細情報グリッド */
+        .dc-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            background-color: #1a1a1a;
+            padding: 15px 20px;
+            border: 1px solid var(--sys-border);
+            border-radius: 4px;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: var(--sys-text-light);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--sys-text);
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .info-unit {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
+            font-weight: 400;
+        }
+
+        /* プログレスバー */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: #334155;
+            border-radius: 3px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--sys-accent);
+            transition: width 0.5s ease;
+        }
+
+        .progress-bar.warning {
+            background-color: var(--status-warning);
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #0f172a; 
+            color: #94a3b8;
+            padding: 20px 30px; 
+            margin-top: auto;
+            border-top: 1px solid var(--sys-border);
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+            color: #94a3b8;
+        }
+
+        /* =========================================
+           レスポンシブ対応
+           ========================================= */
+        @media (max-width: 768px) {
+            .header-inner { flex-direction: column; gap: 15px; padding: 15px; }
+            .system-name { display: none; }
+            .search-container input[type="text"] { width: 200px; }
+            .page-title { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .dc-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .footer-content { flex-direction: column; text-align: center; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-inner">
+            <div class="logo-area">
+                <a href="toppage.html" class="logo">
+                    <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                    OMNIBUS ARCHIVE
+                </a>
+                <div class="system-name">社内ポータルシステム（O-PORTAL）</div>
+            </div>
+            
+            <div class="header-right">
+                <form class="search-container" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="社内情報の検索..." required autocomplete="off">
+                    <button type="submit">検索</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="portal-container">
+
+        <h1 class="page-title">
+            データセンター稼働状況
+            <span class="last-update mono">Last Updated: <span id="current-time">2026/05/05 10:15:32</span></span>
+        </h1>
+
+        <!-- 第一データセンター -->
+        <div class="dc-card">
+            <div class="dc-header">
+                <div class="dc-title">第一データセンター</div>
+                <div class="dc-status">
+                    <span class="status-dot online"></span>
+                    <span class="status-text online">NORMAL / 正常稼働</span>
+                </div>
+            </div>
+            <div class="dc-body">
+                <p class="dc-desc">役割：一般法人顧客データ保護・メインアーカイブサーバー</p>
+                <div class="dc-info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Storage Usage</div>
+                        <div class="info-value mono">68.2 <span class="info-unit">%</span></div>
+                        <div class="progress-container"><div class="progress-bar" style="width: 68.2%;"></div></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Server Temp.</div>
+                        <div class="info-value mono">21.4 <span class="info-unit">℃</span></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Network Traffic</div>
+                        <div class="info-value mono">3.2 <span class="info-unit">Tbps</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第二データセンター -->
+        <div class="dc-card">
+            <div class="dc-header">
+                <div class="dc-title">第二データセンター</div>
+                <div class="dc-status">
+                    <span class="status-dot online"></span>
+                    <span class="status-text online">NORMAL / 正常稼働</span>
+                </div>
+            </div>
+            <div class="dc-body">
+                <p class="dc-desc">役割：大規模バックアップ・DR（ディザスタリカバリ）用ミラーリングサイト</p>
+                <div class="dc-info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Storage Usage</div>
+                        <div class="info-value mono">42.5 <span class="info-unit">%</span></div>
+                        <div class="progress-container"><div class="progress-bar" style="width: 42.5%;"></div></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Server Temp.</div>
+                        <div class="info-value mono">20.8 <span class="info-unit">℃</span></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Network Traffic</div>
+                        <div class="info-value mono">1.5 <span class="info-unit">Tbps</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第三データセンター (黒塗り・高負荷) -->
+        <div class="dc-card">
+            <div class="dc-header">
+                <div class="dc-title"><span class="redacted">第三データセンター</span></div>
+                <div class="dc-status">
+                    <span class="status-dot warning"></span>
+                    <span class="status-text warning">WARNING / 高負荷稼働中</span>
+                </div>
+            </div>
+            <div class="dc-body">
+                <p class="dc-desc">役割：<span class="redacted">オムニバス・コア推論エンジン稼働領域・未公開データソースアーカイブ</span></p>
+                <div class="dc-info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Storage Usage</div>
+                        <div class="info-value mono" style="color: var(--status-warning);">96.8 <span class="info-unit">%</span></div>
+                        <div class="progress-container"><div class="progress-bar warning" style="width: 96.8%;"></div></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Server Temp.</div>
+                        <div class="info-value mono" style="color: var(--status-warning);">26.1 <span class="info-unit">℃</span></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Network Traffic</div>
+                        <div class="info-value mono" style="color: var(--status-warning);">18.7 <span class="info-unit">Tbps (Inbound)</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br class="pc-br">
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            <div class="footer-right">
+                &lt; 20/35 &gt; (Lv.1)
+            </div>
+        </div>
+    </footer>
+
+    <!-- オプション：現在時刻をそれっぽく動かすためのJS -->
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            document.getElementById('current-time').textContent = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+        }
+        
+        // 1秒ごとに更新
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</body>
+</html>

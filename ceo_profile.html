@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>創業者プロフィール | OMNIBUS ARCHIVE（※アーカイブデータ）</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           全体のリセットとカラー変数
+           ========================================= */
+        :root {
+            --primary-color: #0056b3; 
+            --primary-light: #e6f0fa;
+            --text-main: #333333;
+            --text-light: #666666;
+            --bg-color: #f8f9fa;
+            --white: #ffffff;
+            --border-color: #e0e0e0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            line-height: 1.8;
+            word-break: normal;
+            overflow-wrap: break-word;
+        }
+
+        .ib {
+            display: inline-block;
+        }
+
+        .responsive-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        /* 削除済みページを示すヘッダー上部の警告バー */
+        .deleted-notice {
+            background-color: #333333;
+            color: #ffffff;
+            text-align: center;
+            font-size: 0.8rem;
+            padding: 4px 0;
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 0.05em;
+            /* メニュー展開時も最前面に表示させる */
+            position: relative;
+            z-index: 2100;
+        }
+
+        /* =========================================
+           ヘッダー・検索・メニュー（表サイト共通）
+           ========================================= */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            /* メニュー(1500)より手前に表示させるため2000に設定 */
+            z-index: 2000;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: 0.08em;
+        }
+
+        .logo-icon {
+            height: 48px; 
+            width: 48px;  
+            object-fit: contain;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            width: 200px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        .search-container button {
+            padding: 8px 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.3s;
+            font-family: inherit;
+        }
+
+        .search-container button:hover {
+            background-color: #004494;
+        }
+
+        .menu-checkbox { display: none; }
+
+        .menu-button {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .menu-button span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(1) { transform: translateY(10.5px) rotate(45deg); }
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(2) { opacity: 0; }
+        .menu-checkbox:checked ~ header .menu-button span:nth-child(3) { transform: translateY(-10.5px) rotate(-45deg); }
+
+        .drawer-menu {
+            position: fixed;
+            top: 0; right: -350px; 
+            width: 350px; height: 100vh;
+            background-color: var(--white);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+            /* メニュー本体はヘッダーより背面に配置 */
+            z-index: 1500;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        /* ヘッダーの高さ分、メニュー内の上部余白を多く取る */
+        .drawer-inner { padding: 120px 40px 40px; }
+        .drawer-title { font-size: 1.1rem; color: var(--primary-color); margin-bottom: 20px; letter-spacing: 0.1em; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; font-weight: 700; }
+        .drawer-menu ul { list-style: none; }
+        .drawer-menu ul li { margin-bottom: 15px; }
+        .drawer-menu ul li a { text-decoration: none; color: var(--text-main); font-weight: 700; font-size: 1.05rem; transition: color 0.3s, transform 0.3s; display: inline-block; }
+        .drawer-menu ul li a:hover { color: var(--primary-color); transform: translateX(5px); }
+
+        .menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background-color: rgba(0,0,0,0.4); 
+            /* オーバーレイもヘッダーより背面に配置 */
+            z-index: 1400;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease; cursor: pointer;
+        }
+
+        .menu-checkbox:checked ~ .drawer-menu { right: 0; }
+        .menu-checkbox:checked ~ .menu-overlay { opacity: 1; visibility: visible; }
+
+        /* =========================================
+           プロフィール セクション
+           ========================================= */
+        section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 5%;
+        }
+
+        h2.section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 50px;
+            color: var(--text-main);
+            letter-spacing: 0.1em;
+            font-weight: 700;
+        }
+
+        h2.section-title::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-color);
+            margin: 15px auto 0;
+        }
+
+        /* プロフィールヒーロー（顔写真と名前） */
+        .profile-hero {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            background: var(--white);
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            margin-bottom: 50px;
+        }
+
+        .profile-image {
+            flex: 1;
+            max-width: 350px;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            aspect-ratio: 3 / 4;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .profile-header {
+            flex: 2;
+        }
+
+        .profile-role {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+        }
+
+        .profile-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            letter-spacing: 0.15em;
+        }
+
+        .profile-name span {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            font-weight: 400;
+            margin-left: 15px;
+            letter-spacing: 0.05em;
+        }
+
+        .profile-quote {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-style: italic;
+            border-left: 4px solid var(--primary-light);
+            padding-left: 15px;
+            line-height: 1.8;
+        }
+
+        /* 略歴テーブル */
+        .bio-section {
+            margin-bottom: 60px;
+        }
+
+        .bio-section h3 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .bio-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .bio-table th, .bio-table td {
+            padding: 15px 10px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        .bio-table th {
+            width: 120px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .bio-table td {
+            color: var(--text-light);
+        }
+
+        /* 思想・研究内容 */
+        .philosophy-section h3 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .philosophy-text p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.9;
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 30px 5%; 
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            color: #bdc3c7;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            color: #bdc3c7;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+        }
+
+        /* =========================================
+           レスポンシブ対応
+           ========================================= */
+        @media (max-width: 992px) {
+            .profile-hero {
+                flex-direction: column;
+                text-align: center;
+            }
+            .profile-quote {
+                text-align: left;
+            }
+            .bio-table th, .bio-table td {
+                display: block;
+                width: 100%;
+            }
+            .bio-table th {
+                border-bottom: none;
+                padding-bottom: 5px;
+            }
+            .bio-table td {
+                padding-top: 0;
+                padding-bottom: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-top { padding: 10px 5%; }
+            .header-right { gap: 15px; }
+            .search-container input[type="text"] { width: 120px; }
+            .drawer-menu { width: 100%; }
+            .footer-content { flex-direction: column; text-align: center; gap: 15px; }
+            .disclaimer { font-size: 0.75rem; }
+            .footer-right { font-size: 0.9rem; }
+            .pc-br { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 非公開ページであることを示すシステムメッセージ（常に最前面に配置） -->
+    <div class="deleted-notice">
+        SYSTEM NOTICE: This page was archived and unpublished on 2025/11/01. Access from public routing is currently restricted.
+    </div>
+
+    <!-- メニュー開閉用チェックボックス・オーバーレイ・ドロワー -->
+    <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+    <label for="menu-toggle" class="menu-overlay"></label>
+    
+    <nav class="drawer-menu">
+        <div class="drawer-inner">
+            <h2 class="drawer-title">MENU</h2>
+            <ul>
+                <li><a href="toppage.html">ホーム</a></li>
+                <li><a href="toppage.html#philosophy">企業理念</a></li>
+                <li><a href="ceo.html">代表者の挨拶</a></li>
+                <li><a href="toppage.html#services">サービス概要</a></li>
+                <li><a href="pricing.html">サービス価格表</a></li>
+                <li><a href="voc.html">お客様の声</a></li>
+                <li><a href="about.html">会社概要</a></li>
+                <li><a href="blogtop.html">会社公式ブログ</a></li>
+                <li><a href="form.html">お問い合わせフォーム</a></li>
+                <li><a href="privacy.html">プライバシーポリシー</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-top">
+            <a href="toppage.html" class="logo">
+                <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                OMNIBUS ARCHIVE
+            </a>
+            <div class="header-right">
+                <form class="search-container" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="サイト内検索..." required autocomplete="off">
+                    <button type="submit">検索</button>
+                </form>
+                <label for="menu-toggle" class="menu-button">
+                    <span></span><span></span><span></span>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- プロフィール セクション -->
+    <section id="founder-profile">
+        <h2 class="section-title">創業者プロフィール</h2>
+
+        <!-- 顔写真と基本情報 -->
+        <div class="profile-hero">
+            <div class="profile-image">
+                <!-- 【画像のご用意：九条誠のポートレート写真。クリーンなオフィス背景の知的なスーツ姿の男性を推奨】 -->
+                <img src="images/ceo_portrait.png" alt="九条誠 ポートレート">
+            </div>
+            <div class="profile-header">
+                <div class="profile-role">OMNIBUS ARCHIVE 代表取締役 / 創業者</div>
+                <div class="profile-name">九条 誠<span>Makoto Kujo</span></div>
+                <div class="profile-quote">
+                    「データとは、企業や個人の歴史そのものです。我々は技術の力で、その歴史を永遠に守り抜く強固なインフラを創造します。」
+                </div>
+            </div>
+        </div>
+
+        <!-- 略歴 (Biography) -->
+        <div class="bio-section">
+            <h3>略歴</h3>
+            <table class="bio-table">
+                <tbody>
+                    <tr>
+                        <th>1978年</th>
+                        <td>東京都に生まれる。</td>
+                    </tr>
+                    <tr>
+                        <th>2000年</th>
+                        <td>東京情報工学大学 データサイエンス学部を卒業。在学中より、大規模データベースにおける高効率な検索アルゴリズムについて研究を行う。</td>
+                    </tr>
+                    <tr>
+                        <th>2005年</th>
+                        <td>外資系IT企業にて、分散ストレージシステムの開発プロジェクトを主導。</td>
+                    </tr>
+                    <tr>
+                        <th>2008年</th>
+                        <td>日本へ帰国。相次ぐ国内企業の重大なデータ消失事故を目の当たりにし、強固なデータ・アーカイブ基盤の必要性を提唱する。</td>
+                    </tr>
+                    <tr>
+                        <th>2010年</th>
+                        <td>株式会社オムニバス・アーカイブを設立し、代表取締役に就任。独自の検索エンジン「オムニバス・サーチ」の基礎を築く。</td>
+                    </tr>
+                    <tr>
+                        <th>2025年</th>
+                        <td>次世代システム「オムニバス・コア」の実装を主導。現在も代表取締役として、当社の技術的ビジョンと経営の舵取りを担い続けている。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 思想・研究内容 (Philosophy / Research) -->
+        <div class="philosophy-section">
+            <h3>ビジョンと研究内容</h3>
+            <div class="philosophy-text">
+                <p>
+                    九条のビジョンは、「世界中のあらゆる情報を安全に集約し、必要な時に瞬時に引き出せる究極のアーカイブシステム」を構築することにあります。
+                </p>
+                <p>
+                    彼は、物理的なストレージの堅牢性を高めるだけでなく、不完全なデータからAIを用いて欠損を補完・推論する高度な修復アルゴリズムの開発に情熱を注ぎ続けています。彼が基礎理論を築いた「オムニバス・コア」は、現在のデータ復旧サービスにおける中核技術となっています。
+                </p>
+                <p>
+                    「失われたデータは、適切なアルゴリズムを通せば必ず復元できる。それは、企業や個人の歩んだ歴史そのものを守ることに他ならない」という信念のもと、現在も代表取締役として当社の最前線に立ち、究極のアーカイブシステムの完成を目指して研究と経営の両面を力強く牽引しています。
+                </p>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br class="pc-br">
+                登場する人物・団体・名称等は架空 মোহあり、実在のものとは関係ありません。
+            </p>
+            <!-- ページ番号21、非公開ページのためLv.1に設定 -->
+            <div class="footer-right">
+                &lt; 21/35 &gt; (Lv.1)
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
