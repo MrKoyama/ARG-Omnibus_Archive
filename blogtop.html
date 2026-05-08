@@ -439,23 +439,134 @@
             white-space: nowrap; 
         }
 
-        /* =========================================
-           レスポンシブ対応
-           ========================================= */
-        @media (max-width: 768px) {
-            .header-top { padding: 10px 5%; }
-            .header-right { gap: 15px; }
-            .search-container input[type="text"] { width: 120px; }
-            .drawer-menu { width: 100%; }
-            .blog-thumbnail { height: 180px; }
-            .footer-content { flex-direction: column; text-align: center; gap: 15px; }
-            .disclaimer { font-size: 0.75rem; }
-            .footer-right { font-size: 0.9rem; }
-            .pc-br { display: none; }
-            
-            /* スマホ時にはタイトルの文字サイズをさらに最適化 */
-            .blog-title { font-size: 1.1rem; }
-        }
+/* =========================================
+   完全レスポンシブ・デッドスペース解消設定
+   ========================================= */
+
+/* 1. ベースの可変フォントサイズ */
+html {
+    font-size: clamp(14px, 1vw + 10px, 18px); 
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* 2. ヘッダーとフッターの幅を画面いっぱいに */
+.header-top, .header-inner, .footer-content {
+    width: 100%;
+    /* max-widthを緩和し、画面の95%まで広げる */
+    max-width: 95%; 
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 auto;
+}
+
+/* 3. メインコンテンツの幅を拡大し、デッドスペースを消す */
+section, main, .article-container, .portal-container {
+    width: 90%; 
+    /* デスクトップでも余白ができすぎないよう、最大幅を大きく緩和 */
+    max-width: 1600px !important; 
+    margin-left: auto;
+    margin-right: auto;
+    flex-grow: 1; 
+}
+
+/* 長文が横に広がりすぎて読みにくくなるのを防ぐための処置 */
+.policy-container, .article-body, .form-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 4. 画像のレスポンシブ化 */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* 5. 要素のフレックスボックス調整（折り返し許可） */
+.hero, .message-content, .company-profile-wrapper, .review-card {
+    flex-wrap: wrap; 
+}
+
+/* 6. タブレット・スマホ向けのブレイクポイント */
+@media (max-width: 992px) {
+    .hero, .message-content, .company-profile-wrapper, .review-card {
+        flex-direction: column !important;
+    }
+    .hero-text, .message-text, .profile-quote {
+        text-align: center;
+    }
+    .hero-image, .message-image, .company-table-container, .company-side-images, .review-images {
+        width: 100%;
+        max-width: 100%;
+    }
+    .company-side-images {
+        flex-direction: row; 
+    }
+    .company-side-images img {
+        width: calc(50% - 10px);
+    }
+}
+
+@media (max-width: 768px) {
+    section, main, .article-container, .portal-container {
+        width: 100%;
+        padding: 40px 5%;
+    }
+    
+    .header-top, .header-inner {
+        flex-direction: column;
+        padding: 15px 5%;
+    }
+    
+    .header-right {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+    
+    .search-container {
+        flex-grow: 1;
+        margin-right: 15px;
+    }
+    .search-container input[type="text"] {
+        width: 100%; 
+    }
+    
+    .drawer-menu {
+        width: 100%;
+        right: -100%; 
+    }
+
+    .blog-grid, .pricing-wrapper, .facilities-grid, .services-grid {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+
+    .ib { display: inline; }
+    .pc-br { display: none; }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .form-table th, .form-table td, .notice-header-table th, .notice-header-table td, .bio-table th, .bio-table td {
+        display: block;
+        width: 100%;
+    }
+    .form-table th, .bio-table th, .notice-header-table th {
+        border-bottom: none;
+        padding-bottom: 5px;
+    }
+    .form-table td, .bio-table td, .notice-header-table td {
+        padding-top: 0;
+        padding-bottom: 20px;
+    }
+}
     </style>
 </head>
 <body>
