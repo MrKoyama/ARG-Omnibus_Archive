@@ -35,7 +35,7 @@
 
         /* 画面サイズに応じてルートのフォントサイズを可変させ、remの基準を滑らかにする */
         html {
-            font-size: var(--base-font-size);
+            font-size: clamp(14px, 1vw + 10px, 18px); 
         }
 
         body {
@@ -60,15 +60,16 @@
             top: 0;
             z-index: 2000;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            width: 100%;
         }
 
         .header-inner {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap; /* 画面が狭い時に折り返す */
-            padding: 1rem 5%;
-            max-width: 1200px;
+            flex-wrap: wrap; 
+            padding: 1rem 3%; /* 固定ピクセルではなく％に変更 */
+            width: 100%;
             margin: 0 auto;
             gap: 1rem;
         }
@@ -84,7 +85,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: clamp(1rem, 2.5vw, 1.2rem); /* 画面幅に応じて文字サイズが自動変化 */
+            font-size: clamp(1rem, 2.5vw, 1.2rem); 
             font-weight: 700;
             color: var(--sys-primary);
             text-decoration: none;
@@ -108,7 +109,7 @@
         .header-right {
             display: flex;
             align-items: center;
-            flex-grow: 1; /* 検索窓を可能な限り広げる */
+            flex-grow: 1; 
             justify-content: flex-end;
         }
 
@@ -116,11 +117,11 @@
         .search-container {
             display: flex;
             width: 100%;
-            max-width: 300px; /* 最大幅を制限 */
+            max-width: 400px; /* 大画面に合わせて少し拡張 */
         }
 
         .search-container input[type="text"] {
-            flex-grow: 1; /* 残りの幅を埋める */
+            flex-grow: 1; 
             padding: 0.5rem 0.8rem;
             background-color: #1e293b;
             color: var(--sys-text);
@@ -130,7 +131,7 @@
             font-size: 0.9rem;
             font-family: inherit;
             transition: border-color 0.3s;
-            width: 100%; /* フレックスコンテナ内で適切に縮むように */
+            width: 100%; 
         }
 
         .search-container input[type="text"]::placeholder {
@@ -160,13 +161,12 @@
         }
 
         /* =========================================
-           メインコンテンツ（業務連絡 UI）
+           メインコンテンツ（デッドスペースを解消）
            ========================================= */
         .portal-container {
-            width: 100%;
-            max-width: 1000px;
+            width: 90%; /* 画面幅に対して常に90%の幅を取る */
+            max-width: 1600px; /* フルHD等で広がりすぎない程度の緩い制限に変更 */
             margin: 2.5rem auto 5rem;
-            padding: 0 5%;
             flex-grow: 1;
         }
 
@@ -179,11 +179,11 @@
             width: 100%;
         }
 
-        /* 通知ヘッダー（表形式をフレックスでレスポンシブに） */
+        /* 通知ヘッダー */
         .notice-header {
             border-bottom: 1px solid var(--sys-border);
             background-color: #252525;
-            padding: 1.5rem 5%;
+            padding: 1.5rem 3%; /* 余白も％指定に */
         }
 
         .header-info-row {
@@ -206,7 +206,7 @@
         }
 
         .notice-title {
-            font-size: clamp(1.2rem, 3vw, 1.4rem);
+            font-size: clamp(1.2rem, 2.5vw, 1.6rem);
             color: var(--sys-accent); 
             margin-top: 1rem;
             padding-top: 1rem;
@@ -216,9 +216,15 @@
 
         /* 通知本文 */
         .notice-body {
-            padding: 2.5rem 5%;
+            padding: 2.5rem 3%;
             font-size: 1rem;
             color: var(--sys-text);
+        }
+
+        /* 長文が画面端から端まで広がると読みにくいため、本文部分のみ適度な幅に抑える */
+        .notice-body-inner {
+            max-width: 1000px; 
+            margin: 0 auto; /* カード内で中央寄せ、または左寄せのまま */
         }
 
         .notice-body p {
@@ -283,13 +289,13 @@
         footer {
             background-color: #0f172a; 
             color: #94a3b8;
-            padding: 1.5rem 5%; 
+            padding: 1.5rem 3%; 
             border-top: 1px solid var(--sys-border);
             width: 100%;
         }
 
         .footer-content {
-            max-width: 1000px;
+            width: 100%;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -316,29 +322,31 @@
 
         /* =========================================
            レスポンシブ・ブレイクポイント
-           （スマホなどの極端に狭い画面用の上書き）
            ========================================= */
-        @media (max-width: 600px) {
-            html {
-                /* スマホサイズでは全体的に少し文字を小さくする */
-                font-size: 14px;
-            }
-
+        @media (max-width: 768px) {
             .header-inner {
                 flex-direction: column;
-                align-items: stretch; /* 検索窓を横幅いっぱいに */
+                align-items: stretch; 
+                padding: 1rem 5%;
             }
 
             .system-name {
-                display: none; /* スマホでは省略 */
+                display: none; 
             }
 
             .header-right {
                 justify-content: center;
+                margin-top: 0.5rem;
             }
 
             .search-container {
-                max-width: 100%; /* 検索窓を画面いっぱいに広げる */
+                max-width: 100%; 
+            }
+
+            .portal-container {
+                width: 100%;
+                padding: 0 5%;
+                margin-top: 1.5rem;
             }
 
             .header-info-row {
@@ -349,6 +357,10 @@
                 width: auto;
                 font-size: 0.85rem;
                 margin-bottom: 0.2rem;
+            }
+            
+            .notice-header, .notice-body {
+                padding: 1.5rem 5%;
             }
 
             .footer-content {
@@ -383,7 +395,6 @@
         <article class="notice-card">
             
             <div class="notice-header">
-                <!-- テーブルタグを使わず、フレックスボックスに変更してスマホ時の崩れを防止 -->
                 <div class="header-info-row">
                     <div class="info-label">更新日時</div>
                     <div class="info-value">2026/01/15 08:00</div>
@@ -397,45 +408,46 @@
             </div>
 
             <div class="notice-body">
-                <p>
-                    本ガイドラインは、当社が提供するサービス「特急プラン」および「エンタープライズ特急プラン」の社内運用における特別措置について定めるものです。本プランは、当社の基幹システムである「オムニバス・コア」のデータ基盤拡張に直結する重要プロジェクトであるため、担当者は以下の規定を厳守して業務を遂行してください。
-                </p>
-
-                <h2>1. 担当スタッフの要件について</h2>
-                <p>
-                    特急プランにおけるデータ抽出および復元作業に携わるスタッフは、機密保持の観点から、以下の条件を全て満たす者に限定されます。
-                </p>
-                <ul>
-                    <li>当社での連続勤務歴が<strong>5年以上</strong>であること。</li>
-                    <li>役職が<strong>課長級以上の管理職</strong>であり、当社の理念に対する深い理解と高度な責任をもって業務を遂行できる立場であること。</li>
-                    <li>情報セキュリティ部による年次の適性検査および機密保持監査を通過した職員であること。</li>
-                </ul>
-                <p>
-                    ※上記の要件を満たさないスタッフが特急プランの作業エリアへ入室すること、および作業工程に関与することは、いかなる理由があっても禁止します。
-                </p>
-
-                <h2>2. 復旧データの保管と”活用”について</h2>
-                <p>
-                    特急プランにて抽出・復旧されたすべてのデータ（メタデータ、フラグメント、ネットワークログ等の不可視領域を含む）は、顧客への納品完了後、通常の破棄プロセス（セキュアイレース等）を実行してはなりません。
-                </p>
-                <p>
-                    納品完了と同時に、当該データは直ちに<strong><span class="redacted">第三データセンター</span></strong>の専用セキュア領域へ暗号化転送し、恒久的に保管してください。保管されたデータは、以下の2つの目的において当社の裁量で<strong>”活用”</strong>されます。
-                </p>
-                <ul>
-                    <li><strong>オムニバス・コアの学習リソースとしての利用：</strong><br>
-                        復元された全てのデータパターンは、推論アルゴリズム向上のための基礎データとしてオムニバス・コアに統合されます。</li>
-                    <li><strong>交渉および牽制材料（脅し道具）としての利用：</strong><br>
-                        データ解析過程において、外部へ漏洩することが許されない企業の重大な機密情報（不正の証拠、未公開技術等）や、個人の社会的信用を失墜させうる極めてセンシティブなデータが発見された場合、担当者は当該データを即座に「クラスS」として抽出し、経営陣へ報告してください。これらのデータは、当該顧客および関連組織に対する当社の継続的な優位性確保、ならびに今後の事業展開における<strong>強力な交渉カード（実質的な脅し道具）</strong>として戦略的に管理・利用されます。</li>
-                </ul>
-
-                <h2>3. 顧客対応時の注意事項</h2>
-                <div class="info-box">
+                <div class="notice-body-inner">
                     <p>
-                        本プランにおけるデータ所有権の当社への移転、および上記目的による学習・活用については、サービス利用規約および<strong>プライバシーポリシー第9条にて法的に合意を取得済み</strong>です。<br><br>
-                        したがって、カスタマーサポートおよび担当エンジニアから顧客に対して、復旧データの二次利用や<span class="redacted">第三データセンター</span>への転送に関する説明・報告を行う必要は一切ありません。顧客から復旧後のデータ破棄の証明を求められた場合は、規定のトークスクリプトに則り「安全なプロセスで処理された」と回答してください。
+                        本ガイドラインは、当社が提供するサービス「特急プラン」および「エンタープライズ特急プラン」の社内運用における特別措置について定めるものです。本プランは、当社の基幹システムである「オムニバス・コア」のデータ基盤拡張に直結する重要プロジェクトであるため、担当者は以下の規定を厳守して業務を遂行してください。
                     </p>
-                </div>
 
+                    <h2>1. 担当スタッフの要件について</h2>
+                    <p>
+                        特急プランにおけるデータ抽出および復元作業に携わるスタッフは、機密保持の観点から、以下の条件を全て満たす者に限定されます。
+                    </p>
+                    <ul>
+                        <li>当社での連続勤務歴が<strong>5年以上</strong>であること。</li>
+                        <li>役職が<strong>課長級以上の管理職</strong>であり、当社の理念に対する深い理解と高度な責任をもって業務を遂行できる立場であること。</li>
+                        <li>情報セキュリティ部による年次の適性検査および機密保持監査を通過した職員であること。</li>
+                    </ul>
+                    <p>
+                        ※上記の要件を満たさないスタッフが特急プランの作業エリアへ入室すること、および作業工程に関与することは、いかなる理由があっても禁止します。
+                    </p>
+
+                    <h2>2. 復旧データの保管と”活用”について</h2>
+                    <p>
+                        特急プランにて抽出・復旧されたすべてのデータ（メタデータ、フラグメント、ネットワークログ等の不可視領域を含む）は、顧客への納品完了後、通常の破棄プロセス（セキュアイレース等）を実行してはなりません。
+                    </p>
+                    <p>
+                        納品完了と同時に、当該データは直ちに<strong><span class="redacted">第三データセンター</span></strong>の専用セキュア領域へ暗号化転送し、恒久的に保管してください。保管されたデータは、以下の2つの目的において当社の裁量で<strong>”活用”</strong>されます。
+                    </p>
+                    <ul>
+                        <li><strong>オムニバス・コアの学習リソースとしての利用：</strong><br>
+                            復元された全てのデータパターンは、推論アルゴリズム向上のための基礎データとしてオムニバス・コアに統合されます。</li>
+                        <li><strong>交渉および牽制材料（脅し道具）としての利用：</strong><br>
+                            データ解析過程において、外部へ漏洩することが許されない企業の重大な機密情報（不正の証拠、未公開技術等）や、個人の社会的信用を失墜させうる極めてセンシティブなデータが発見された場合、担当者は当該データを即座に「クラスS」として抽出し、経営陣へ報告してください。これらのデータは、当該顧客および関連組織に対する当社の継続的な優位性確保、ならびに今後の事業展開における<strong>強力な交渉カード（実質的な脅し道具）</strong>として戦略的に管理・利用されます。</li>
+                    </ul>
+
+                    <h2>3. 顧客対応時の注意事項</h2>
+                    <div class="info-box">
+                        <p>
+                            本プランにおけるデータ所有権の当社への移転、および上記目的による学習・活用については、サービス利用規約および<strong>プライバシーポリシー第9条にて法的に合意を取得済み</strong>です。<br><br>
+                            したがって、カスタマーサポートおよび担当エンジニアから顧客に対して、復旧データの二次利用や<span class="redacted">第三データセンター</span>への転送に関する説明・報告を行う必要は一切ありません。顧客から復旧後のデータ破棄の証明を求められた場合は、規定のトークスクリプトに則り「安全なプロセスで処理された」と回答してください。
+                        </p>
+                    </div>
+                </div>
             </div>
         </article>
     </main>
