@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社内掲示板（BBS） | OMNIBUS ARCHIVE 社内ポータル</title>
+    <title>【極秘】第三データセンター運用・管理マニュアル | OMNIBUS ARCHIVE 社内ポータル</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,6 +23,7 @@
             --sys-text-light: #94a3b8; 
             --sys-border: #334155; 
             --sys-header-bg: #0f172a; 
+            --sys-alert: #ef4444; /* 警告用レッド */
         }
         
         * {
@@ -38,9 +39,6 @@
             line-height: 1.6;
             word-break: normal;
             overflow-wrap: break-word;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
         }
 
         /* =========================================
@@ -236,7 +234,7 @@
         /* ユーザー様よりご提示いただいた共通CSSコード（ここまで） */
 
         /* =========================================
-           社内掲示板（BBS）トップ専用UI
+           マニュアル（業務連絡）専用UI
            ========================================= */
         .portal-container {
             margin-top: 40px;
@@ -258,134 +256,124 @@
             text-decoration: underline;
         }
 
-        .page-title {
-            font-size: 1.6rem;
-            color: var(--sys-text);
-            margin-bottom: 30px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .bbs-category {
+        .notice-card {
             background-color: var(--sys-white);
             border: 1px solid var(--sys-border);
             border-radius: 4px;
-            margin-bottom: 40px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            overflow: hidden;
         }
 
-        .bbs-category-header {
-            background-color: #252525;
-            padding: 15px 25px;
+        /* 通知ヘッダー */
+        .notice-header {
             border-bottom: 1px solid var(--sys-border);
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--sys-accent);
+            background-color: #252525;
+            padding: 20px 30px;
         }
 
-        /* スレッド一覧テーブル */
-        .thread-list {
+        .notice-header-table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 0.95rem;
         }
 
-        .thread-list th, .thread-list td {
-            padding: 15px 25px;
-            border-bottom: 1px solid #2a2a2a;
+        .notice-header-table th {
             text-align: left;
-        }
-
-        .thread-list tr:last-child td {
-            border-bottom: none;
-        }
-
-        .thread-list th {
-            font-size: 0.85rem;
+            width: 120px;
             color: var(--sys-text-light);
+            padding: 5px 0;
             font-weight: 500;
-            background-color: #1a1a1a;
         }
 
-        .col-id { width: 60px; text-align: center; }
-        .col-title { width: auto; }
-        .col-posts { width: 80px; text-align: center; }
-        .col-date { width: 180px; }
-
-        /* スレッド行のスタイル */
-        .thread-row {
-            transition: background-color 0.2s;
-        }
-
-        .thread-row:hover {
-            background-color: #2a313d;
-        }
-
-        .thread-id {
-            font-family: 'Courier New', Courier, monospace;
-            color: var(--sys-text-light);
-            text-align: center;
-        }
-
-        /* リンクが「生きている」スレッド */
-        .thread-link {
-            color: var(--sys-primary);
-            text-decoration: none;
+        .notice-header-table td {
+            color: var(--sys-text);
+            padding: 5px 0;
             font-weight: 700;
-            font-size: 1.05rem;
-            display: block;
         }
 
-        .thread-link:hover {
-            text-decoration: underline;
+        .notice-title {
+            font-size: 1.4rem;
+            color: var(--sys-alert); /* 極秘情報のため赤を適用 */
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--sys-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notice-title::before {
+            content: "⚠";
+            font-size: 1.2rem;
+        }
+
+        /* 通知本文 */
+        .notice-body {
+            padding: 40px 30px;
+            font-size: 1rem;
+            color: var(--sys-text);
+        }
+
+        .notice-body p {
+            margin-bottom: 20px;
+        }
+
+        .notice-body h2 {
+            font-size: 1.15rem;
+            color: var(--sys-primary);
+            margin: 35px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--sys-border);
+        }
+
+        .notice-body h2:first-child {
+            margin-top: 0;
+        }
+
+        .notice-body ul {
+            margin-bottom: 20px;
+            margin-left: 20px;
+            color: var(--sys-text);
+        }
+
+        .notice-body li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .notice-body strong {
             color: var(--sys-accent);
         }
 
-        /* リンクが「死んでいる（アクセス不可）」スレッド */
-        .thread-dead {
-            color: #64748b; /* 暗いグレーにして非アクティブ感を出す */
-            font-weight: 400;
-            font-size: 1.05rem;
-            cursor: default;
+        /* 黒塗り（検閲）スタイル */
+        .redacted {
+            background-color: #000000;
+            color: transparent;
+            user-select: none;
+            padding: 0 4px;
+            border-radius: 2px;
+            display: inline-block;
+            vertical-align: middle;
+            pointer-events: none; 
         }
 
-        .post-count {
-            text-align: center;
-            font-family: 'Courier New', Courier, monospace;
-            color: var(--sys-text-light);
+        /* 警告ボックス */
+        .alert-box {
+            border: 1px solid var(--sys-alert);
+            background-color: rgba(239, 68, 68, 0.1);
+            padding: 20px;
+            border-radius: 2px;
+            margin-top: 30px;
         }
 
-        .last-update {
-            font-size: 0.85rem;
-            color: var(--sys-text-light);
+        .alert-box p {
+            margin-bottom: 0;
+            color: #fca5a5;
+            font-weight: 700;
         }
 
-        /* レスポンシブ微調整（掲示板テーブル） */
         @media (max-width: 768px) {
-            .thread-list th { display: none; } /* スマホでは見出し行を隠す */
-            .thread-list td {
-                display: block;
-                width: 100%;
-                padding: 10px 15px;
-                border-bottom: none;
-            }
-            .thread-list tr {
-                display: block;
-                border-bottom: 1px solid var(--sys-border);
-                padding: 10px 0;
-            }
-            .col-id { display: none; } /* IDも省略 */
-            .col-title { font-size: 1.1rem; padding-bottom: 5px; }
-            .col-posts, .col-date { 
-                display: inline-block; 
-                width: auto; 
-                padding: 0 15px; 
-                font-size: 0.8rem;
-            }
-            .col-posts::before { content: "レス数: "; }
+            .notice-header, .notice-body { padding: 20px; }
+            .notice-header-table th { width: 80px; }
         }
     </style>
 </head>
@@ -415,98 +403,72 @@
     <main class="portal-container">
 
         <div class="breadcrumb">
-            <a href="o-portal.html">O-PORTAL トップ</a> &gt; 社内掲示板（BBS）
+            <a href="o-portal.html">O-PORTAL トップ</a> &gt; <a href="#">業務マニュアル</a> &gt; <span class="redacted">第三データセンター</span>管理マニュアル
         </div>
 
-        <h1 class="page-title">社内掲示板（BBS）</h1>
+        <article class="notice-card">
+            <!-- ヘッダー -->
+            <div class="notice-header">
+                <table class="notice-header-table">
+                    <tbody>
+                        <tr>
+                            <th>更新日時</th>
+                            <td>2025/11/10 03:00</td>
+                        </tr>
+                        <tr>
+                            <th>管理部門</th>
+                            <td>代表取締役室 / 情報セキュリティ部</td>
+                        </tr>
+                        <tr>
+                            <th>対象権限</th>
+                            <td>Lv.3 限定（※閲覧記録監視中）</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h1 class="notice-title">【極秘】第三データセンター運用・管理マニュアル</h1>
+            </div>
 
-        <!-- カテゴリ1：人事・総務連絡 -->
-        <div class="bbs-category">
-            <div class="bbs-category-header">人事部・総務部連絡</div>
-            <table class="thread-list">
-                <thead>
-                    <tr>
-                        <th class="col-id">ID</th>
-                        <th class="col-title">スレッドタイトル</th>
-                        <th class="col-posts">レス数</th>
-                        <th class="col-date">最終更新日時</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- アクセス可能なスレッド（リンクが生きている） -->
-                    <tr class="thread-row">
-                        <td class="col-id"><span class="thread-id">011</span></td>
-                        <td class="col-title">
-                            <a href="thread_001.html" class="thread-link">【新入社員向け】業務に関するQ&Aスレッド</a>
-                        </td>
-                        <td class="col-posts"><span class="post-count">25</span></td>
-                        <td class="col-date"><span class="last-update">2026/04/08 10:02</span></td>
-                    </tr>
-                    
-                    <!-- 以下のスレッドはアクセス不可（リンクなし） -->
-                    <tr class="thread-row">
-                        <td class="col-id"><span class="thread-id">007</span></td>
-                        <td class="col-title">
-                            <span class="thread-dead">【周知】各種経費精算システムのUI変更について</span>
-                        </td>
-                        <td class="col-posts"><span class="post-count">3</span></td>
-                        <td class="col-date"><span class="last-update">2026/03/25 14:30</span></td>
-                    </tr>
-                    <tr class="thread-row">
-                        <td class="col-id"><span class="thread-id">003</span></td>
-                        <td class="col-title">
-                            <span class="thread-dead">健康診断（2026年度上半期）の受診日程調整</span>
-                        </td>
-                        <td class="col-posts"><span class="post-count">88</span></td>
-                        <td class="col-date"><span class="last-update">2026/03/10 09:15</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- 本文 -->
+            <div class="notice-body">
+                <p>
+                    本マニュアルは、当社の最重要施設である<strong>「第三データセンター（Core-Node）」</strong>の運用に関する管理規定を定めるものです。<br>
+                    第三データセンターの存在は、オムニバス・コアの学習データ構築および当社の事業戦略の根幹に関わるものであり、本施設に関する一切の情報は一般社員に対して完全に秘匿されます。
+                </p>
 
-        <!-- カテゴリ2：システム管理・開発 -->
-        <div class="bbs-category">
-            <div class="bbs-category-header">システム管理部・開発部</div>
-            <table class="thread-list">
-                <thead>
-                    <tr>
-                        <th class="col-id">ID</th>
-                        <th class="col-title">スレッドタイトル</th>
-                        <th class="col-posts">レス数</th>
-                        <th class="col-date">最終更新日時</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- 以下のスレッドはアクセス不可（リンクなし） -->
-                    <tr class="thread-row">
-                        <td class="col-id"><span class="thread-id">015</span></td>
-                        <td class="col-title">
-                            <span class="thread-dead">第三データセンターへのVPN接続エラーに関する報告</span>
-                        </td>
-                        <td class="col-posts"><span class="post-count">14</span></td>
-                        <td class="col-date"><span class="last-update">2026/04/10 11:20</span></td>
-                    </tr>
-                    <tr class="thread-row">
-                        <td class="col-id"><span class="thread-id">008</span></td>
-                        <td class="col-title">
-                            <span class="thread-dead">オムニバス・コア：推論アルゴリズムver2.4のバグ修正</span>
-                        </td>
-                        <td class="col-posts"><span class="post-count">42</span></td>
-                        <td class="col-date"><span class="last-update">2026/04/02 18:45</span></td>
-                    </tr>
+                <h2>1. 人員アサインと施設へのアクセスについて</h2>
+                <p>
+                    第三データセンターの運用、保守、およびデータ選別業務に携わるスタッフは、以下の条件を満たした者から代表取締役室が直接指名します。
+                </p>
+                <ul>
+                    <li>当社の企業理念に完全に同意し、いかなる業務命令にも忠実に従う<strong>極めて忠誠心の高い社員</strong>であること。</li>
+                    <li>情報セキュリティ部による厳格な身辺調査を通過し、外部機関への情報漏洩リスクが皆無であると認定された者。</li>
+                    <li>配属されたスタッフは、業務外で他の一般従業員と第三データセンターに関する会話を行うことを固く禁じます。</li>
+                </ul>
 
-                    <!-- アクセス可能なスレッド（リンクが生きている） -->
-                    <tr class="thread-row">
-                        <td class="col-id"><span class="thread-id">005</span></td>
-                        <td class="col-title">
-                            <a href="thread_002.html" class="thread-link">【障害報告】顧客データベースの断続的なアクセス遅延について</a>
-                        </td>
-                        <td class="col-posts"><span class="post-count">7</span></td>
-                        <td class="col-date"><span class="last-update">2026/03/28 22:15</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                <h2>2. データの管理・選別プロセス</h2>
+                <p>
+                    特急プラン等で抽出され、第三データセンターに転送されたデータ群（企業の財務データ、不正の証拠、個人の通話履歴、行動ログ等）の管理については、いかなるAIおよび自動化プログラムも使用しません。<br>
+                    これら「クラスS」のデータがネットワークの外部へ誤って流出するリスクを完全に排除するため、<strong>データの閲覧、選別、および仕分け作業は、100%指名されたスタッフの手（オフライン端末上）によってのみ行われます。</strong>
+                </p>
+
+                <h2>3. オムニバス・コアへの「学習」プロセス</h2>
+                <p>
+                    手作業によって選別されたデータのうち、当社にとって「有用」と判断された機密情報のみが、オムニバス・コアの推論アルゴリズム向上のための学習データとして専用サーバーへ投入されます。
+                </p>
+                <p>
+                    推論エンジンはこれらのデータを学習することで、ターゲットとなる企業や個人の思考パターン、隠蔽したい事実、行動の傾向を完全に模倣・再構築することが可能となります。学習が完了したオリジナルデータは、第三データセンターの物理ストレージにて厳重に保管し、今後の当社の事業展開において必要なタイミングで引き出せるようリスト化して管理してください。
+                </p>
+
+                <div class="alert-box">
+                    <p>
+                        【警告】<br>
+                        本マニュアルの内容、および第三データセンター内で取り扱うデータの内容は、最高レベルの社外秘です。本ページのスクリーンショットの撮影、内容のメモ、およびローカルへの保存はシステムにより検知され、即時解雇および法的措置の対象となります。<br>
+                        閲覧終了後、速やかにウィンドウを閉じてください。
+                    </p>
+                </div>
+
+            </div>
+        </article>
 
     </main>
 
@@ -517,9 +479,9 @@
                 このサイトの内容はフィクションです。<br class="pc-br">
                 登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
             </p>
-            <!-- ページ番号25、レベルLv.2に設定 -->
+            <!-- ページ番号29、レベルLv.3に設定 -->
             <div class="footer-right">
-                &lt; 25/35 &gt; (Lv.2)
+                &lt; 29/35 &gt; (Lv.3)
             </div>
         </div>
     </footer>
