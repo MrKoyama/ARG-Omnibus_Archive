@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>【非公開】第三データセンター運用・管理マニュアル | OMNIBUS ARCHIVE 社内ポータル</title>
+    <title>第一・第二データセンター 保守運用マニュアル | OMNIBUS ARCHIVE 社内ポータル</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +23,6 @@
             --sys-text-light: #94a3b8; 
             --sys-border: #334155; 
             --sys-header-bg: #0f172a; 
-            --sys-alert: #f59e0b; /* 警告用オレンジ */
         }
         
         * {
@@ -241,6 +240,21 @@
             margin-bottom: 100px;
         }
 
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--sys-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
         .notice-card {
             background-color: var(--sys-white);
             border: 1px solid var(--sys-border);
@@ -277,13 +291,10 @@
 
         .notice-title {
             font-size: 1.4rem;
-            color: var(--sys-accent);
+            color: var(--sys-accent); 
             margin-top: 15px;
             padding-top: 15px;
             border-top: 1px dashed var(--sys-border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         /* 通知本文 */
@@ -309,7 +320,7 @@
             margin-top: 0;
         }
 
-        .notice-body ul {
+        .notice-body ul, .notice-body ol {
             margin-bottom: 20px;
             margin-left: 20px;
             color: var(--sys-text);
@@ -324,24 +335,33 @@
             color: var(--sys-accent);
         }
 
-        /* 注意事項のボックス */
-        .alert-box {
-            border: 1px solid var(--sys-alert);
-            background-color: rgba(245, 158, 11, 0.1);
-            padding: 20px;
-            border-radius: 2px;
-            margin-top: 30px;
+        /* 表形式のデータ表示用スタイル */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            background-color: #1a1a1a;
+            border: 1px solid var(--sys-border);
         }
 
-        .alert-box p {
-            margin-bottom: 0;
-            color: #fcd34d;
-            font-weight: 700;
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            border: 1px solid var(--sys-border);
+            text-align: left;
+        }
+
+        .data-table th {
+            background-color: #2a313d;
+            color: var(--sys-text-light);
+            font-weight: 500;
         }
 
         @media (max-width: 768px) {
             .notice-header, .notice-body { padding: 20px; }
             .notice-header-table th { width: 80px; }
+            .data-table th, .data-table td { display: block; width: 100%; }
         }
     </style>
 </head>
@@ -370,68 +390,90 @@
     <!-- メインコンテンツ -->
     <main class="portal-container">
 
+        <div class="breadcrumb">
+            <a href="manual.html">業務マニュアル一覧</a> &gt; 第一・第二データセンター 保守運用マニュアル
+        </div>
+
         <article class="notice-card">
-            <!-- ヘッダー -->
+            <!-- 事務的な通知ヘッダー -->
             <div class="notice-header">
                 <table class="notice-header-table">
                     <tbody>
                         <tr>
-                            <th>更新日時</th>
-                            <td>2025/11/10 03:00</td>
+                            <th>最終更新日</th>
+                            <td>2026/02/01</td>
                         </tr>
                         <tr>
                             <th>管理部門</th>
-                            <td>代表取締役室 / 情報セキュリティ部</td>
+                            <td>施設管理部 (Facility Management Dept.)</td>
                         </tr>
                     </tbody>
                 </table>
-                <h1 class="notice-title">【社内規定】第三データセンター運用・管理マニュアル</h1>
+                <h1 class="notice-title">第一・第二データセンター 保守運用マニュアル</h1>
             </div>
 
-            <!-- 本文 -->
+            <!-- 通知本文 -->
             <div class="notice-body">
                 <p>
-                    本マニュアルは、当社の重要施設である<strong>第三データセンター</strong>の運用に関する管理規定を定めるものです。<br>
-                    第三データセンターの存在は、オムニバス・コアのデータ構築および当社の事業戦略に関わるものであり、本施設に関する運用プロセスは一般社員には非公開とされています。関係者は以下の規定を遵守してください。
+                    本マニュアルは、当社が運用する「第一データセンター（Site-A）」および「第二データセンター（Site-B）」における、日常的なハードウェア保守、空調管理、入退室プロトコルに関する基本規定を定めたものです。施設管理部の担当スタッフは、本マニュアルを遵守し、安定したデータ基盤の維持に努めてください。
                 </p>
 
-                <h2>1. 人員アサインと施設へのアクセスについて</h2>
+                <h2>1. 対象施設の役割と基本要件</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>施設名</th>
+                            <th>主要な役割</th>
+                            <th>セキュリティレベル</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>第一データセンター<br>(Site-A)</td>
+                            <td>一般法人顧客のデータ保護・メインアーカイブサーバーの運用。</td>
+                            <td>Tier 3 相当<br>（IDカード＋静脈認証）</td>
+                        </tr>
+                        <tr>
+                            <td>第二データセンター<br>(Site-B)</td>
+                            <td>大規模バックアップおよびDR（ディザスタリカバリ）用の遠隔ミラーリングサイト。</td>
+                            <td>Tier 3 相当<br>（IDカード＋静脈認証）</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>2. 入退室プロトコル</h2>
                 <p>
-                    第三データセンターの運用、保守、およびデータ管理業務に携わるスタッフは、以下の条件を満たした者の中から担当部門が選任します。
+                    データセンター内のサーバールームへ入室する際は、以下の手順を厳守してください。
+                </p>
+                <ol>
+                    <li>事前申請：作業日の2営業日前までに、O-PORTALの施設利用申請システムより入室申請を行うこと。</li>
+                    <li>本人確認：エントランスの警備スタッフに社員証（IDカード）を提示し、入室記録簿に氏名と入室時刻を記入すること。</li>
+                    <li>生体認証：サーバールーム前室（マントラップ）にて、IDカードの読み取りおよび静脈認証を行うこと。※共連れ（テールゲーティング）は厳禁とする。</li>
+                    <li>持ち込み制限：カメラ付きスマートフォン、USBメモリ等の記録媒体の持ち込みは原則禁止とする。作業用PCを持ち込む場合は、事前にセキュリティ部の許可を得ること。</li>
+                </ol>
+
+                <h2>3. 温湿度および空調管理</h2>
+                <p>
+                    サーバーの安定稼働を維持するため、サーバールーム内の温湿度は以下の基準値内に保つ必要があります。
                 </p>
                 <ul>
-                    <li>当社の企業理念を理解し、業務命令に対して忠実に従うことができる社員であること。</li>
-                    <li>情報セキュリティ部による適性検査を通過し、外部への情報漏洩リスクがないと判断された者。</li>
-                    <li>配属されたスタッフは、業務外で他の一般従業員に対して担当業務の詳細を語ることを控えてください。</li>
+                    <li><strong>目標温度：</strong> 20℃ ～ 24℃（コールドアイル吸気温度）</li>
+                    <li><strong>目標湿度：</strong> 40% ～ 60%</li>
                 </ul>
-
-                <h2>2. データの管理・選別プロセス</h2>
                 <p>
-                    復旧作業等の過程で第三データセンターに一時保管されたデータ群（顧客の機微情報を含む）の管理については、誤った自動処理によるシステムへの負荷や外部流出リスクを排除するため、原則として<strong>システム管理部の専任スタッフによる手作業（オフライン端末上での目視および分類）</strong>によって行われます。
+                    監視システムにより、温度が26℃を超える、または湿度が基準値を逸脱した場合は、自動的にアラートが発報されます。アラートを受信した当直スタッフは、直ちに現地設備の目視確認および空調システム（CRAC）の再起動等の初期対応を実施してください。
                 </p>
 
-                <h2>3. データの有用性評価とラベル付け</h2>
+                <h2>4. ハードウェア障害時の対応フロー</h2>
                 <p>
-                    手作業による内容確認の際、担当スタッフは各データがオムニバス・コアの学習および当社の事業活動においてどれだけ活用できるか（有用であるか）を評価し、<strong>「データ有用性スコア（Utility Score）」</strong>の算出、およびそれに基づくデータのラベル付け工程を必ず実行してください。
+                    サーバーラックのランプ異常、または監視システムからのSNMPトラップによる障害検知が行われた場合の対応フローは以下の通りです。
                 </p>
-                <p>
-                    ※詳細なスコアリングの算出基準、および各ラベルが付与された後のデータの取り扱い手順については、本マニュアルには記載されません。該当プロセスについては別途指定された指示に従い、厳格に処理を行ってください。
-                </p>
-
-                <h2>4. オムニバス・コアへの「学習」プロセス</h2>
-                <p>
-                    上記プロセスでラベル付けされ、「有用」と判断された情報は、オムニバス・コアの推論アルゴリズム向上のための学習データとして専用サーバーへ投入されます。
-                </p>
-                <p>
-                    推論エンジンはこれらのデータを学習することで、データのパターンや傾向をモデリングし、今後の復旧精度の向上に役立てます。なお、学習に利用された後のオリジナルデータは、第三データセンター内のセキュアな物理ストレージにて保管され、今後の事業展開において必要なタイミングで参照できるよう分類管理されます。
-                </p>
-
-                <div class="alert-box">
-                    <p>
-                        【取り扱い上の注意】<br>
-                        本マニュアルの内容、および施設内で取り扱うデータの詳細は社内秘情報に該当します。本ページのスクリーンショットの撮影、内容のメモ、および無断でのローカル保存は社内規定違反となります。閲覧終了後は、速やかにウィンドウを閉じてください。
-                    </p>
-                </div>
+                <ol>
+                    <li>障害発生ラックおよび対象ノードの特定。</li>
+                    <li>冗長化システム（Site-Bへのフェイルオーバー等）が正常に機能しているかの確認。</li>
+                    <li>ハードウェアの物理的な破損（HDD/SSDの故障、電源ユニットの不良等）が確認された場合は、予備パーツ（コールドスタンバイ）への交換作業を実施。</li>
+                    <li>交換後の正常稼働確認後、O-PORTALの「インシデント管理システム」へ対応ログを起票し、シフトリーダーへ報告すること。</li>
+                </ol>
 
             </div>
         </article>
@@ -445,9 +487,9 @@
                 このサイトの内容はフィクションです。<br class="pc-br">
                 登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
             </p>
-            <!-- ページ番号21、レベルLv.2に設定 -->
+            <!-- ページ番号30、レベルLv.2に設定 -->
             <div class="footer-right">
-                &lt; 21/35 &gt; (Lv.2)
+                &lt; 30/35 &gt; (Lv.2)
             </div>
         </div>
     </footer>

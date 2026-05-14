@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>【非公開】第三データセンター運用・管理マニュアル | OMNIBUS ARCHIVE 社内ポータル</title>
+    <title>業務マニュアル一覧 | OMNIBUS ARCHIVE 社内ポータル</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +23,6 @@
             --sys-text-light: #94a3b8; 
             --sys-border: #334155; 
             --sys-header-bg: #0f172a; 
-            --sys-alert: #f59e0b; /* 警告用オレンジ */
         }
         
         * {
@@ -39,6 +38,9 @@
             line-height: 1.6;
             word-break: normal;
             overflow-wrap: break-word;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         /* =========================================
@@ -234,114 +236,128 @@
         /* ユーザー様よりご提示いただいた共通CSSコード（ここまで） */
 
         /* =========================================
-           マニュアル（業務連絡）専用UI
+           マニュアル一覧（トップ）専用UI
            ========================================= */
         .portal-container {
-            margin-top: 60px;
+            margin-top: 40px;
             margin-bottom: 100px;
         }
 
-        .notice-card {
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--sys-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 1.6rem;
+            color: var(--sys-text);
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .page-desc {
+            font-size: 0.95rem;
+            color: var(--sys-text-light);
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--sys-border);
+            padding-bottom: 20px;
+        }
+
+        /* マニュアルのカードグリッド */
+        .manual-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .manual-card {
             background-color: var(--sys-white);
             border: 1px solid var(--sys-border);
             border-radius: 4px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-        }
-
-        /* 通知ヘッダー */
-        .notice-header {
-            border-bottom: 1px solid var(--sys-border);
-            background-color: #252525;
-            padding: 20px 30px;
-        }
-
-        .notice-header-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-        }
-
-        .notice-header-table th {
-            text-align: left;
-            width: 120px;
-            color: var(--sys-text-light);
-            padding: 5px 0;
-            font-weight: 500;
-        }
-
-        .notice-header-table td {
+            padding: 25px;
+            text-decoration: none;
             color: var(--sys-text);
-            padding: 5px 0;
-            font-weight: 700;
-        }
-
-        .notice-title {
-            font-size: 1.4rem;
-            color: var(--sys-accent);
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed var(--sys-border);
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
             display: flex;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* 通知本文 */
-        .notice-body {
-            padding: 40px 30px;
-            font-size: 1rem;
-            color: var(--sys-text);
+        .manual-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--sys-primary);
         }
 
-        .notice-body p {
-            margin-bottom: 20px;
+        .manual-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--sys-accent);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
         }
 
-        .notice-body h2 {
-            font-size: 1.15rem;
-            color: var(--sys-primary);
-            margin: 35px 0 15px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--sys-border);
+        .manual-dept {
+            font-size: 0.8rem;
+            color: var(--sys-text-light);
+            margin-bottom: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 0.05em;
         }
 
-        .notice-body h2:first-child {
-            margin-top: 0;
-        }
-
-        .notice-body ul {
-            margin-bottom: 20px;
-            margin-left: 20px;
-            color: var(--sys-text);
-        }
-
-        .notice-body li {
-            margin-bottom: 10px;
-            line-height: 1.8;
-        }
-
-        .notice-body strong {
+        .manual-title {
+            font-size: 1.2rem;
             color: var(--sys-accent);
-        }
-
-        /* 注意事項のボックス */
-        .alert-box {
-            border: 1px solid var(--sys-alert);
-            background-color: rgba(245, 158, 11, 0.1);
-            padding: 20px;
-            border-radius: 2px;
-            margin-top: 30px;
-        }
-
-        .alert-box p {
-            margin-bottom: 0;
-            color: #fcd34d;
+            margin-bottom: 15px;
             font-weight: 700;
+        }
+
+        .manual-desc {
+            font-size: 0.95rem;
+            color: var(--sys-text);
+            flex-grow: 1;
+        }
+
+        /* 隠しリンク（機密情報）用スタイル */
+        .secret-link-area {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px dashed #2a2a2a;
+            text-align: right;
+        }
+
+        .secret-link {
+            font-size: 0.8rem;
+            color: #2a2a2a; /* 背景色に近付けて隠す */
+            text-decoration: none;
+            font-family: 'Courier New', Courier, monospace;
+            transition: color 0.3s;
+        }
+
+        .secret-link:hover {
+            color: var(--sys-primary);
+            text-decoration: underline;
         }
 
         @media (max-width: 768px) {
-            .notice-header, .notice-body { padding: 20px; }
-            .notice-header-table th { width: 80px; }
+            .manual-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -370,71 +386,53 @@
     <!-- メインコンテンツ -->
     <main class="portal-container">
 
-        <article class="notice-card">
-            <!-- ヘッダー -->
-            <div class="notice-header">
-                <table class="notice-header-table">
-                    <tbody>
-                        <tr>
-                            <th>更新日時</th>
-                            <td>2025/11/10 03:00</td>
-                        </tr>
-                        <tr>
-                            <th>管理部門</th>
-                            <td>代表取締役室 / 情報セキュリティ部</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <h1 class="notice-title">【社内規定】第三データセンター運用・管理マニュアル</h1>
-            </div>
+        <div class="breadcrumb">
+            <a href="o-portal.html">O-PORTAL トップ</a> &gt; 業務マニュアル一覧
+        </div>
 
-            <!-- 本文 -->
-            <div class="notice-body">
-                <p>
-                    本マニュアルは、当社の重要施設である<strong>第三データセンター</strong>の運用に関する管理規定を定めるものです。<br>
-                    第三データセンターの存在は、オムニバス・コアのデータ構築および当社の事業戦略に関わるものであり、本施設に関する運用プロセスは一般社員には非公開とされています。関係者は以下の規定を遵守してください。
-                </p>
+        <h1 class="page-title">業務マニュアル一覧</h1>
+        <p class="page-desc">各部門の業務手順およびガイドラインを掲載しています。自身の担当業務に関するマニュアルは定期的に確認してください。</p>
 
-                <h2>1. 人員アサインと施設へのアクセスについて</h2>
-                <p>
-                    第三データセンターの運用、保守、およびデータ管理業務に携わるスタッフは、以下の条件を満たした者の中から担当部門が選任します。
+        <!-- マニュアル一覧グリッド -->
+        <div class="manual-grid">
+            
+            <!-- マニュアル1：第一・第二データセンター -->
+            <a href="manual_dc.html" class="manual-card">
+                <div class="manual-dept">Facility Management Dept.</div>
+                <h3 class="manual-title">第一・第二データセンター 保守運用マニュアル</h3>
+                <p class="manual-desc">
+                    メインアーカイブサーバー（Site-A）およびミラーリングサイト（Site-B）における、日常的なハードウェア保守、空調管理、入退室プロトコルに関する規定。
                 </p>
-                <ul>
-                    <li>当社の企業理念を理解し、業務命令に対して忠実に従うことができる社員であること。</li>
-                    <li>情報セキュリティ部による適性検査を通過し、外部への情報漏洩リスクがないと判断された者。</li>
-                    <li>配属されたスタッフは、業務外で他の一般従業員に対して担当業務の詳細を語ることを控えてください。</li>
-                </ul>
+            </a>
 
-                <h2>2. データの管理・選別プロセス</h2>
-                <p>
-                    復旧作業等の過程で第三データセンターに一時保管されたデータ群（顧客の機微情報を含む）の管理については、誤った自動処理によるシステムへの負荷や外部流出リスクを排除するため、原則として<strong>システム管理部の専任スタッフによる手作業（オフライン端末上での目視および分類）</strong>によって行われます。
+            <!-- マニュアル2：データ復旧業務 -->
+            <a href="#" class="manual-card">
+                <div class="manual-dept">Engineering Dept.</div>
+                <h3 class="manual-title">データ復旧（物理・論理障害）基本作業フロー</h3>
+                <p class="manual-desc">
+                    クリーンルーム内でのメディア解体手順、専用ツールを用いたダンプデータの抽出、および初期診断における障害レベルの判定基準について。
                 </p>
+            </a>
 
-                <h2>3. データの有用性評価とラベル付け</h2>
-                <p>
-                    手作業による内容確認の際、担当スタッフは各データがオムニバス・コアの学習および当社の事業活動においてどれだけ活用できるか（有用であるか）を評価し、<strong>「データ有用性スコア（Utility Score）」</strong>の算出、およびそれに基づくデータのラベル付け工程を必ず実行してください。
+            <!-- マニュアル3：カスタマーサポート -->
+            <a href="#" class="manual-card">
+                <div class="manual-dept">Customer Support Dept.</div>
+                <h3 class="manual-title">カスタマーサポート 顧客対応マニュアル</h3>
+                <p class="manual-desc">
+                    障害発生時の初期ヒアリング項目、エンジニアチームとの連携フロー、および復旧失敗時におけるトークスクリプト等、顧客対応の基本方針。
                 </p>
-                <p>
-                    ※詳細なスコアリングの算出基準、および各ラベルが付与された後のデータの取り扱い手順については、本マニュアルには記載されません。該当プロセスについては別途指定された指示に従い、厳格に処理を行ってください。
-                </p>
+            </a>
 
-                <h2>4. オムニバス・コアへの「学習」プロセス</h2>
-                <p>
-                    上記プロセスでラベル付けされ、「有用」と判断された情報は、オムニバス・コアの推論アルゴリズム向上のための学習データとして専用サーバーへ投入されます。
+            <!-- 追加マニュアル：経費精算など -->
+            <a href="#" class="manual-card">
+                <div class="manual-dept">General Affairs Dept.</div>
+                <h3 class="manual-title">O-PORTAL 経費精算システム利用ガイド</h3>
+                <p class="manual-desc">
+                    社内システムを用いた交通費、出張費、および備品購入費の申請手順と、月末の締め日に関する注意事項。
                 </p>
-                <p>
-                    推論エンジンはこれらのデータを学習することで、データのパターンや傾向をモデリングし、今後の復旧精度の向上に役立てます。なお、学習に利用された後のオリジナルデータは、第三データセンター内のセキュアな物理ストレージにて保管され、今後の事業展開において必要なタイミングで参照できるよう分類管理されます。
-                </p>
+            </a>
 
-                <div class="alert-box">
-                    <p>
-                        【取り扱い上の注意】<br>
-                        本マニュアルの内容、および施設内で取り扱うデータの詳細は社内秘情報に該当します。本ページのスクリーンショットの撮影、内容のメモ、および無断でのローカル保存は社内規定違反となります。閲覧終了後は、速やかにウィンドウを閉じてください。
-                    </p>
-                </div>
-
-            </div>
-        </article>
+        </div>
 
     </main>
 
@@ -445,9 +443,9 @@
                 このサイトの内容はフィクションです。<br class="pc-br">
                 登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
             </p>
-            <!-- ページ番号21、レベルLv.2に設定 -->
+            <!-- ページ番号を29に、レベルをLv.2に設定 -->
             <div class="footer-right">
-                &lt; 21/35 &gt; (Lv.2)
+                &lt; 29/35 &gt; (Lv.2)
             </div>
         </div>
     </footer>
