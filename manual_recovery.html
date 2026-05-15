@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データ復旧（物理・論理障害）基本作業フロー | OMNIBUS ARCHIVE 社内ポータル</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ユーザー様よりご提示いただいた共通CSSコード（ここから） */
+        /* =========================================
+           カラー変数（ダーク・無機質なシステムカラー）
+           ========================================= */
+        :root {
+            --sys-primary: #3b82f6; 
+            --sys-accent: #60a5fa;  
+            --sys-bg: #121212; 
+            --sys-white: #1e1e1e; 
+            --sys-text: #e2e8f0; 
+            --sys-text-light: #94a3b8; 
+            --sys-border: #334155; 
+            --sys-header-bg: #0f172a; 
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--sys-text);
+            background-color: var(--sys-bg);
+            line-height: 1.6;
+            word-break: normal;
+            overflow-wrap: break-word;
+        }
+
+        /* =========================================
+           ヘッダー（ダーク・機能的）
+           ========================================= */
+        header {
+            background-color: var(--sys-header-bg);
+            border-bottom: 2px solid var(--sys-primary);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            max-width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--sys-primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-icon {
+            height: 36px; 
+            width: 36px;  
+            object-fit: contain;
+        }
+
+        .system-name {
+            font-size: 0.9rem;
+            color: var(--sys-text-light);
+            border-left: 1px solid var(--sys-border);
+            padding-left: 15px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* 検索欄（ダークUI対応） */
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 6px 12px;
+            background-color: #1e293b;
+            color: var(--sys-text);
+            border: 1px solid var(--sys-border);
+            border-radius: 2px 0 0 2px;
+            outline: none;
+            width: 250px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input[type="text"]::placeholder {
+            color: #64748b;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--sys-primary);
+        }
+
+        .search-container button {
+            padding: 6px 15px;
+            background-color: var(--sys-primary);
+            color: #ffffff;
+            border: 1px solid var(--sys-primary);
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #2563eb;
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #0f172a; 
+            color: #94a3b8;
+            padding: 20px 30px; 
+            margin-top: auto;
+            border-top: 1px solid var(--sys-border);
+            width: 100%;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+            color: #94a3b8;
+        }
+
+        /* =========================================
+           完全レスポンシブ・デッドスペース解消設定
+           ========================================= */
+        html {
+            font-size: clamp(14px, 1vw + 10px, 18px); 
+        }
+
+        .header-top, .header-inner, .footer-content {
+            width: 100%;
+            max-width: 95%; 
+            padding-left: 0;
+            padding-right: 0;
+            margin: 0 auto;
+        }
+
+        section, main, .article-container, .portal-container {
+            width: 90%; 
+            max-width: 1600px !important; 
+            margin-left: auto;
+            margin-right: auto;
+            flex-grow: 1; 
+        }
+
+        @media (max-width: 768px) {
+            section, main, .article-container, .portal-container {
+                width: 100%;
+                padding: 40px 5%;
+            }
+            .header-top, .header-inner {
+                flex-direction: column;
+                padding: 15px 5%;
+            }
+            .system-name {
+                display: none;
+            }
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+            .search-container {
+                flex-grow: 1;
+                margin-right: 15px;
+            }
+            .search-container input[type="text"] {
+                width: 100%; 
+            }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        /* ユーザー様よりご提示いただいた共通CSSコード（ここまで） */
+
+        /* =========================================
+           マニュアル（業務連絡）専用UI
+           ========================================= */
+        .portal-container {
+            margin-top: 60px;
+            margin-bottom: 100px;
+        }
+
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--sys-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .notice-card {
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        /* 通知ヘッダー */
+        .notice-header {
+            border-bottom: 1px solid var(--sys-border);
+            background-color: #252525;
+            padding: 20px 30px;
+        }
+
+        .notice-header-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .notice-header-table th {
+            text-align: left;
+            width: 120px;
+            color: var(--sys-text-light);
+            padding: 5px 0;
+            font-weight: 500;
+        }
+
+        .notice-header-table td {
+            color: var(--sys-text);
+            padding: 5px 0;
+            font-weight: 700;
+        }
+
+        .notice-title {
+            font-size: 1.4rem;
+            color: var(--sys-accent); 
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--sys-border);
+        }
+
+        /* 通知本文 */
+        .notice-body {
+            padding: 40px 30px;
+            font-size: 1rem;
+            color: var(--sys-text);
+        }
+
+        .notice-body p {
+            margin-bottom: 20px;
+        }
+
+        .notice-body h2 {
+            font-size: 1.15rem;
+            color: var(--sys-primary);
+            margin: 35px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--sys-border);
+        }
+
+        .notice-body h2:first-child {
+            margin-top: 0;
+        }
+
+        .notice-body ul, .notice-body ol {
+            margin-bottom: 20px;
+            margin-left: 20px;
+            color: var(--sys-text);
+        }
+
+        .notice-body li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .notice-body strong {
+            color: var(--sys-accent);
+        }
+
+        /* 黒塗り（検閲）スタイル */
+        .redacted {
+            background-color: #000000;
+            color: transparent;
+            user-select: none;
+            padding: 0 4px;
+            border-radius: 2px;
+            display: inline-block;
+            vertical-align: middle;
+            pointer-events: none; 
+        }
+
+        /* フロー用ステップデザイン */
+        .flow-step {
+            background-color: #1a1a1a;
+            border-left: 4px solid var(--sys-primary);
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .flow-step-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--sys-text);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flow-step-num {
+            background-color: var(--sys-primary);
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            font-size: 0.85rem;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .flow-step-desc {
+            font-size: 0.95rem;
+            color: var(--sys-text-light);
+        }
+
+        /* 警告ボックス（赤ベース） */
+        .warning-box {
+            border: 1px solid #ef4444;
+            background-color: rgba(239, 68, 68, 0.1);
+            padding: 15px 20px;
+            border-radius: 2px;
+            margin-top: 15px;
+        }
+
+        .warning-box p {
+            margin-bottom: 0;
+            color: #fca5a5;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .notice-header, .notice-body { padding: 20px; }
+            .notice-header-table th { width: 80px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-inner">
+            <div class="logo-area">
+                <a href="toppage.html" class="logo">
+                    <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                    OMNIBUS ARCHIVE
+                </a>
+                <div class="system-name">社内ポータルシステム（O-PORTAL）</div>
+            </div>
+            
+            <div class="header-right">
+                <form class="search-container" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="社内情報の検索..." required autocomplete="off">
+                    <button type="submit">検索</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="portal-container">
+
+        <div class="breadcrumb">
+            <a href="manual.html">業務マニュアル一覧</a> &gt; データ復旧（物理・論理障害）基本作業フロー
+        </div>
+
+        <article class="notice-card">
+            <!-- 事務的な通知ヘッダー -->
+            <div class="notice-header">
+                <table class="notice-header-table">
+                    <tbody>
+                        <tr>
+                            <th>更新日時</th>
+                            <td>2026/02/10 10:00</td>
+                        </tr>
+                        <tr>
+                            <th>管理部門</th>
+                            <td>開発部 / エンジニアリングチーム</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h1 class="notice-title">データ復旧（物理・論理障害）基本作業フロー</h1>
+            </div>
+
+            <!-- 通知本文 -->
+            <div class="notice-body">
+                <p>
+                    本マニュアルは、顧客より預かったメディア（HDD、SSD、サーバー構築RAID等）に対する、初期診断からデータ納品に至るまでの基本作業手順を定めたものです。担当エンジニアは、顧客データの毀損リスクを最小限に抑えるため、以下のフローを厳守して作業を行ってください。
+                </p>
+
+                <h2>第1フェーズ：初期診断と障害の切り分け</h2>
+                <p>
+                    メディア到着後、通電および動作音の確認を行い、障害の性質（論理障害か物理障害か）を切り分けます。
+                </p>
+                <div class="flow-step">
+                    <div class="flow-step-title"><span class="flow-step-num">1</span>受入検査および外観確認</div>
+                    <div class="flow-step-desc">メディアのシリアルナンバー照合、外装の損傷（落下痕、水没、焦げ跡など）の目視確認を行う。</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-title"><span class="flow-step-num">2</span>通電テストと診断装置への接続</div>
+                    <div class="flow-step-desc">専用の診断装置（PC-3000等）へ接続し、モーターの回転音やヘッドのシーク音を確認する。異音（カチカチ音など）が発生した場合は直ちに通電を停止し、物理障害（重度）としてクリーンルーム作業へ移行する。</div>
+                </div>
+
+                <h2>第2フェーズ：障害別の復旧アプローチ</h2>
+                <p>
+                    初期診断の結果に基づき、以下のいずれかのアプローチを選択してデータの抽出を試みます。
+                </p>
+                
+                <h3>【A】論理障害（システムエラー、誤消去等）の場合</h3>
+                <div class="flow-step">
+                    <div class="flow-step-title"><span class="flow-step-num">A1</span>クローン（セクタイメージ）の作成</div>
+                    <div class="flow-step-desc">オリジナルメディアへの直接操作を避けるため、専用ツールを用いて全セクタのクローン（ダンプデータ）を作成する。</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-title"><span class="flow-step-num">A2</span>「オムニバス・コア」を用いた論理スキャン</div>
+                    <div class="flow-step-desc">クローンデータに対し、当社の推論エンジン「オムニバス・コア」によるディープスキャンを実行。ファイルシステムの再構築および断片化されたファイルの結合を行う。</div>
+                </div>
+
+                <h3>【B】物理障害（ヘッドクラッシュ、基盤ショート等）の場合</h3>
+                <div class="flow-step">
+                    <div class="flow-step-title"><span class="flow-step-num">B1</span>クリーンルーム（クラス100）での解体作業</div>
+                    <div class="flow-step-desc">HDDのカバーを開封し、プラッタ（磁気ディスク）のスクラッチ確認、および磁気ヘッドの交換作業を実施する。適合するドナーパーツは社内パーツライブラリより調達する。</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-title"><span class="flow-step-num">B2</span>ファームウェアの修復・ダンプデータの抽出</div>
+                    <div class="flow-step-desc">ヘッド交換後、ファームウェア（SA領域）の修復を行い、メディアが正常に認識される状態を確保した上で、不良セクタを回避しながらダンプデータを抽出する。以降は論理障害の手順（A2）へ合流する。</div>
+                </div>
+
+                <h2>第3フェーズ：検証と納品準備</h2>
+                <p>
+                    データの抽出および再構築が完了した後、データ品質の最終確認を行います。
+                </p>
+                <div class="flow-step">
+                    <div class="flow-step-title"><span class="flow-step-num">3</span>ファイル整合性の確認</div>
+                    <div class="flow-step-desc">抽出されたデータのうち、主要なファイル（ドキュメント、データベースファイル等）が正常に開けるか、ハッシュチェックおよび目視による整合性確認を行う。</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-title"><span class="flow-step-num">4</span>暗号化および納品メディアへの移行</div>
+                    <div class="flow-step-desc">復旧リストをカスタマーサポート部へ連携し、顧客の承認を得た後、復旧データを納品用メディアへ移行する。配送中の漏洩を防ぐため、データは規定の方式で暗号化すること。</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-title"><span class="flow-step-num">5</span>社内データの完全消去</div>
+                    <div class="flow-step-desc">
+                        納品完了から一定の検収期間経過後、作業に使用したクローンデータおよび作業ログは、セキュアイレースを用いて復元不可能な状態に完全消去する。
+                        <div class="warning-box">
+                            <p>
+                                ※注意※<br>
+                                上記の消去プロセスは「通常プラン」における規定です。「特急プラン」および「エンタープライズ特急プラン」が適用された案件のデータについては、この段階での消去を行わず、<strong><span class="redacted">特急プラン運用に関する特別ガイドライン</span></strong>に記載された例外処置の手順に従ってシステム転送を行ってください。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </article>
+
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br class="pc-br">
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            <!-- ページ番号31、レベルLv.2に設定 -->
+            <div class="footer-right">
+                &lt; 31/35 &gt; (Lv.2)
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
