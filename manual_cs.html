@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第一・第二データセンター 保守運用マニュアル | OMNIBUS ARCHIVE 社内ポータル</title>
+    <title>カスタマーサポート 顧客対応マニュアル | OMNIBUS ARCHIVE 社内ポータル</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,6 +23,7 @@
             --sys-text-light: #94a3b8; 
             --sys-border: #334155; 
             --sys-header-bg: #0f172a; 
+            --sys-alert: #ef4444; /* 警告用レッド */
         }
         
         * {
@@ -335,33 +336,63 @@
             color: var(--sys-accent);
         }
 
-        /* 表形式のデータ表示用スタイル */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            margin-bottom: 30px;
-            font-size: 0.95rem;
+        /* トークスクリプト用のボックス */
+        .script-box {
             background-color: #1a1a1a;
-            border: 1px solid var(--sys-border);
+            border-left: 4px solid var(--sys-primary);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 4px 4px 0;
+            font-family: inherit;
         }
 
-        .data-table th, .data-table td {
-            padding: 12px 15px;
-            border: 1px solid var(--sys-border);
-            text-align: left;
+        .script-box .speaker {
+            font-weight: 700;
+            color: var(--sys-accent);
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+        
+        .script-box .script-text {
+            color: var(--sys-text);
+            font-style: italic;
+            font-size: 0.95rem;
         }
 
-        .data-table th {
-            background-color: #2a313d;
-            color: var(--sys-text-light);
-            font-weight: 500;
+        /* 特殊対応ボックス（赤系の枠線で目立たせる） */
+        .special-rule-box {
+            border: 1px solid #ef4444;
+            background-color: rgba(239, 68, 68, 0.05);
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 40px;
+        }
+
+        .special-rule-box h3 {
+            color: #ef4444;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .special-rule-box h3::before {
+            content: "⚠";
+        }
+
+        .special-rule-box p {
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .special-rule-box p:last-child {
+            margin-bottom: 0;
         }
 
         @media (max-width: 768px) {
             .notice-header, .notice-body { padding: 20px; }
             .notice-header-table th { width: 80px; }
-            .data-table th, .data-table td { display: block; width: 100%; }
         }
     </style>
 </head>
@@ -391,7 +422,7 @@
     <main class="portal-container">
 
         <div class="breadcrumb">
-            <a href="manual.html">業務マニュアル一覧</a> &gt; 第一・第二データセンター 保守運用マニュアル
+            <a href="manual.html">業務マニュアル一覧</a> &gt; カスタマーサポート 顧客対応マニュアル
         </div>
 
         <article class="notice-card">
@@ -400,80 +431,74 @@
                 <table class="notice-header-table">
                     <tbody>
                         <tr>
-                            <th>最終更新日</th>
-                            <td>2026/02/01</td>
+                            <th>更新日時</th>
+                            <td>2025/08/20 09:00</td>
                         </tr>
                         <tr>
                             <th>管理部門</th>
-                            <td>施設管理部</td>
+                            <td>カスタマーサポート部</td>
                         </tr>
                     </tbody>
                 </table>
-                <h1 class="notice-title">第一・第二データセンター 保守運用マニュアル</h1>
+                <h1 class="notice-title">カスタマーサポート 顧客対応マニュアル</h1>
             </div>
 
             <!-- 通知本文 -->
             <div class="notice-body">
                 <p>
-                    本マニュアルは、当社が運用する「第一データセンター（Site-A）」および「第二データセンター（Site-B）」における、日常的なハードウェア保守、空調管理、入退室プロトコルに関する基本規定を定めたものです。施設管理部の担当スタッフは、本マニュアルを遵守し、安定したデータ基盤の維持に努めてください。
+                    本マニュアルは、カスタマーサポート（CS）部門における、データ復旧に関する初期受付から納品・事後対応までの基本方針およびトークスクリプトを定めるものです。CS担当者は、お客様の不安に寄り添い、丁寧かつ誠実な対応を心がけてください。
                 </p>
 
-                <h2>1. 対象施設の役割と基本要件</h2>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>施設名</th>
-                            <th>主要な役割</th>
-                            <th>セキュリティレベル</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>第一データセンター<br>(Site-A)</td>
-                            <td>一般法人顧客のデータ保護・メインアーカイブサーバーの運用。</td>
-                            <td>Tier 3 相当<br>（IDカード＋静脈認証）</td>
-                        </tr>
-                        <tr>
-                            <td>第二データセンター<br>(Site-B)</td>
-                            <td>大規模バックアップおよびDR（ディザスタリカバリ）用の遠隔ミラーリングサイト。</td>
-                            <td>Tier 3 相当<br>（IDカード＋静脈認証）</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h2>2. 入退室プロトコル</h2>
+                <h2>1. 障害発生時の初期ヒアリングフロー</h2>
                 <p>
-                    データセンター内のサーバールームへ入室する際は、以下の手順を厳守してください。
+                    突然のデータ喪失により、お電話口で動揺されているお客様に対しては、まず落ち着いて状況をお話しいただけるよう、言葉遣いやトーンに配慮してヒアリングを行います。
                 </p>
                 <ol>
-                    <li>事前申請：作業日の2営業日前までに、O-PORTALの施設利用申請システムより入室申請を行うこと。</li>
-                    <li>本人確認：エントランスの警備スタッフに社員証（IDカード）を提示し、入室記録簿に氏名と入室時刻を記入すること。</li>
-                    <li>生体認証：サーバールーム前室（マントラップ）にて、IDカードの読み取りおよび静脈認証を行うこと。※共連れ（テールゲーティング）は厳禁とする。</li>
-                    <li>持ち込み制限：カメラ付きスマートフォン、USBメモリ等の記録媒体の持ち込みは原則禁止とする。作業用PCを持ち込む場合は、事前にセキュリティ部の許可を得ること。</li>
+                    <li><strong>共感と安心の提供：</strong> お客様の不安や焦りに寄り添い、当社が全力でサポートする旨を伝えます。</li>
+                    <li><strong>対象メディアの確認：</strong> PC、外付けHDD、SSD、サーバーなど、障害が発生している機器の種類と型番を確認します。</li>
+                    <li><strong>障害状況のヒアリング：</strong> 専門用語は控え、「画面にはどのようなメッセージが出ていますか？」「カチカチというような異音はしていませんか？」など、お客様が答えやすい言葉で質問します。</li>
+                    <li><strong>データの重要度と希望納期：</strong> 最優先で復旧させたいデータ（写真、業務書類など）と、いつまでに必要かを確認し、適切なプラン（スタンダードプラン、特急プラン、エンタープライズプラン）をご案内します。</li>
                 </ol>
 
-                <h2>3. 温湿度および空調管理</h2>
+                <div class="script-box">
+                    <div class="speaker">【推奨スクリプト：初期受付】</div>
+                    <div class="script-text">
+                        「大変ご不安なことと存じます。ですが、どうぞご安心ください。弊社には専門のエンジニアと設備が揃っておりますので、全力でサポートさせていただきます。まずは正確な診断を行うために、現在お使いの機器についていくつかお聞かせいただけますでしょうか？」
+                    </div>
+                </div>
+
+                <h2>2. エンジニアチームとの連携</h2>
                 <p>
-                    サーバーの安定稼働を維持するため、サーバールーム内の温湿度は以下の基準値内に保つ必要があります。
+                    ヒアリングした内容は、速やかに社内のインシデント管理システムに登録し、エンジニアチームへ引き継ぎます。
+                    エンジニアからの初期診断結果（障害のレベル、復旧にかかる期間、お見積り額）が出た際は、お客様に専門用語を使わず、わかりやすく丁寧にご説明し、作業開始の承認をいただきます。
+                </p>
+
+                <h2>3. 復旧不可能時（または一部欠損時）の対応方針</h2>
+                <p>
+                    当社の技術をもってしても、メディアの物理的な損傷が激しく、データ復元が不可能なケースがございます。このような場合、お客様は深い落胆を感じられますので、より一層誠実で思いやりのある対応が求められます。
                 </p>
                 <ul>
-                    <li><strong>目標温度：</strong> 20℃ ～ 24℃（コールドアイル吸気温度）</li>
-                    <li><strong>目標湿度：</strong> 40% ～ 60%</li>
+                    <li>専門的な診断結果を元に、「なぜデータが取り出せなかったのか」を客観的かつ丁寧に説明してください。</li>
+                    <li>ご希望に添えなかったことに対して、真摯にお詫びの言葉を伝えてください。</li>
                 </ul>
-                <p>
-                    監視システムにより、温度が26℃を超える、または湿度が基準値を逸脱した場合は、自動的にアラートが発報されます。アラートを受信した当直スタッフは、直ちに現地設備の目視確認および空調システム（CRAC）の再起動等の初期対応を実施してください。
-                </p>
 
-                <h2>4. ハードウェア障害時の対応フロー</h2>
-                <p>
-                    サーバーラックのランプ異常、または監視システムからのSNMPトラップによる障害検知が行われた場合の対応フローは以下の通りです。
-                </p>
-                <ol>
-                    <li>障害発生ラックおよび対象ノードの特定。</li>
-                    <li>冗長化システム（Site-Bへのフェイルオーバー等）が正常に機能しているかの確認。</li>
-                    <li>ハードウェアの物理的な破損（HDD/SSDの故障、電源ユニットの不良等）が確認された場合は、予備パーツ（コールドスタンバイ）への交換作業を実施。</li>
-                    <li>交換後の正常稼働確認後、O-PORTALの「インシデント管理システム」へ対応ログを起票し、シフトリーダーへ報告すること。</li>
-                </ol>
+                <div class="script-box">
+                    <div class="speaker">【推奨スクリプト：復旧不可の報告】</div>
+                    <div class="script-text">
+                        「弊社のエンジニアが最善を尽くし解析を行いましたが、誠に残念ながら、記録部分の物理的な損傷が非常に大きく、これ以上のデータ抽出が困難な状態であることが判明いたしました。お客様の大切なデータをご返却できず、大変心苦しい結果となってしまい誠に申し訳ございません。」
+                    </div>
+                </div>
+
+                <!-- 違和感を持たせる特殊対応規定 -->
+                <div class="special-rule-box">
+                    <h3>【重要】「特急プラン」納品後の事後対応について</h3>
+                    <p>
+                        スタンダードプランおよびエンタープライズプランをご利用のお客様からの納品後のお問い合わせについては、引き続きCS部門にて対応を行いますが、<strong>「特急プラン」をご利用いただいたお客様から、復旧・納品完了後にいただいたお電話（特に復旧されたデータの内容や取り扱いに関するお問い合わせ）</strong>については、CS部門でのヒアリングおよび回答を一切行わないでください。
+                    </p>
+                    <p>
+                        該当するお電話を受けた際は、「本件につきましては、担当窓口より折り返しご連絡いたします」とお伝えし、通話を終了した後、<strong>速やかに「リスクマネジメント・アライアンス室」へ案件をエスカレーション（引き継ぎ）</strong>してください。
+                    </p>
+                </div>
 
             </div>
         </article>
@@ -487,9 +512,9 @@
                 このサイトの内容はフィクションです。<br class="pc-br">
                 登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
             </p>
-            <!-- ページ番号30、レベルLv.2に設定 -->
+            <!-- ページ番号32、レベルLv.2に設定 -->
             <div class="footer-right">
-                &lt; 30/35 &gt; (Lv.2)
+                &lt; 32/35 &gt; (Lv.2)
             </div>
         </div>
     </footer>

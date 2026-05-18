@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社員ディレクトリ | OMNIBUS ARCHIVE 社内ポータル</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           カラー変数（ダーク・無機質なシステムカラー）
+           ========================================= */
+        :root {
+            --sys-primary: #3b82f6; 
+            --sys-accent: #60a5fa;  
+            --sys-bg: #121212; 
+            --sys-white: #1e1e1e; 
+            --sys-text: #e2e8f0; 
+            --sys-text-light: #94a3b8; 
+            --sys-border: #334155; 
+            --sys-header-bg: #0f172a; 
+            --sys-alert: #ef4444; 
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--sys-text);
+            background-color: var(--sys-bg);
+            line-height: 1.6;
+            word-break: normal;
+            overflow-wrap: break-word;
+        }
+
+        /* =========================================
+           ヘッダー（ダーク・機能的）
+           ========================================= */
+        header {
+            background-color: var(--sys-header-bg);
+            border-bottom: 2px solid var(--sys-primary);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            max-width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--sys-primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-icon {
+            height: 36px; 
+            width: 36px;  
+            object-fit: contain;
+        }
+
+        .system-name {
+            font-size: 0.9rem;
+            color: var(--sys-text-light);
+            border-left: 1px solid var(--sys-border);
+            padding-left: 15px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* 検索欄（ダークUI対応） */
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 6px 12px;
+            background-color: #1e293b;
+            color: var(--sys-text);
+            border: 1px solid var(--sys-border);
+            border-radius: 2px 0 0 2px;
+            outline: none;
+            width: 250px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input[type="text"]::placeholder {
+            color: #64748b;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--sys-primary);
+        }
+
+        .search-container button {
+            padding: 6px 15px;
+            background-color: var(--sys-primary);
+            color: #ffffff;
+            border: 1px solid var(--sys-primary);
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #2563eb;
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #0f172a; 
+            color: #94a3b8;
+            padding: 20px 30px; 
+            margin-top: auto;
+            border-top: 1px solid var(--sys-border);
+            width: 100%;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+            color: #94a3b8;
+        }
+
+        /* =========================================
+           完全レスポンシブ・デッドスペース解消設定
+           ========================================= */
+        html {
+            font-size: clamp(14px, 1vw + 10px, 18px); 
+        }
+
+        .header-top, .header-inner, .footer-content {
+            width: 100%;
+            max-width: 95%; 
+            padding-left: 0;
+            padding-right: 0;
+            margin: 0 auto;
+        }
+
+        section, main, .article-container, .portal-container {
+            width: 90%; 
+            max-width: 1600px !important; 
+            margin-left: auto;
+            margin-right: auto;
+            flex-grow: 1; 
+        }
+
+        @media (max-width: 768px) {
+            section, main, .article-container, .portal-container {
+                width: 100%;
+                padding: 40px 5%;
+            }
+            .header-top, .header-inner {
+                flex-direction: column;
+                padding: 15px 5%;
+            }
+            .system-name {
+                display: none;
+            }
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+            .search-container {
+                flex-grow: 1;
+                margin-right: 15px;
+            }
+            .search-container input[type="text"] {
+                width: 100%; 
+            }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* =========================================
+           ディレクトリ（社員名簿）専用UI
+           ========================================= */
+        .portal-container {
+            margin-top: 40px;
+            margin-bottom: 100px;
+        }
+
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--sys-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 1.6rem;
+            color: var(--sys-text);
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .page-desc {
+            font-size: 0.95rem;
+            color: var(--sys-text-light);
+            margin-bottom: 30px;
+        }
+
+        /* 検索・絞り込みツールバー */
+        .toolbar {
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            border-radius: 4px;
+            padding: 20px 25px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            flex-wrap: wrap;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toolbar label {
+            font-size: 0.9rem;
+            color: var(--sys-text-light);
+            font-weight: 700;
+        }
+
+        .toolbar select, .toolbar input[type="text"] {
+            padding: 8px 12px;
+            background-color: #1e293b;
+            color: var(--sys-text);
+            border: 1px solid var(--sys-border);
+            border-radius: 2px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .toolbar select:focus, .toolbar input[type="text"]:focus {
+            border-color: var(--sys-primary);
+        }
+
+        .btn-filter {
+            padding: 8px 25px;
+            background-color: var(--sys-primary);
+            color: var(--sys-white);
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.3s;
+        }
+
+        .btn-filter:hover {
+            background-color: #2563eb;
+        }
+
+        /* 社員リストテーブル */
+        .directory-card {
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .directory-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .directory-table th, .directory-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #2a2a2a;
+            text-align: left;
+        }
+
+        .directory-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .directory-table th {
+            background-color: #252525;
+            color: var(--sys-text-light);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .directory-table tr:hover td {
+            background-color: #2a313d;
+        }
+
+        .col-id {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--sys-text-light);
+            width: 100px;
+        }
+
+        .col-name {
+            font-weight: 700;
+            color: var(--sys-accent);
+            width: 180px;
+        }
+
+        .col-dept {
+            color: var(--sys-text);
+        }
+
+        .col-role {
+            color: var(--sys-text-light);
+        }
+
+        .col-ext {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--sys-primary);
+            width: 100px;
+        }
+
+        /* 検索結果が0件の時の表示 */
+        .no-results {
+            padding: 30px;
+            text-align: center;
+            color: var(--sys-text-light);
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .toolbar-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .toolbar select, .toolbar input[type="text"] {
+                width: 100%;
+            }
+            
+            /* スマホ用のテーブル調整 */
+            .directory-table th { display: none; }
+            .directory-table td {
+                display: block;
+                width: 100%;
+                padding: 8px 15px;
+                border-bottom: none;
+            }
+            .directory-table tr {
+                display: block;
+                border-bottom: 1px solid var(--sys-border);
+                padding: 10px 0;
+            }
+            .col-id { display: none; }
+            .col-name { font-size: 1.1rem; padding-bottom: 5px; width: 100%; }
+            .col-ext::before { content: "内線: "; color: var(--sys-text-light); font-family: sans-serif; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-inner">
+            <div class="logo-area">
+                <a href="toppage.html" class="logo">
+                    <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                    OMNIBUS ARCHIVE
+                </a>
+                <div class="system-name">社内ポータルシステム（O-PORTAL）</div>
+            </div>
+            
+            <div class="header-right">
+                <form class="search-container" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="社内情報の検索..." required autocomplete="off">
+                    <button type="submit">検索</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="portal-container">
+
+        <div class="breadcrumb">
+            <a href="o-portal.html">O-PORTAL トップ</a> &gt; 社員ディレクトリ
+        </div>
+
+        <h1 class="page-title">社員ディレクトリ</h1>
+        <p class="page-desc">社内の組織図および全従業員の連絡先（内線番号）・配属部門を検索します。</p>
+
+        <!-- 絞り込みツールバー -->
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <label for="dept-select">部署：</label>
+                <select id="dept-select">
+                    <option value="all">すべての部署</option>
+                    <option value="代表取締役室">代表取締役室</option>
+                    <option value="開発部">開発部</option>
+                    <option value="情報セキュリティ部">情報セキュリティ部</option>
+                    <option value="システム管理部">システム管理部</option>
+                    <option value="カスタマーサポート部">カスタマーサポート部</option>
+                    <option value="人事部">人事部</option>
+                    <option value="総務部">総務部</option>
+                    <option value="営業部">営業部</option>
+                    <option value="施設管理部">施設管理部</option>
+                </select>
+            </div>
+            <div class="toolbar-group">
+                <label for="name-search">氏名検索：</label>
+                <input type="text" id="name-search" placeholder="例：鈴木">
+            </div>
+            <!-- 検索ボタン（これを押した時にのみ絞り込みを実行する） -->
+            <button class="btn-filter" type="button" id="btn-search">検索</button>
+        </div>
+
+        <!-- 社員リスト -->
+        <div class="directory-card">
+            <table class="directory-table">
+                <thead>
+                    <tr>
+                        <th class="col-id">社員ID</th>
+                        <th class="col-name">氏名</th>
+                        <th class="col-dept">配属部門</th>
+                        <th class="col-role">役職・担当</th>
+                        <th class="col-ext">内線</th>
+                    </tr>
+                </thead>
+                <tbody id="employee-list">
+                    <!-- ここにJavaScriptで全185人分の固定データが描画されます -->
+                </tbody>
+            </table>
+            <div id="no-results" class="no-results">該当する社員が見つかりませんでした。</div>
+        </div>
+
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br class="pc-br">
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            <div class="footer-right">
+                &lt; 35/35 &gt; (Lv.2)
+            </div>
+        </div>
+    </footer>
+
+    <!-- 社員データ（固定185人分）および検索実行のスクリプト -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // ページ更新で変わらない、全185名の完全固定データ
+            const allEmployees = [
+                { id: "E0001", name: "九条 誠", dept: "代表取締役室", role: "創業者", ext: "---" },
+                { id: "E0239", name: "東雲 慧", dept: "開発部", role: "エンジニア", ext: "100" },
+                { id: "E0240", name: "佐々木 健一", dept: "情報セキュリティ部", role: "マネージャー", ext: "999" },
+                { id: "E0241", name: "鈴木 宏", dept: "システム管理部", role: "情報基盤課 リーダー", ext: "901" },
+                { id: "E0242", name: "中村 翔太", dept: "開発部", role: "データインテリジェンスチーム", ext: "405" },
+                { id: "E0243", name: "佐藤 美咲", dept: "人事部", role: "研修担当", ext: "210" },
+                { id: "E0244", name: "伊藤 誠治", dept: "営業部", role: "経理担当", ext: "320" },
+                { id: "E0245", name: "高橋 結衣", dept: "営業部", role: "法人営業担当", ext: "315" },
+                { id: "E0254", name: "中野 理沙", dept: "カスタマーサポート部", role: "オペレーター", ext: "338" },
+
+                // 以下、モブ社員データ
+                { id: "E0246", name: "神楽 達也", dept: "開発部", role: "エンジニア", ext: "664" },
+                { id: "E0247", name: "村上 奈々", dept: "カスタマーサポート部", role: "オペレーター", ext: "114" },
+                { id: "E0248", name: "坂本 久美子", dept: "システム管理部", role: "アシスタント", ext: "159" },
+                { id: "E0249", name: "長谷川 知花", dept: "カスタマーサポート部", role: "アシスタント", ext: "193" },
+                { id: "E0250", name: "大塚 風太", dept: "営業部", role: "チームリーダー", ext: "878" },
+                { id: "E0251", name: "南 浩二", dept: "システム管理部", role: "エンジニア", ext: "167" },
+                { id: "E0252", name: "望月 湊斗", dept: "施設管理部", role: "主任", ext: "542" },
+                { id: "E0253", name: "小川 彩", dept: "システム管理部", role: "アシスタント", ext: "534" },
+                { id: "E0255", name: "龍崎 奈々", dept: "システム管理部", role: "アシスタント", ext: "207" },
+                { id: "E0256", name: "増田 真由美", dept: "総務部", role: "一般社員", ext: "250" },
+                { id: "E0257", name: "姫野 椿", dept: "総務部", role: "エンジニア", ext: "389" },
+                { id: "E0258", name: "東条 雄大", dept: "施設管理部", role: "エンジニア", ext: "833" },
+                { id: "E0259", name: "加藤 大地", dept: "営業部", role: "エンジニア", ext: "872" },
+                { id: "E0260", name: "二階堂 紬", dept: "総務部", role: "アシスタント", ext: "831" },
+                { id: "E0261", name: "横山 明日香", dept: "総務部", role: "主任", ext: "870" },
+                { id: "E0262", name: "伊藤 葉", dept: "情報セキュリティ部", role: "チームリーダー", ext: "561" },
+                { id: "E0263", name: "橘 智子", dept: "情報セキュリティ部", role: "チームリーダー", ext: "437" },
+                { id: "E0264", name: "天城 陽菜", dept: "情報セキュリティ部", role: "一般社員", ext: "484" },
+                { id: "E0265", name: "土屋 裕子", dept: "人事部", role: "主任", ext: "847" },
+                { id: "E0266", name: "杉山 葉", dept: "営業部", role: "一般社員", ext: "613" },
+                { id: "E0267", name: "青木 焔真", dept: "人事部", role: "チームリーダー", ext: "753" },
+                { id: "E0268", name: "星野 莉子", dept: "人事部", role: "アシスタント", ext: "596" },
+                { id: "E0269", name: "斎藤 洋子", dept: "総務部", role: "主任", ext: "579" },
+                { id: "E0270", name: "中野 光", dept: "人事部", role: "一般社員", ext: "106" },
+                { id: "E0271", name: "川崎 桃子", dept: "システム管理部", role: "エンジニア", ext: "518" },
+                { id: "E0272", name: "篠原 一真", dept: "カスタマーサポート部", role: "オペレーター", ext: "128" },
+                { id: "E0273", name: "石井 京子", dept: "システム管理部", role: "チームリーダー", ext: "751" },
+                { id: "E0274", name: "岡本 紫", dept: "営業部", role: "アシスタント", ext: "354" },
+                { id: "E0275", name: "工藤 宏樹", dept: "営業部", role: "一般社員", ext: "356" },
+                { id: "E0276", name: "島田 芽依", dept: "情報セキュリティ部", role: "チームリーダー", ext: "119" },
+                { id: "E0277", name: "雪村 一真", dept: "カスタマーサポート部", role: "アシスタント", ext: "186" },
+                { id: "E0278", name: "小松 岳", dept: "開発部", role: "オペレーター", ext: "365" },
+                { id: "E0279", name: "風間 刃", dept: "システム管理部", role: "チームリーダー", ext: "752" },
+                { id: "E0280", name: "増田 修", dept: "システム管理部", role: "主任", ext: "713" },
+                { id: "E0281", name: "丸山 湊", dept: "営業部", role: "主任", ext: "557" },
+                { id: "E0282", name: "栗原 杏", dept: "施設管理部", role: "エンジニア", ext: "614" },
+                { id: "E0283", name: "市川 杏", dept: "システム管理部", role: "エンジニア", ext: "349" },
+                { id: "E0284", name: "水無瀬 涼太", dept: "情報セキュリティ部", role: "一般社員", ext: "297" },
+                { id: "E0285", name: "酒井 朱莉", dept: "カスタマーサポート部", role: "オペレーター", ext: "605" },
+                { id: "E0286", name: "雪村 和也", dept: "カスタマーサポート部", role: "アシスタント", ext: "141" },
+                { id: "E0287", name: "冴島 和子", dept: "カスタマーサポート部", role: "オペレーター", ext: "194" },
+                { id: "E0288", name: "南 銀", dept: "営業部", role: "一般社員", ext: "542" },
+                { id: "E0289", name: "獅子王 悠人", dept: "施設管理部", role: "アシスタント", ext: "444" },
+                { id: "E0290", name: "上田 悠人", dept: "営業部", role: "一般社員", ext: "159" },
+                { id: "E0291", name: "西園寺 澪", dept: "カスタマーサポート部", role: "一般社員", ext: "827" },
+                { id: "E0292", name: "赤城 蒼", dept: "カスタマーサポート部", role: "オペレーター", ext: "432" },
+                { id: "E0293", name: "小鳥遊 匠", dept: "人事部", role: "オペレーター", ext: "322" },
+                { id: "E0294", name: "冴島 涼太", dept: "カスタマーサポート部", role: "主任", ext: "852" },
+                { id: "E0295", name: "宮崎 颯", dept: "人事部", role: "エンジニア", ext: "359" },
+                { id: "E0296", name: "小松 大輝", dept: "カスタマーサポート部", role: "アシスタント", ext: "346" },
+                { id: "E0297", name: "野村 一真", dept: "総務部", role: "一般社員", ext: "825" },
+                { id: "E0298", name: "藤井 恭平", dept: "カスタマーサポート部", role: "チームリーダー", ext: "630" },
+                { id: "E0299", name: "内田 達也", dept: "システム管理部", role: "エンジニア", ext: "545" },
+                { id: "E0300", name: "宮本 大地", dept: "カスタマーサポート部", role: "一般社員", ext: "602" },
+                { id: "E0301", name: "山本 勝", dept: "営業部", role: "主任", ext: "807" },
+                { id: "E0302", name: "鉄 七海", dept: "総務部", role: "アシスタント", ext: "109" },
+                { id: "E0303", name: "山口 亮", dept: "営業部", role: "チームリーダー", ext: "367" },
+                { id: "E0304", name: "西村 美月", dept: "営業部", role: "アシスタント", ext: "704" },
+                { id: "E0305", name: "片山 明日香", dept: "開発部", role: "オペレーター", ext: "827" },
+                { id: "E0306", name: "高橋 勇斗", dept: "開発部", role: "オペレーター", ext: "688" },
+                { id: "E0307", name: "平田 涼太", dept: "人事部", role: "エンジニア", ext: "755" },
+                { id: "E0308", name: "佐々木 志保", dept: "システム管理部", role: "一般社員", ext: "185" },
+                { id: "E0309", name: "渡部 烈", dept: "カスタマーサポート部", role: "エンジニア", ext: "430" },
+                { id: "E0310", name: "不知火 理恵", dept: "人事部", role: "アシスタント", ext: "135" },
+                { id: "E0311", name: "内田 陽向", dept: "情報セキュリティ部", role: "オペレーター", ext: "567" },
+                { id: "E0312", name: "井上 陸", dept: "営業部", role: "アシスタント", ext: "299" },
+                { id: "E0313", name: "不知火 健一", dept: "総務部", role: "アシスタント", ext: "732" },
+                { id: "E0314", name: "田中 陽向", dept: "開発部", role: "チームリーダー", ext: "193" },
+                { id: "E0315", name: "服部 愛", dept: "システム管理部", role: "エンジニア", ext: "105" },
+                { id: "E0316", name: "白銀 涼介", dept: "開発部", role: "チームリーダー", ext: "338" },
+                { id: "E0317", name: "川崎 野乃花", dept: "情報セキュリティ部", role: "オペレーター", ext: "281" },
+                { id: "E0318", name: "風間 咲良", dept: "営業部", role: "アシスタント", ext: "700" },
+                { id: "E0319", name: "百合川 颯太", dept: "開発部", role: "一般社員", ext: "258" },
+                { id: "E0320", name: "南 彩", dept: "総務部", role: "アシスタント", ext: "166" },
+                { id: "E0321", name: "原田 彩花", dept: "人事部", role: "アシスタント", ext: "468" },
+                { id: "E0322", name: "天城 真白", dept: "システム管理部", role: "一般社員", ext: "185" },
+                { id: "E0323", name: "土屋 真由美", dept: "施設管理部", role: "オペレーター", ext: "875" },
+                { id: "E0324", name: "鷹司 裕子", dept: "総務部", role: "オペレーター", ext: "896" },
+                { id: "E0325", name: "石田 綾", dept: "人事部", role: "アシスタント", ext: "535" },
+                { id: "E0326", name: "百合川 望", dept: "営業部", role: "一般社員", ext: "593" },
+                { id: "E0327", name: "上田 哲也", dept: "カスタマーサポート部", role: "アシスタント", ext: "755" },
+                { id: "E0328", name: "伊藤 健", dept: "情報セキュリティ部", role: "一般社員", ext: "277" },
+                { id: "E0329", name: "上田 翔平", dept: "カスタマーサポート部", role: "一般社員", ext: "617" },
+                { id: "E0330", name: "九条 碧", dept: "システム管理部", role: "主任", ext: "473" },
+                { id: "E0331", name: "結城 和子", dept: "カスタマーサポート部", role: "エンジニア", ext: "105" },
+                { id: "E0332", name: "土屋 拓海", dept: "施設管理部", role: "エンジニア", ext: "869" },
+                { id: "E0333", name: "佐野 慶太", dept: "総務部", role: "オペレーター", ext: "250" },
+                { id: "E0334", name: "福田 茜", dept: "総務部", role: "一般社員", ext: "138" },
+                { id: "E0335", name: "工藤 瑛太", dept: "開発部", role: "主任", ext: "115" },
+                { id: "E0336", name: "吉村 樹", dept: "カスタマーサポート部", role: "オペレーター", ext: "755" },
+                { id: "E0337", name: "鉄 宏樹", dept: "施設管理部", role: "一般社員", ext: "235" },
+                { id: "E0338", name: "小林 義人", dept: "人事部", role: "エンジニア", ext: "515" },
+                { id: "E0339", name: "一条 洋平", dept: "開発部", role: "アシスタント", ext: "284" },
+                { id: "E0340", name: "本田 愛莉", dept: "システム管理部", role: "一般社員", ext: "411" },
+                { id: "E0341", name: "佐々木 苺", dept: "人事部", role: "アシスタント", ext: "349" },
+                { id: "E0342", name: "神宮寺 航", dept: "システム管理部", role: "エンジニア", ext: "651" },
+                { id: "E0343", name: "清水 一真", dept: "人事部", role: "エンジニア", ext: "354" },
+                { id: "E0344", name: "岡田 竜也", dept: "人事部", role: "チームリーダー", ext: "367" },
+                { id: "E0345", name: "中島 颯真", dept: "情報セキュリティ部", role: "一般社員", ext: "172" },
+                { id: "E0346", name: "池田 勝", dept: "開発部", role: "オペレーター", ext: "813" },
+                { id: "E0347", name: "河野 航", dept: "人事部", role: "チームリーダー", ext: "207" },
+                { id: "E0348", name: "岡本 翔平", dept: "カスタマーサポート部", role: "エンジニア", ext: "488" },
+                { id: "E0349", name: "福田 梨花", dept: "人事部", role: "一般社員", ext: "827" },
+                { id: "E0350", name: "安達 吉雄", dept: "総務部", role: "主任", ext: "419" },
+                { id: "E0351", name: "江塚 寛自", dept: "システム管理部", role: "アシスタント", ext: "587" },
+                { id: "E0352", name: "井上 奏乃", dept: "人事部", role: "一般社員", ext: "115" },
+                { id: "E0353", name: "美澄 英男", dept: "営業部", role: "アシスタント", ext: "878" },
+                { id: "E0354", name: "森阪 斯和", dept: "システム管理部", role: "一般社員", ext: "216" },
+                { id: "E0355", name: "市川 怜虎", dept: "総務部", role: "アシスタント", ext: "485" },
+                { id: "E0356", name: "多摩川 颯介", dept: "営業部", role: "エンジニア", ext: "867" },
+                { id: "E0357", name: "伊藤 達彬", dept: "情報セキュリティ部", role: "一般社員", ext: "420" },
+                { id: "E0358", name: "北堀 生健", dept: "情報セキュリティ部", role: "一般社員", ext: "614" },
+                { id: "E0359", name: "池町 紗千也", dept: "システム管理部", role: "一般社員", ext: "704" },
+                { id: "E0360", name: "丸山 識一", dept: "施設管理部", role: "エンジニア", ext: "542" },
+                { id: "E0361", name: "河野 颯", dept: "人事部", role: "一般社員", ext: "354" },
+                { id: "E0362", name: "大本 聖子", dept: "総務部", role: "一般社員", ext: "437" },
+                { id: "E0363", name: "菜月 昴", dept: "情報セキュリティ部", role: "一般社員", ext: "870" },
+                { id: "E0364", name: "宮本 美子", dept: "営業部", role: "オペレーター", ext: "847" },
+                { id: "E0365", name: "山之内 義則", dept: "施設管理部", role: "アシスタント", ext: "831" },
+                { id: "E0366", name: "村松 大二郎", dept: "人事部", role: "一般社員", ext: "596" },
+                { id: "E0367", name: "永田 りの", dept: "人事部", role: "アシスタント", ext: "579" },
+                { id: "E0368", name: "村田 正忠", dept: "カスタマーサポート部", role: "エンジニア", ext: "106" },
+                { id: "E0369", name: "倉島 龍二", dept: "営業部", role: "一般社員", ext: "518" },
+                { id: "E0370", name: "高柳 伝", dept: "情報セキュリティ部", role: "主任", ext: "128" },
+                { id: "E0371", name: "篠田 健太", dept: "総務部", role: "アシスタント", ext: "751" },
+                { id: "E0372", name: "安藤 宏樹", dept: "システム管理部", role: "オペレーター", ext: "354" },
+                { id: "E0373", name: "長谷川 りこ", dept: "システム管理部", role: "一般社員", ext: "356" },
+                { id: "E0374", name: "和田 大樹", dept: "施設管理部", role: "アシスタント", ext: "119" },
+                { id: "E0375", name: "福本 花苗", dept: "情報セキュリティ部", role: "エンジニア", ext: "186" },
+                { id: "E0376", name: "笠木 響", dept: "営業部", role: "エンジニア", ext: "365" },
+                { id: "E0377", name: "中山 高志", dept: "施設管理部", role: "オペレーター", ext: "752" },
+                { id: "E0378", name: "冬野 将弥", dept: "総務部", role: "一般社員", ext: "713" },
+                { id: "E0379", name: "加古 和幸", dept: "カスタマーサポート部", role: "チームリーダー", ext: "557" },
+                { id: "E0380", name: "松井 結羽", dept: "システム管理部", role: "オペレーター", ext: "614" },
+                { id: "E0381", name: "稲森 さら", dept: "総務部", role: "アシスタント", ext: "349" },
+                { id: "E0382", name: "篠澤 広", dept: "施設管理部", role: "アシスタント", ext: "297" },
+                { id: "E0383", name: "野村 政輝", dept: "システム管理部", role: "アシスタント", ext: "605" },
+                { id: "E0384", name: "土橋 博志", dept: "人事部", role: "アシスタント", ext: "141" },
+                { id: "E0385", name: "真田 あんな", dept: "営業部", role: "アシスタント", ext: "194" },
+                { id: "E0386", name: "平原 眞奈", dept: "カスタマーサポート部", role: "一般社員", ext: "542" },
+                { id: "E0387", name: "近藤 淳哉", dept: "システム管理部", role: "チームリーダー", ext: "444" },
+                { id: "E0388", name: "笠原 茂樹", dept: "人事部", role: "オペレーター", ext: "159" },
+                { id: "E0389", name: "田辺 道夫", dept: "営業部", role: "エンジニア", ext: "827" },
+                { id: "E0390", name: "小林 有希", dept: "システム管理部", role: "アシスタント", ext: "432" },
+                { id: "E0391", name: "山本 善成", dept: "システム管理部", role: "一般社員", ext: "322" },
+                { id: "E0392", name: "松永 和夫", dept: "情報セキュリティ部", role: "エンジニア", ext: "852" },
+                { id: "E0393", name: "足木 かおる", dept: "営業部", role: "アシスタント", ext: "359" },
+                { id: "E0394", name: "佐々木 真優", dept: "総務部", role: "オペレーター", ext: "346" },
+                { id: "E0395", name: "近賀 ひかる", dept: "情報セキュリティ部", role: "アシスタント", ext: "825" },
+                { id: "E0396", name: "弘中 勝吾", dept: "人事部", role: "一般社員", ext: "630" },
+                { id: "E0397", name: "山北 航基", dept: "総務部", role: "アシスタント", ext: "545" },
+                { id: "E0398", name: "石井 愛", dept: "システム管理部", role: "一般社員", ext: "602" },
+                { id: "E0399", name: "森﨑 竜哉", dept: "人事部", role: "一般社員", ext: "807" },
+                { id: "E0400", name: "蒲原 和博", dept: "施設管理部", role: "アシスタント", ext: "109" },
+                { id: "E0401", name: "佐藤 かなり", dept: "開発部", role: "一般社員", ext: "367" },
+                { id: "E0402", name: "津森 弘美", dept: "総務部", role: "アシスタント", ext: "704" },
+                { id: "E0403", name: "岩本 優香", dept: "開発部", role: "アシスタント", ext: "827" },
+                { id: "E0404", name: "小林 潤", dept: "システム管理部", role: "一般社員", ext: "688" },
+                { id: "E0405", name: "黒田 知美", dept: "人事部", role: "チームリーダー", ext: "755" },
+                { id: "E0406", name: "藤乃 功輝", dept: "人事部", role: "一般社員", ext: "185" },
+                { id: "E0407", name: "近藤 翔", dept: "カスタマーサポート部", role: "アシスタント", ext: "430" },
+                { id: "E0408", name: "大谷 あいか", dept: "総務部", role: "エンジニア", ext: "135" },
+                { id: "E0409", name: "渡辺 環奈", dept: "カスタマーサポート部", role: "エンジニア", ext: "567" },
+                { id: "E0410", name: "高槻 圭吾", dept: "営業部", role: "エンジニア", ext: "299" },
+                { id: "E0411", name: "山口 多香子", dept: "開発部", role: "エンジニア", ext: "732" },
+                { id: "E0412", name: "友永 京子", dept: "カスタマーサポート部", role: "アシスタント", ext: "193" },
+                { id: "E0413", name: "古三沢 彰", dept: "施設管理部", role: "チームリーダー", ext: "105" },
+                { id: "E0414", name: "原 栄二", dept: "営業部", role: "一般社員", ext: "338" },
+                { id: "E0415", name: "押谷 ゆきこ", dept: "開発部", role: "アシスタント", ext: "281" },
+                { id: "E0416", name: "水野 葵", dept: "営業部", role: "アシスタント", ext: "700" },
+                { id: "E0417", name: "藤本 裕介", dept: "人事部", role: "オペレーター", ext: "258" },
+                { id: "E0418", name: "若林 洋平", dept: "システム管理部", role: "エンジニア", ext: "166" },
+                { id: "E0419", name: "伊藤 信平", dept: "営業部", role: "アシスタント", ext: "468" },
+                { id: "E0420", name: "松田 幸雄", dept: "総務部", role: "一般社員", ext: "185" },
+                { id: "E0421", name: "鈴木 ゆず", dept: "営業部", role: "アシスタント", ext: "875" },
+                { id: "E0422", name: "倉島 秀文", dept: "カスタマーサポート部", role: "一般社員", ext: "896" }
+            ];
+
+            // UI要素の取得
+            const tbody = document.getElementById('employee-list');
+            const deptSelect = document.getElementById('dept-select');
+            const nameSearch = document.getElementById('name-search');
+            const btnSearch = document.getElementById('btn-search');
+            const noResults = document.getElementById('no-results');
+
+            // テーブルを描画する関数
+            const renderTable = (employees) => {
+                tbody.innerHTML = '';
+                
+                if (employees.length === 0) {
+                    noResults.style.display = 'block';
+                } else {
+                    noResults.style.display = 'none';
+                    employees.forEach(emp => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="col-id">${emp.id}</td>
+                            <td class="col-name">${emp.name}</td>
+                            <td class="col-dept">${emp.dept}</td>
+                            <td class="col-role">${emp.role}</td>
+                            <td class="col-ext">${emp.ext}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            };
+
+            // 検索（絞り込み）を実行する関数
+            const filterEmployees = () => {
+                const selectedDept = deptSelect.value;
+                const searchWord = nameSearch.value.trim().toLowerCase();
+
+                const filtered = allEmployees.filter(emp => {
+                    // 部署の判定
+                    const matchDept = (selectedDept === 'all') || (emp.dept === selectedDept);
+                    // 氏名の判定（スペースを抜いて検索しやすくする）
+                    const empNameNoSpace = emp.name.replace(/\s+/g, '');
+                    const searchWordNoSpace = searchWord.replace(/\s+/g, '');
+                    const matchName = empNameNoSpace.includes(searchWordNoSpace);
+
+                    return matchDept && matchName;
+                });
+
+                renderTable(filtered);
+            };
+
+            // 「検索」ボタンがクリックされた時にのみ絞り込みを実行する
+            btnSearch.addEventListener('click', filterEmployees);
+
+            // エンターキーでも検索できるようにする
+            nameSearch.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    filterEmployees();
+                }
+            });
+
+            // 初回描画（最初は全員表示）
+            renderTable(allEmployees);
+        });
+    </script>
+
+</body>
+</html>

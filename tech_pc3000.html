@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第一・第二データセンター 保守運用マニュアル | OMNIBUS ARCHIVE 社内ポータル</title>
+    <title>【技術マニュアル】PC-3000 / スパイダーボード 運用仕様 | OMNIBUS ARCHIVE 社内ポータル</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,6 +23,7 @@
             --sys-text-light: #94a3b8; 
             --sys-border: #334155; 
             --sys-header-bg: #0f172a; 
+            --sys-alert: #ef4444; 
         }
         
         * {
@@ -260,6 +261,7 @@
             border: 1px solid var(--sys-border);
             border-radius: 4px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            overflow: hidden;
         }
 
         /* 通知ヘッダー */
@@ -335,33 +337,55 @@
             color: var(--sys-accent);
         }
 
-        /* 表形式のデータ表示用スタイル */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            margin-bottom: 30px;
-            font-size: 0.95rem;
+        /* 機材紹介レイアウト */
+        .equipment-block {
+            display: flex;
+            gap: 30px;
             background-color: #1a1a1a;
             border: 1px solid var(--sys-border);
+            border-left: 4px solid var(--sys-primary);
+            padding: 25px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            align-items: flex-start;
         }
 
-        .data-table th, .data-table td {
-            padding: 12px 15px;
-            border: 1px solid var(--sys-border);
-            text-align: left;
+        .equipment-img {
+            flex: 1;
+            max-width: 300px;
+            flex-shrink: 0;
         }
 
-        .data-table th {
-            background-color: #2a313d;
+        .equipment-img img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            border: 1px solid #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .equipment-text {
+            flex: 2;
+        }
+
+        .equipment-text h3 {
+            font-size: 1.2rem;
+            color: var(--sys-text);
+            margin-bottom: 10px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .equipment-text p {
+            font-size: 0.95rem;
             color: var(--sys-text-light);
-            font-weight: 500;
+            margin-bottom: 10px;
         }
 
         @media (max-width: 768px) {
             .notice-header, .notice-body { padding: 20px; }
             .notice-header-table th { width: 80px; }
-            .data-table th, .data-table td { display: block; width: 100%; }
+            .equipment-block { flex-direction: column; }
+            .equipment-img { max-width: 100%; }
         }
     </style>
 </head>
@@ -391,7 +415,7 @@
     <main class="portal-container">
 
         <div class="breadcrumb">
-            <a href="manual.html">業務マニュアル一覧</a> &gt; 第一・第二データセンター 保守運用マニュアル
+            <a href="manual.html">業務マニュアル一覧</a> &gt; 機材運用仕様書（PC-3000 / Spider Board）
         </div>
 
         <article class="notice-card">
@@ -400,81 +424,80 @@
                 <table class="notice-header-table">
                     <tbody>
                         <tr>
-                            <th>最終更新日</th>
-                            <td>2026/02/01</td>
+                            <th>更新日時</th>
+                            <td>2025/11/01 10:00</td>
                         </tr>
                         <tr>
                             <th>管理部門</th>
-                            <td>施設管理部</td>
+                            <td>開発部 / エンジニアリングチーム</td>
+                        </tr>
+                        <tr>
+                            <th>対象権限</th>
+                            <td>Lv.3</td>
                         </tr>
                     </tbody>
                 </table>
-                <h1 class="notice-title">第一・第二データセンター 保守運用マニュアル</h1>
+                <h1 class="notice-title">【技術マニュアル】PC-3000 / スパイダーボード 運用仕様</h1>
             </div>
 
             <!-- 通知本文 -->
             <div class="notice-body">
                 <p>
-                    本マニュアルは、当社が運用する「第一データセンター（Site-A）」および「第二データセンター（Site-B）」における、日常的なハードウェア保守、空調管理、入退室プロトコルに関する基本規定を定めたものです。施設管理部の担当スタッフは、本マニュアルを遵守し、安定したデータ基盤の維持に努めてください。
+                    本マニュアルは、物理的・論理的に致命的な損傷を受けたストレージメディア（HDD、SSD、スマートフォン端末等）から生のデータを抽出するための専用診断・復旧装置「PC-3000」および「スパイダーボード（Spider Board）」の基本運用仕様を定めたものです。
                 </p>
-
-                <h2>1. 対象施設の役割と基本要件</h2>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>施設名</th>
-                            <th>主要な役割</th>
-                            <th>セキュリティレベル</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>第一データセンター<br>(Site-A)</td>
-                            <td>一般法人顧客のデータ保護・メインアーカイブサーバーの運用。</td>
-                            <td>Tier 3 相当<br>（IDカード＋静脈認証）</td>
-                        </tr>
-                        <tr>
-                            <td>第二データセンター<br>(Site-B)</td>
-                            <td>大規模バックアップおよびDR（ディザスタリカバリ）用の遠隔ミラーリングサイト。</td>
-                            <td>Tier 3 相当<br>（IDカード＋静脈認証）</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h2>2. 入退室プロトコル</h2>
                 <p>
-                    データセンター内のサーバールームへ入室する際は、以下の手順を厳守してください。
-                </p>
-                <ol>
-                    <li>事前申請：作業日の2営業日前までに、O-PORTALの施設利用申請システムより入室申請を行うこと。</li>
-                    <li>本人確認：エントランスの警備スタッフに社員証（IDカード）を提示し、入室記録簿に氏名と入室時刻を記入すること。</li>
-                    <li>生体認証：サーバールーム前室（マントラップ）にて、IDカードの読み取りおよび静脈認証を行うこと。※共連れ（テールゲーティング）は厳禁とする。</li>
-                    <li>持ち込み制限：カメラ付きスマートフォン、USBメモリ等の記録媒体の持ち込みは原則禁止とする。作業用PCを持ち込む場合は、事前にセキュリティ部の許可を得ること。</li>
-                </ol>
-
-                <h2>3. 温湿度および空調管理</h2>
-                <p>
-                    サーバーの安定稼働を維持するため、サーバールーム内の温湿度は以下の基準値内に保つ必要があります。
-                </p>
-                <ul>
-                    <li><strong>目標温度：</strong> 20℃ ～ 24℃（コールドアイル吸気温度）</li>
-                    <li><strong>目標湿度：</strong> 40% ～ 60%</li>
-                </ul>
-                <p>
-                    監視システムにより、温度が26℃を超える、または湿度が基準値を逸脱した場合は、自動的にアラートが発報されます。アラートを受信した当直スタッフは、直ちに現地設備の目視確認および空調システム（CRAC）の再起動等の初期対応を実施してください。
+                    これらの機材によって抽出されたダンプデータ（完全なバイナリデータ）は、オムニバス・コアが欠損領域を推論し、人格や記憶のモデルを再構築するための<strong>最も重要な一次ソース（入力データ）</strong>となります。担当エンジニアは、機材の取り扱いに細心の注意を払い、可能な限り完全な形でデータを吸い出してください。
                 </p>
 
-                <h2>4. ハードウェア障害時の対応フロー</h2>
-                <p>
-                    サーバーラックのランプ異常、または監視システムからのSNMPトラップによる障害検知が行われた場合の対応フローは以下の通りです。
-                </p>
-                <ol>
-                    <li>障害発生ラックおよび対象ノードの特定。</li>
-                    <li>冗長化システム（Site-Bへのフェイルオーバー等）が正常に機能しているかの確認。</li>
-                    <li>ハードウェアの物理的な破損（HDD/SSDの故障、電源ユニットの不良等）が確認された場合は、予備パーツ（コールドスタンバイ）への交換作業を実施。</li>
-                    <li>交換後の正常稼働確認後、O-PORTALの「インシデント管理システム」へ対応ログを起票し、シフトリーダーへ報告すること。</li>
-                </ol>
+                <h2>主要機材の仕様と運用手順</h2>
 
+                <!-- 機材1：PC-3000 -->
+                <div class="equipment-block">
+                    <div class="equipment-img">
+                        <!-- 【画像のご用意：PC-3000のハードウェア本体（PCIeカードや専用の接続BOX）、または専用ソフトウェアでHDDのセクタ情報を解析しているモニター画面の画像 (推奨: 600x400px)】 -->
+                        <img src="images/tool_pc3000.png" alt="PC-3000 システム画像">
+                    </div>
+                    <div class="equipment-text">
+                        <h3>PC-3000 (Data Recovery System)</h3>
+                        <p>
+                            <strong>用途：</strong> HDD、SSD、RAIDシステムなどのストレージに対する、工場出荷レベル（ファクトリーモード）での直接アクセスと診断、およびファームウェア（SA領域）の修復・書き換え。
+                        </p>
+                        <p>
+                            <strong>運用手順：</strong><br>
+                            OSやBIOSレベルで認識しなくなったドライブを当機材に接続し、ドライブ独自のテクノモード・コマンドを発行して強制的に認識させます。物理的な不良セクタ（バッドセクタ）をハードウェアレベルでスキップしながら、磁気プラッタの全領域からダンプデータ（セクタイメージ）を作成します。
+                        </p>
+                        <p>
+                            <strong>注意事項：</strong> ヘッドのシークエラーが頻発する場合は、無理に読み取りを継続せず、クリーンルームでの物理的なヘッド交換作業を先行させてください。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 機材2：スパイダーボード -->
+                <div class="equipment-block">
+                    <div class="equipment-img">
+                        <!-- 【画像のご用意：スパイダーボード（Spider Board）の画像。基盤から取り外されたメモリチップに対して、蜘蛛の足のような極細のピン（プローブ）が何本も接続されている精密な作業風景 (推奨: 600x400px)】 -->
+                        <img src="images/tool_spiderboard.png" alt="Spider Board 接続画像">
+                    </div>
+                    <div class="equipment-text">
+                        <h3>Spider Board (Pinout Adapter)</h3>
+                        <p>
+                            <strong>用途：</strong> 基盤が完全に破壊されたUSBメモリ、SDカード、スマートフォンなどから取り外した「NANDフラッシュメモリチップ」への直接配線（ピンアウト）と、データの直接読み出し（チップオフ復旧）。
+                        </p>
+                        <p>
+                            <strong>運用手順：</strong><br>
+                            はんだ付けによる熱損傷リスクを回避するため、チップの微細な接点（コンタクトパッド）に対して、当機材の極細ピン（プローブ）を顕微鏡下で精密に位置合わせします。接続確立後、PC-3000 Flash等と連携してメモリ内部の生のバイナリデータを吸い出します。
+                        </p>
+                        <p>
+                            <strong>注意事項：</strong> コントローラーチップを通さずに抽出したデータは、アルゴリズムによって暗号化・分散化された「ノイズの塊」となっています。吸い出した直後のデータの解読は、後工程のオムニバス・コアの推論エンジンに一任してください。
+                        </p>
+                    </div>
+                </div>
+
+                <h2>抽出データの連携プロトコル</h2>
+                <p>
+                    上記機材を用いて抽出に成功したダンプデータは、ファイルシステムの再構築を行う前に、必ず当社のセキュアサーバー（第三データセンター連携ノード）を経由させてください。
+                    これにより、抽出された純粋なユーザーデータがオムニバス・コアの学習モデルに自動的に同期されます。
+                </p>
             </div>
         </article>
 
@@ -487,9 +510,9 @@
                 このサイトの内容はフィクションです。<br class="pc-br">
                 登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
             </p>
-            <!-- ページ番号30、レベルLv.2に設定 -->
+            <!-- ページ番号37、レベルLv.3に設定 -->
             <div class="footer-right">
-                &lt; 30/35 &gt; (Lv.2)
+                &lt; 37/35 &gt; (Lv.3)
             </div>
         </div>
     </footer>
