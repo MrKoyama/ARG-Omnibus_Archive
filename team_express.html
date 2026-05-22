@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>【非公開】第三データセンター運用・管理マニュアル | OMNIBUS ARCHIVE 社内ポータル</title>
+    <title>【極秘】特急プラン事後対応専門チーム 運用プロトコル | OMNIBUS ARCHIVE 社内ポータル</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +23,7 @@
             --sys-text-light: #94a3b8; 
             --sys-border: #334155; 
             --sys-header-bg: #0f172a; 
-            --sys-alert: #f59e0b; /* 警告用オレンジ */
+            --sys-alert: #ef4444; 
         }
         
         * {
@@ -241,11 +241,27 @@
             margin-bottom: 100px;
         }
 
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--sys-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
         .notice-card {
             background-color: var(--sys-white);
             border: 1px solid var(--sys-border);
             border-radius: 4px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            overflow: hidden;
         }
 
         /* 通知ヘッダー */
@@ -277,13 +293,10 @@
 
         .notice-title {
             font-size: 1.4rem;
-            color: var(--sys-accent);
+            color: var(--sys-accent); 
             margin-top: 15px;
             padding-top: 15px;
             border-top: 1px dashed var(--sys-border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         /* 通知本文 */
@@ -309,7 +322,7 @@
             margin-top: 0;
         }
 
-        .notice-body ul {
+        .notice-body ul, .notice-body ol {
             margin-bottom: 20px;
             margin-left: 20px;
             color: var(--sys-text);
@@ -324,36 +337,35 @@
             color: var(--sys-accent);
         }
 
-        /* 注意事項のボックス */
-        .alert-box {
-            border: 1px solid var(--sys-alert);
-            background-color: rgba(245, 158, 11, 0.1);
+        /* 組織構造ボックス（インデント等で階層を表現） */
+        .structure-box {
+            background-color: #1a1a1a;
+            border: 1px solid var(--sys-border);
             padding: 20px;
-            border-radius: 2px;
-            margin-top: 30px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            font-family: 'Courier New', Courier, monospace;
         }
 
-        .alert-box p {
-            margin-bottom: 0;
-            color: #fcd34d;
-            font-weight: 700;
+        .structure-box .node-title {
+            color: var(--sys-text-light);
+            margin-bottom: 10px;
+        }
+
+        .structure-box .node-company {
+            color: var(--sys-text);
+            margin-bottom: 5px;
+        }
+        
+        .structure-box .node-external {
+            color: var(--sys-accent);
+            font-weight: bold;
+            margin-left: 20px;
         }
 
         @media (max-width: 768px) {
             .notice-header, .notice-body { padding: 20px; }
             .notice-header-table th { width: 80px; }
-        }
-
-                /* 黒塗り（検閲）スタイル */
-        .redacted {
-            background-color: #000000;
-            color: transparent;
-            user-select: none;
-            padding: 0 4px;
-            border-radius: 2px;
-            display: inline-block;
-            vertical-align: middle;
-            pointer-events: none; /* 選択やコピーを防ぐ */
         }
     </style>
 </head>
@@ -382,68 +394,64 @@
     <!-- メインコンテンツ -->
     <main class="portal-container">
 
+        <div class="breadcrumb">
+            <a href="manual.html">業務マニュアル一覧</a> &gt; 特急プラン事後対応専門チーム 運用プロトコル
+        </div>
+
         <article class="notice-card">
-            <!-- ヘッダー -->
+            <!-- 事務的な通知ヘッダー -->
             <div class="notice-header">
                 <table class="notice-header-table">
                     <tbody>
                         <tr>
                             <th>更新日時</th>
-                            <td>2025/11/10 03:00</td>
+                            <td>2025/11/01 10:00</td>
                         </tr>
                         <tr>
                             <th>管理部門</th>
-                            <td>代表取締役室 / 情報セキュリティ部</td>
+                            <td>情報管理統括室</td>
                         </tr>
                     </tbody>
                 </table>
-                <h1 class="notice-title">【社内規定】第三データセンター運用・管理マニュアル</h1>
+                <h1 class="notice-title">【極秘】特急プラン事後対応専門チーム 運用プロトコル</h1>
             </div>
 
-            <!-- 本文 -->
+            <!-- 通知本文 -->
             <div class="notice-body">
                 <p>
-                    本マニュアルは、当社の重要施設である<strong>第三データセンター</strong>の運用に関する管理規定を定めるものです。<br>
-                    第三データセンターの存在は、オムニバス・コアのデータ構築および当社の事業戦略に関わるものであり、本施設に関する運用プロセスは一般社員には非公開とされています。関係者は以下の規定を遵守してください。
+                    本プロトコルは、カスタマーサポート部門からエスカレーションされる「特急プラン」に関する事後対応の運用基準、および顧客データの取り扱いに関する社外委託のフローを定めるものです。
                 </p>
 
-                <h2>1. 人員アサインと施設へのアクセスについて</h2>
+                <h2>1. 事後対応チームの実態と業務委託（アウトソーシング）</h2>
                 <p>
-                    第三データセンターの運用、保守、およびデータ管理業務に携わるスタッフは、以下の条件を満たした者の中から担当部門が選任します。
+                    特急プランで復旧が完了したデータに関して、顧客からデータの削除や確認を求める問い合わせがあった場合、一般のCS部門から「特急プラン事後対応専門チーム」へ案件が引き継がれます。
                 </p>
-                <ul>
-                    <li>当社の企業理念を理解し、業務命令に対して忠実に従うことができる社員であること。</li>
-                    <li>情報セキュリティ部による適性検査を通過し、外部への情報漏洩リスクがないと判断された者。</li>
-                    <li>配属されたスタッフは、業務外で他の一般従業員に対して担当業務の詳細を語ることを控えてください。</li>
-                </ul>
-
-                <h2>2. データの管理・選別プロセス</h2>
                 <p>
-                    復旧作業等の過程で第三データセンターに一時保管されたデータ群（顧客の機微情報を含む）の管理については、誤った自動処理によるシステムへの負荷や外部流出リスクを排除するため、原則として<strong>システム管理部の専任スタッフによる手作業（オフライン端末上での目視および分類）</strong>によって行われます。
+                    しかし、当チームは株式会社オムニバス・アーカイブの社内には物理的に存在しません。特急プラン納品後の顧客折衝、およびデータの事後運用プロセスは、当社の関連会社である<strong>「オムニバス・テクノロジーズ株式会社」へ100%業務委託</strong>されています。
                 </p>
 
-                <h2>3. データの有用性評価とラベル付け</h2>
-                <p>
-                    手作業による内容確認の際、担当スタッフは各データがオムニバス・コアの学習および当社の事業活動においてどれだけ活用できるか（有用であるか）を評価し、<span class="redacted">データ有用性スコア（Utility Score）</span>の算出、およびそれに基づくデータのラベル付け工程を必ず実行してください。
-                </p>
-                <p>
-                    ※詳細なスコアリングの算出基準、および各ラベルが付与された後のデータの取り扱い手順については、本マニュアルには記載されません。該当プロセスについては別途指定された指示に従い、厳格に処理を行ってください。
-                </p>
-
-                <h2>4. オムニバス・コアへの「学習」プロセス</h2>
-                <p>
-                    上記プロセスでラベル付けされ、「有用」と判断された情報は、オムニバス・コアの推論アルゴリズム向上のための学習データとして専用サーバーへ投入されます。
-                </p>
-                <p>
-                    推論エンジンはこれらのデータを学習することで、データのパターンや傾向をモデリングし、今後の復旧精度の向上に役立てます。なお、学習に利用された後のオリジナルデータは、第三データセンター内のセキュアな物理ストレージにて保管され、今後の事業展開において必要なタイミングで参照できるよう分類管理されます。
-                </p>
-
-                <div class="alert-box">
-                    <p>
-                        【取り扱い上の注意】<br>
-                        本マニュアルの内容、および施設内で取り扱うデータの詳細は社内秘情報に該当します。本ページのスクリーンショットの撮影、内容のメモ、および無断でのローカル保存は社内規定違反となります。閲覧終了後は、速やかにウィンドウを閉じてください。
-                    </p>
+                <div class="structure-box">
+                    <div class="node-title">[案件エスカレーションフロー]</div>
+                    <div class="node-company">株式会社オムニバス・アーカイブ (本体)</div>
+                    <div class="node-company"> ├─ データ抽出・有用性スコア算出</div>
+                    <div class="node-company"> └─ 事後対応の引き継ぎ・委託</div>
+                    <div class="node-external"> └─▶ オムニバス・テクノロジーズ株式会社 (特急プラン事後対応専門チーム)</div>
                 </div>
+                <p>
+                    この委託構造により、当社（オムニバス・アーカイブ本体）はあくまで「データの復旧・抽出およびスコアリング」を行う技術提供元の立場を維持し、当該データのその後の処理および顧客との交渉プロセスに伴うコンプライアンス上の責任を切り離して運用します。
+                </p>
+
+                <h2>2. データ有用性スコアに基づく振り分けと連携</h2>
+                <p>
+                    特急プランによって抽出されたデータは、当社のシステム内で査定され、<strong>「データ有用性スコア（Utility Score）」</strong>が算出されます。<br>
+                    このスコアに基づき、データは適格なラベルを付与された上で振り分けられ、オムニバス・テクノロジーズ社へ暗号化転送されます。転送先での当該データの具体的な運用方針および活用手法については、同社の独立した判断に委ねられます。
+                </p>
+
+                <h2>3. オムニバス・コアの学習データとしての利用</h2>
+                <p>
+                    上記のプロセスと並行し、抽出されたすべてのデータセットは当社の推論エンジン「オムニバス・コア」の学習リソースとして専用サーバーに投入されます。<br>
+                    AIがこれらのデータパターンを学習することで、今後、より不完全な断片データからでも、対象者の機密情報を正確に推論・再構築することが可能となります。
+                </p>
 
             </div>
         </article>
@@ -457,9 +465,9 @@
                 このサイトの内容はフィクションです。<br class="pc-br">
                 登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
             </p>
-            <!-- ページ番号21、レベルLv.2に設定 -->
+            <!-- ページ番号38、レベルLv.3に設定 -->
             <div class="footer-right">
-                &lt; 21/35 &gt; (Lv.2)
+                &lt; 38/35 &gt; (Lv.3)
             </div>
         </div>
     </footer>
