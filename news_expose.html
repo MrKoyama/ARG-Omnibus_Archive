@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【独自】データ復旧大手関連会社が顧客データを不正利用し恐喝か 役員ら逮捕へ | Yaboo!ニュース</title>
+    
+    <!-- 一般的なニュースサイトらしい、読みやすいゴシック体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           カラー変数（ニュースサイト風の明るいテーマ）
+           ========================================= */
+        :root {
+            --brand-color: #ff0033; /* Yaboo!っぽい赤色 */
+            --bg-color: #f5f5f5; /* 背景の薄いグレー */
+            --white: #ffffff;
+            --text-main: #222222;
+            --text-light: #777777;
+            --border-color: #dddddd;
+            --link-color: #0044cc;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            line-height: 1.6;
+        }
+
+        /* ダミーリンク（クリックしても上部に戻らない仕様） */
+        .dummy-link {
+            color: var(--link-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .dummy-link:hover {
+            text-decoration: underline;
+        }
+
+        /* フェードイン演出（前の暗転ページからの繋がり） */
+        body {
+            animation: fadeInPage 1.5s ease-in-out forwards;
+        }
+        @keyframes fadeInPage {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* =========================================
+           ヘッダー（Yaboo!ニュース風・ジャンル表示）
+           ========================================= */
+        header {
+            background-color: var(--white);
+            border-bottom: 2px solid var(--brand-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .header-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--brand-color);
+            font-style: italic;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: baseline;
+            text-decoration: none;
+        }
+
+        .logo span {
+            font-size: 1rem;
+            color: #555;
+            font-style: normal;
+            margin-left: 5px;
+            font-weight: 700;
+        }
+
+        /* ニュースジャンルナビゲーション */
+        .nav-genres {
+            display: flex;
+            gap: 15px;
+            list-style: none;
+        }
+
+        .nav-genres li {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #444;
+            cursor: pointer;
+        }
+
+        .nav-genres li:hover {
+            color: var(--brand-color);
+        }
+
+        .nav-genres li.active {
+            color: var(--brand-color);
+            border-bottom: 2px solid var(--brand-color);
+        }
+
+        /* =========================================
+           メインレイアウト（2カラム）
+           ========================================= */
+        .container {
+            max-width: 1000px;
+            margin: 20px auto 60px;
+            padding: 0 20px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .main-content {
+            flex: 1; /* メイン記事部分が広く取る */
+            background-color: var(--white);
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .sidebar {
+            width: 300px; /* サイドバーは固定幅 */
+            flex-shrink: 0;
+        }
+
+        /* =========================================
+           記事コンテンツ
+           ========================================= */
+        .article-category {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .article-title {
+            font-size: 1.8rem;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            line-height: 1.4;
+            font-weight: 900;
+        }
+
+        .article-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* 記事のメイン画像 */
+        .article-image {
+            margin-bottom: 25px;
+        }
+
+        .article-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 2px;
+        }
+
+        .article-image-caption {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        /* 記事本文 */
+        .article-body p {
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .article-body h2 {
+            font-size: 1.3rem;
+            margin: 40px 0 15px;
+            padding-left: 10px;
+            border-left: 5px solid var(--brand-color);
+        }
+
+        /* 記事内の小見出しや強調 */
+        .highlight-text {
+            font-weight: bold;
+            background: linear-gradient(transparent 60%, #ffff66 60%);
+        }
+
+        /* 記事内の挿絵画像 */
+        .article-sub-image {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .article-sub-image img {
+            max-width: 80%;
+            height: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        /* =========================================
+           サイドバー（他のニュース等）
+           ========================================= */
+        .side-widget {
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .side-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--brand-color);
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+
+        .news-list {
+            list-style: none;
+        }
+
+        .news-list li {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+
+        .news-list li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .news-thumb {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .news-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            font-weight: bold;
+        }
+
+        /* アクセスランキング用数字 */
+        .rank-num {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--brand-color);
+            font-style: italic;
+            width: 25px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* =========================================
+           フッター（これまでの共通仕様＋ARG）
+           ========================================= */
+        footer {
+            background-color: #333333;
+            color: #aaaaaa;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            border-top: 5px solid var(--brand-color);
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .footer-arg-meta {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #777777; 
+            letter-spacing: 0.05em;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header-inner {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .nav-genres {
+                width: 100%;
+                justify-content: space-between;
+                overflow-x: auto;
+                padding-bottom: 5px;
+            }
+            .main-content {
+                padding: 20px 15px;
+            }
+            .article-title {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー（Yaboo!ニュース風） -->
+    <header>
+        <div class="header-inner">
+            <div class="logo">Yaboo! <span>ニュース</span></div>
+            <!-- 検索欄の代わりにニュースジャンルを配置（見た目だけ） -->
+            <ul class="nav-genres">
+                <li>主要</li>
+                <li class="active">社会</li>
+                <li>政治</li>
+                <li>経済</li>
+                <li>国際</li>
+                <li>IT・科学</li>
+                <li>エンタメ</li>
+                <li>スポーツ</li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- メインコンテンツ（記事本文） -->
+        <main class="main-content">
+            <div class="article-category">社会 &gt; 事件・事故</div>
+            <h1 class="article-title">【独自】データ復旧大手関連会社が顧客データを不正利用し恐喝か 役員ら複数名逮捕へ</h1>
+            <div class="article-meta">
+                <span class="source">Yaboo! ニュース オリジナル</span>
+                <span class="date">2026/05/18(木) 12:04 配信</span>
+            </div>
+
+            <div class="article-image">
+                <!-- 【画像のご用意：警察の捜査員がダンボール箱（押収品）を持ってオフィスビルから出てくる様子、または「オムニバス・テクノロジーズ」という架空の社名ロゴが貼られたビルの外観写真（ブルーシート等で規制されている風） (推奨: 800x450px)】 -->
+                <img src="images/news_arrest.png" alt="捜査関係者による家宅捜索の様子">
+                <div class="article-image-caption">関係先への家宅捜索に入る捜査員ら（18日午前、都内）</div>
+            </div>
+
+            <div class="article-body">
+                <p>
+                    データ復旧事業大手の「株式会社オムニバス・アーカイブ」の完全子会社である「オムニバス・テクノロジーズ株式会社」（東京都港区）が、復旧依頼を受けた顧客の機密データを不正に抽出し、それを脅迫材料として複数の企業や個人から金銭を要求していた疑いが強まり、警視庁は18日、同社の役員ら数名を恐喝等の容疑で逮捕する方針を固めた。
+                </p>
+                <p>
+                    捜査関係者によると、同社内に設置されていた非公然の部署（通称：データ執行班）が組織的に関与していたとみられ、全容解明に向けた捜査が進められている。
+                </p>
+
+                <h2>復元データから「弱み」をランク付けか</h2>
+                <p>
+                    事件発覚の端緒となったのは、同社内部のシステムサーバーから流出したとみられる「業務マニュアル」および「事例報告書」と呼ばれる内部告発データだ。
+                </p>
+                <p>
+                    流出した資料によれば、同社は高額な「特急プラン」を利用して持ち込まれたサーバーやスマートフォンなどの記憶媒体からデータを復元した際、顧客へ納品した直後にデータを消去せず、別のサーバーへ密かに転送。その後、スタッフが手作業でデータの内容を検閲し、企業の不正会計の証拠や個人のスキャンダルになり得る情報を<span class="highlight-text">「有用性スコア」としてランク付け（Class-A〜C）していた</span>という。
+                </p>
+
+                <div class="article-sub-image">
+                    <!-- 【画像のご用意：流出した内部資料のイメージ。黒塗りの文書や「Class-A」「極秘」といった文字がスタンプされた書類の画像 (推奨: 600x400px)】 -->
+                    <img src="images/news_document.png" alt="流出したとされる内部マニュアルの一部">
+                    <div class="article-image-caption">流出したとされる内部マニュアルの一部。データの有用性によるランク分けが記載されている</div>
+                </div>
+
+                <p>
+                    こうして抽出された「弱み」を盾に取り、法人に対しては『高度なセキュリティ保護』と称した架空のコンサルティング契約を結ばせ、毎月多額の金銭を支払わせていた。また、個人に対しては、データを暴露しない条件として、違法薬物の運搬などの非合法な業務（いわゆる闇バイト）を強要していた疑いも持たれている。さらに、金融価値のあるクレジットカード情報などは、ダークウェブ上で売却され資金化されていたという。
+                </p>
+
+                <h2>親会社「オムニバス・アーカイブ」は関与を完全否定</h2>
+                <p>
+                    この前代未聞の恐喝事件を受け、親会社である株式会社オムニバス・アーカイブは18日午前に緊急の記者会見を開いた。<br>
+                    同社の広報担当者は、「関連会社における一部社員の逸脱した違法行為について、誠に遺憾であり、被害に遭われた方々に深くお詫び申し上げる」と謝罪した。
+                </p>
+                <p>
+                    一方で、データの不正抽出や恐喝への本社（親会社）の関与については<span class="highlight-text">「一切関知していない。業務委託先のテクノロジーズ社が独自の判断で行った犯罪行為である」と全面的に否定</span>した。
+                </p>
+
+                <div class="article-sub-image">
+                    <!-- 【画像のご用意：記者会見で深々と頭を下げるスーツ姿の役員たち（東雲慧や広報担当など）、無数のフラッシュがたかれている様子 (推奨: 600x400px)】 -->
+                    <img src="images/news_press.png" alt="緊急会見を開いたオムニバス・アーカイブの広報担当">
+                    <div class="article-image-caption">緊急会見で謝罪する親会社オムニバス・アーカイブの担当者。自身の関与は否定した</div>
+                </div>
+
+                <p>
+                    オムニバス・アーカイブ側は、「我々はデータの復元およびAI学習のためのシステム運用を適正に行っており、事後対応を委託していたテクノロジーズ社が提供データを悪用するとは夢にも思わなかった」と主張。今後は警察の捜査に全面的に協力するとともに、テクノロジーズ社との業務委託契約を即日解除し、同社に対する損害賠償請求の準備を進めているという。
+                </p>
+
+                <h2>「トカゲのしっぽ切り」との見方も？</h2>
+                <p>
+                    しかし、業界関係者からは今回の騒動における親会社の対応に対して、いくつかの疑念の声も上がっている。
+                </p>
+                <p>
+                    ITジャーナリストのA氏は、「同社が提供するAI（オムニバス・コア）に学習させるためのデータを抽出・転送する過程で、親会社側がデータの悪用リスクや、関連会社の不審な動きに本当に気がついていなかったのか、疑問が残る」と推測する。
+                </p>
+                <p>
+                    もし仮に、最初から『汚れ仕事』およびそれに伴う法的責任を関連会社へ押し付けるような運用構造を意図的に作っていたとすれば、今回の素早い契約解除と関与の否定も、見事なトカゲのしっぽ切りと言えるのではないだろうか。
+                </p>
+                <p>
+                    事実として、オムニバス・テクノロジーズ社は今回の事件により事業停止状態に陥り、近く倒産（破産手続き）に向かうと見られている。一方で、親会社であるオムニバス・アーカイブは法的な追求を免れ、現在も堂々とデータ復旧事業を継続している。
+                </p>
+                <p>
+                    真実は、逮捕されるテクノロジーズ社の役員らの供述、そして未だ全容が見えない「オムニバス・コア」のシステム解析を待つしかない。私たちの「記憶」は、果たして本当に守られていたのだろうか。
+                </p>
+
+            </div>
+        </main>
+
+        <!-- サイドバー（他のニュースやランキング） -->
+        <aside class="sidebar">
+            
+            <div class="side-widget">
+                <h3 class="side-title">関連記事</h3>
+                <ul class="news-list">
+                    <li>
+                        <!-- 【画像のご用意：霞ヶ関や警察庁の建物の外観、またはパトカーのランプ等 (推奨: 120x90px)】 -->
+                        <img src="images/news_thumb_1.png" alt="関連記事サムネイル" class="news-thumb">
+                        <span class="dummy-link news-text">【解説】データ復旧業界に潜む「二次被害」のリスクとは？</span>
+                    </li>
+                    <li>
+                        <!-- 【画像のご用意：ダークウェブやサイバー犯罪をイメージした、緑のコードやハッカー風の画像 (推奨: 120x90px)】 -->
+                        <img src="images/news_thumb_2.png" alt="関連記事サムネイル" class="news-thumb">
+                        <span class="dummy-link news-text">流出したクレカ情報はどこへ？ダークウェブの闇市場を追う</span>
+                    </li>
+                    <li>
+                        <!-- 【画像のご用意：オムニバス・アーカイブのロゴ、またはクリーンなオフィスビルの画像 (推奨: 120x90px)】 -->
+                        <img src="images/logo.png" alt="関連記事サムネイル" class="news-thumb">
+                        <span class="dummy-link news-text">オムニバス・アーカイブ、AIシステム「コア」の安全性強調</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="side-widget">
+                <h3 class="side-title">アクセスランキング（社会）</h3>
+                <ul class="news-list">
+                    <li>
+                        <span class="rank-num">1</span>
+                        <span class="dummy-link news-text">データ復旧大手関連会社が顧客データを不正利用し恐喝か 役員ら逮捕へ</span>
+                    </li>
+                    <li>
+                        <span class="rank-num">2</span>
+                        <span class="dummy-link news-text">都内ターミナル駅で大規模な通信障害、原因は人為的ミスか</span>
+                    </li>
+                    <li>
+                        <span class="rank-num">3</span>
+                        <span class="dummy-link news-text">相次ぐ「闇バイト」強盗、指示役は海外サーバーを経由し接触か</span>
+                    </li>
+                    <li>
+                        <span class="rank-num">4</span>
+                        <span class="dummy-link news-text">某官庁のシステムから情報漏洩の疑い、調査委員会が発足</span>
+                    </li>
+                    <li>
+                        <span class="rank-num">5</span>
+                        <span class="dummy-link news-text">次世代AIによるディープフェイク被害、法整備の遅れを指摘する声</span>
+                    </li>
+                </ul>
+            </div>
+
+        </aside>
+
+    </div>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br>
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            
+            <!-- ご指示のARGメタ情報・レベル表記 -->
+            <div class="footer-arg-meta">
+                &lt; 100/35 &gt; (Lv.5) &lt; END-A トカゲのしっぽ切り &gt;
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
