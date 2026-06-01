@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社内掲示板（BBS） | OMNIBUS ARCHIVE 社内ポータル</title>
+    <title>全社通知一覧 | OMNIBUS ARCHIVE 社内ポータル</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,6 +23,7 @@
             --sys-text-light: #94a3b8; 
             --sys-border: #334155; 
             --sys-header-bg: #0f172a; 
+            --sys-alert: #ef4444; 
         }
         
         * {
@@ -38,9 +39,6 @@
             line-height: 1.6;
             word-break: normal;
             overflow-wrap: break-word;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
         }
 
         /* =========================================
@@ -236,7 +234,7 @@
         /* ユーザー様よりご提示いただいた共通CSSコード（ここまで） */
 
         /* =========================================
-           社内掲示板（BBS）トップ専用UI
+           全社通知一覧 専用UI
            ========================================= */
         .portal-container {
             margin-top: 40px;
@@ -261,131 +259,179 @@
         .page-title {
             font-size: 1.6rem;
             color: var(--sys-text);
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             font-weight: 700;
             letter-spacing: 0.05em;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
 
-        .bbs-category {
+        .page-desc {
+            font-size: 0.95rem;
+            color: var(--sys-text-light);
+            margin-bottom: 30px;
+        }
+
+        /* 検索・絞り込みツールバー */
+        .toolbar {
             background-color: var(--sys-white);
             border: 1px solid var(--sys-border);
             border-radius: 4px;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            overflow: hidden;
+            padding: 20px 25px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            flex-wrap: wrap;
         }
 
-        .bbs-category-header {
-            background-color: #252525;
-            padding: 15px 25px;
-            border-bottom: 1px solid var(--sys-border);
-            font-size: 1.1rem;
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toolbar label {
+            font-size: 0.9rem;
+            color: var(--sys-text-light);
             font-weight: 700;
-            color: var(--sys-accent);
         }
 
-        /* スレッド一覧テーブル */
-        .thread-list {
+        .toolbar select, .toolbar input[type="text"] {
+            padding: 8px 12px;
+            background-color: #1e293b;
+            color: var(--sys-text);
+            border: 1px solid var(--sys-border);
+            border-radius: 2px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .toolbar select:focus, .toolbar input[type="text"]:focus {
+            border-color: var(--sys-primary);
+        }
+
+        .btn-filter {
+            padding: 8px 25px;
+            background-color: var(--sys-primary);
+            color: var(--sys-white);
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.3s;
+        }
+
+        .btn-filter:hover {
+            background-color: #2563eb;
+        }
+
+        /* 通知一覧リスト（テーブル） */
+        .notice-list-card {
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .notice-table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 0.95rem;
         }
 
-        .thread-list th, .thread-list td {
-            padding: 15px 25px;
+        .notice-table th, .notice-table td {
+            padding: 15px 20px;
             border-bottom: 1px solid #2a2a2a;
             text-align: left;
+            vertical-align: middle;
         }
 
-        .thread-list tr:last-child td {
+        .notice-table tr:last-child td {
             border-bottom: none;
         }
 
-        .thread-list th {
-            font-size: 0.85rem;
+        .notice-table th {
+            background-color: #252525;
             color: var(--sys-text-light);
             font-weight: 500;
-            background-color: #1a1a1a;
+            white-space: nowrap;
         }
 
-        .col-id { width: 60px; text-align: center; }
-        .col-title { width: auto; }
-        .col-posts { width: 80px; text-align: center; }
-        .col-date { width: 180px; }
-
-        /* スレッド行のスタイル */
-        .thread-row {
-            transition: background-color 0.2s;
-        }
-
-        .thread-row:hover {
+        .notice-table tr:hover td {
             background-color: #2a313d;
         }
 
-        .thread-id {
+        .col-date {
             font-family: 'Courier New', Courier, monospace;
             color: var(--sys-text-light);
-            text-align: center;
+            width: 120px;
         }
 
-        /* リンクが「生きている」スレッド */
-        .thread-link {
-            color: var(--sys-primary);
-            text-decoration: none;
+        .col-dept {
+            color: var(--sys-text-light);
+            width: 200px;
+        }
+
+        .col-title {
             font-weight: 700;
-            font-size: 1.05rem;
-            display: block;
         }
 
-        .thread-link:hover {
-            text-decoration: underline;
+        /* リンク設定 */
+        .notice-link {
             color: var(--sys-accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
         }
 
-        /* リンクが「死んでいる（アクセス不可）」スレッド */
-        .thread-dead {
-            color: #64748b; /* 暗いグレーにして非アクティブ感を出す */
-            font-weight: 400;
-            font-size: 1.05rem;
-            cursor: default;
+        .notice-link:hover {
+            color: var(--sys-primary);
+            text-decoration: underline;
         }
 
-        .post-count {
-            text-align: center;
-            font-family: 'Courier New', Courier, monospace;
-            color: var(--sys-text-light);
+        /* 警告・重要アイコン */
+        .icon-alert {
+            color: var(--sys-alert);
+            font-size: 1.1rem;
+        }
+        .icon-info {
+            color: var(--sys-primary);
+            font-size: 1.1rem;
         }
 
-        .last-update {
-            font-size: 0.85rem;
-            color: var(--sys-text-light);
-        }
-
-        /* レスポンシブ微調整（掲示板テーブル） */
+        /* スマホ用テーブル調整 */
         @media (max-width: 768px) {
-            .thread-list th { display: none; } /* スマホでは見出し行を隠す */
-            .thread-list td {
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .toolbar-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .toolbar select, .toolbar input[type="text"] {
+                width: 100%;
+            }
+            
+            .notice-table th { display: none; }
+            .notice-table td {
                 display: block;
                 width: 100%;
-                padding: 10px 15px;
+                padding: 8px 15px;
                 border-bottom: none;
             }
-            .thread-list tr {
+            .notice-table tr {
                 display: block;
                 border-bottom: 1px solid var(--sys-border);
                 padding: 10px 0;
             }
-            .col-id { display: none; } /* IDも省略 */
-            .col-title { font-size: 1.1rem; padding-bottom: 5px; }
-            .col-posts, .col-date { 
-                display: inline-block; 
-                width: auto; 
-                padding: 0 15px; 
-                font-size: 0.8rem;
-            }
-            .col-posts::before { content: "レス数: "; }
+            .col-date { font-size: 0.85rem; padding-bottom: 0 !important; }
+            .col-dept { font-size: 0.85rem; color: #64748b; padding-bottom: 5px !important; }
+            .col-title { font-size: 1.05rem; padding-top: 0 !important; }
         }
     </style>
 </head>
@@ -415,94 +461,92 @@
     <main class="portal-container">
 
         <div class="breadcrumb">
-            <a href="o-portal.html">O-PORTAL トップ</a> &gt; 社内掲示板（BBS）
+            <a href="o-portal.html">O-PORTAL トップ</a> &gt; 全社通知一覧
         </div>
 
-        <h1 class="page-title">社内掲示板（BBS）</h1>
+        <h1 class="page-title">全社通知一覧</h1>
+        <p class="page-desc">システム管理部および各部門からの重要なお知らせ・通達事項を時系列で表示します。</p>
 
-        <!-- カテゴリ1：人事・総務連絡 -->
-        <div class="bbs-category">
-            <div class="bbs-category-header">人事部・総務部連絡</div>
-            <table class="thread-list">
+        <!-- 絞り込みツールバー -->
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <label for="dept-select">発信元：</label>
+                <select id="dept-select">
+                    <option value="all">すべての部門</option>
+                    <option value="sys">システム管理部</option>
+                    <option value="sec">情報セキュリティ部</option>
+                    <option value="hr">人事・総務部</option>
+                </select>
+            </div>
+            <div class="toolbar-group">
+                <label for="keyword-search">キーワード：</label>
+                <input type="text" id="keyword-search" placeholder="例：システム">
+            </div>
+            <button class="btn-filter" type="button">絞り込み</button>
+        </div>
+
+        <!-- 通知リスト -->
+        <div class="notice-list-card">
+            <table class="notice-table">
                 <thead>
                     <tr>
-                        <th class="col-id">ID</th>
-                        <th class="col-title">スレッドタイトル</th>
-                        <th class="col-posts">レス数</th>
-                        <th class="col-date">最終更新日時</th>
+                        <th class="col-date">発信日時</th>
+                        <th class="col-dept">発信元</th>
+                        <th class="col-title">件名・タイトル</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- アクセス可能なスレッド（リンクが生きている） -->
-                    <tr class="thread-row">
-                        <td class="col-id"><span class="thread-id">011</span></td>
-                        <td class="col-title">
-                            <a href="thread_001.html" class="thread-link">【新入社員向け】業務に関するQ&Aスレッド</a>
-                        </td>
-                        <td class="col-posts"><span class="post-count">25</span></td>
-                        <td class="col-date"><span class="last-update">2026/04/08 10:02</span></td>
-                    </tr>
-                    
-                    <!-- 以下のスレッドはアクセス不可（リンクなし） -->
-                    <tr class="thread-row">
-                        <td class="col-id"><span class="thread-id">005</span></td>
-                        <td class="col-title">
-                            <span class="thread-dead">【周知】各種経費精算システムのUI変更について</span>
-                        </td>
-                        <td class="col-posts"><span class="post-count">3</span></td>
-                        <td class="col-date"><span class="last-update">2026/03/25 14:30</span></td>
-                    </tr>
-                    <tr class="thread-row">
-                        <td class="col-id"><span class="thread-id">003</span></td>
-                        <td class="col-title">
-                            <span class="thread-dead">健康診断（2026年度上半期）の受診日程調整</span>
-                        </td>
-                        <td class="col-posts"><span class="post-count">88</span></td>
-                        <td class="col-date"><span class="last-update">2026/03/10 09:15</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- カテゴリ2：システム管理・開発 -->
-        <div class="bbs-category">
-            <div class="bbs-category-header">システム管理部・開発部</div>
-            <table class="thread-list">
-                <thead>
+                    <!-- 通知1 -->
                     <tr>
-                        <th class="col-id">ID</th>
-                        <th class="col-title">スレッドタイトル</th>
-                        <th class="col-posts">レス数</th>
-                        <th class="col-date">最終更新日時</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- 以下のスレッドはアクセス不可（リンクなし） -->
-                    <tr class="thread-row">
-                        <td class="col-id"><span class="thread-id">015</span></td>
+                        <td class="col-date">2026/05/05</td>
+                        <td class="col-dept">システム管理部 情報基盤課</td>
                         <td class="col-title">
-                            <span class="thread-dead">第三データセンターへのVPN接続エラーに関する報告</span>
+                            <a href="notice_search.html" class="notice-link">
+                                <span class="icon-info">ℹ</span>
+                                【全体通知】社内ポータルへの「オムニバス・サーチ」システム組み込みについて
+                            </a>
                         </td>
-                        <td class="col-posts"><span class="post-count">14</span></td>
-                        <td class="col-date"><span class="last-update">2026/04/10 11:20</span></td>
                     </tr>
-                    <tr class="thread-row">
-                        <td class="col-id"><span class="thread-id">008</span></td>
+                    <!-- 通知2 -->
+                    <tr>
+                        <td class="col-date">2026/04/18</td>
+                        <td class="col-dept">情報セキュリティ部</td>
                         <td class="col-title">
-                            <span class="thread-dead">オムニバス・コア：推論アルゴリズムver2.4のバグ修正</span>
+                            <a href="notice_core.html" class="notice-link">
+                                <span class="icon-alert">⚠</span>
+                                【重要通達】「オムニバス・コア」の機密保持に関する再徹底について
+                            </a>
                         </td>
-                        <td class="col-posts"><span class="post-count">42</span></td>
-                        <td class="col-date"><span class="last-update">2026/04/02 18:45</span></td>
                     </tr>
-
-                    <!-- アクセス可能なスレッド（リンクが生きている） -->
-                    <tr class="thread-row">
-                        <td class="col-id"><span class="thread-id">007</span></td>
+                    <!-- ダミー通知（リンクなし） -->
+                    <tr>
+                        <td class="col-date">2026/04/01</td>
+                        <td class="col-dept">人事部 研修担当</td>
                         <td class="col-title">
-                            <a href="thread_002.html" class="thread-link">【障害報告】顧客データベースの断続的なアクセス遅延について</a>
+                            <a href="#" class="notice-link" style="color: var(--sys-text); text-decoration: none; cursor: default;">
+                                2026年度 新入社員研修スケジュールの確定について
+                            </a>
                         </td>
-                        <td class="col-posts"><span class="post-count">7</span></td>
-                        <td class="col-date"><span class="last-update">2026/03/28 22:15</span></td>
+                    </tr>
+                    <!-- ダミー通知（リンクなし） -->
+                    <tr>
+                        <td class="col-date">2026/03/15</td>
+                        <td class="col-dept">システム管理部</td>
+                        <td class="col-title">
+                            <a href="#" class="notice-link" style="color: var(--sys-text); text-decoration: none; cursor: default;">
+                                経費精算システムの定期メンテナンス（3/20実施）のお知らせ
+                            </a>
+                        </td>
+                    </tr>
+                    <!-- ダミー通知（リンクなし） -->
+                    <tr>
+                        <td class="col-date">2026/02/28</td>
+                        <td class="col-dept">施設管理部</td>
+                        <td class="col-title">
+                            <a href="#" class="notice-link" style="color: var(--sys-text); text-decoration: none; cursor: default;">
+                                本社ビル35階・防災設備の点検について
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -519,7 +563,7 @@
             </p>
             <!-- ページ番号25、レベルLv.2に設定 -->
             <div class="footer-right">
-                &lt; 26/35 &gt; (Lv.2)
+                &lt; 25/35 &gt; (Lv.2)
             </div>
         </div>
     </footer>

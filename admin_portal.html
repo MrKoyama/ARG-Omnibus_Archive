@@ -10,19 +10,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* ユーザー様よりご提示いただいたCSSコード（ここから） */
+        /* ユーザー様よりご提示いただいた共通CSSコード（ここから） */
         /* =========================================
            カラー変数（ダーク・無機質なシステムカラー）
            ========================================= */
         :root {
-            --sys-primary: #3b82f6; /* ダーク背景に映えるブルー */
-            --sys-accent: #60a5fa;  /* 強調用の明るいブルー */
-            --sys-bg: #121212; /* 深い背景色 */
-            --sys-white: #1e1e1e; /* カード等の背景色 */
-            --sys-text: #e2e8f0; /* 基本のテキストカラー（白系） */
-            --sys-text-light: #94a3b8; /* サブテキスト（グレー系） */
-            --sys-border: #334155; /* 暗いボーダー色 */
-            --sys-header-bg: #0f172a; /* ヘッダーの背景色 */
+            --sys-primary: #3b82f6; 
+            --sys-accent: #60a5fa;  
+            --sys-bg: #121212; 
+            --sys-white: #1e1e1e; 
+            --sys-text: #e2e8f0; 
+            --sys-text-light: #94a3b8; 
+            --sys-border: #334155; 
+            --sys-header-bg: #0f172a; 
+            
+            /* ログイン状態用のカラー（グリーン） */
+            --status-auth: #22c55e;
         }
         
         * {
@@ -141,83 +144,6 @@
         }
 
         /* =========================================
-           メインコンテンツ（業務連絡 UI）
-           ========================================= */
-        .portal-container {
-            max-width: 1000px;
-            margin: 40px auto 100px;
-            padding: 0 20px;
-        }
-
-        .notice-card {
-            background-color: var(--sys-white);
-            border: 1px solid var(--sys-border);
-            border-radius: 4px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-        }
-
-        /* 通知ヘッダー（表形式） */
-        .notice-header {
-            border-bottom: 1px solid var(--sys-border);
-            background-color: #252525;
-            padding: 20px 30px;
-        }
-
-        .notice-header-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-        }
-
-        .notice-header-table th {
-            text-align: left;
-            width: 120px;
-            color: var(--sys-text-light);
-            padding: 5px 0;
-            font-weight: 500;
-        }
-
-        .notice-header-table td {
-            color: var(--sys-text);
-            padding: 5px 0;
-            font-weight: 700;
-        }
-
-        .notice-title {
-            font-size: 1.4rem;
-            color: var(--sys-accent); /* 赤から青系統のアクセントカラーに変更 */
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed var(--sys-border);
-        }
-
-        /* 通知本文 */
-        .notice-body {
-            padding: 40px 30px;
-            font-size: 1rem;
-            color: var(--sys-text);
-        }
-
-        .notice-body p {
-            margin-bottom: 20px;
-        }
-
-        .notice-body ul {
-            margin-bottom: 20px;
-            margin-left: 20px;
-            color: var(--sys-text);
-        }
-
-        .notice-body li {
-            margin-bottom: 5px;
-        }
-
-        /* 重要なキーワードの強調も青色に変更 */
-        .notice-body strong {
-            color: var(--sys-accent);
-        }
-
-        /* =========================================
            フッター
            ========================================= */
         footer {
@@ -226,6 +152,7 @@
             padding: 20px 30px; 
             margin-top: auto;
             border-top: 1px solid var(--sys-border);
+            width: 100%;
         }
 
         .footer-content {
@@ -256,73 +183,24 @@
         /* =========================================
            完全レスポンシブ・デッドスペース解消設定
            ========================================= */
-
-        /* 1. ベースの可変フォントサイズ */
         html {
             font-size: clamp(14px, 1vw + 10px, 18px); 
         }
 
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* 2. ヘッダーとフッターの幅を画面いっぱいに */
         .header-top, .header-inner, .footer-content {
             width: 100%;
-            /* max-widthを緩和し、画面の95%まで広げる */
             max-width: 95%; 
             padding-left: 0;
             padding-right: 0;
             margin: 0 auto;
         }
 
-        /* 3. メインコンテンツの幅を拡大し、デッドスペースを消す */
         section, main, .article-container, .portal-container {
             width: 90%; 
-            /* デスクトップでも余白ができすぎないよう、最大幅を大きく緩和 */
             max-width: 1600px !important; 
             margin-left: auto;
             margin-right: auto;
             flex-grow: 1; 
-        }
-
-        /* 長文が横に広がりすぎて読みにくくなるのを防ぐための処置 */
-        .policy-container, .article-body, .form-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* 4. 画像のレスポンシブ化 */
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        /* 5. 要素のフレックスボックス調整（折り返し許可） */
-        .hero, .message-content, .company-profile-wrapper, .review-card {
-            flex-wrap: wrap; 
-        }
-
-        /* 6. タブレット・スマホ向けのブレイクポイント */
-        @media (max-width: 992px) {
-            .hero, .message-content, .company-profile-wrapper, .review-card {
-                flex-direction: column !important;
-            }
-            .hero-text, .message-text, .profile-quote {
-                text-align: center;
-            }
-            .hero-image, .message-image, .company-table-container, .company-side-images, .review-images {
-                width: 100%;
-                max-width: 100%;
-            }
-            .company-side-images {
-                flex-direction: row; 
-            }
-            .company-side-images img {
-                width: calc(50% - 10px);
-            }
         }
 
         @media (max-width: 768px) {
@@ -330,18 +208,18 @@
                 width: 100%;
                 padding: 40px 5%;
             }
-            
             .header-top, .header-inner {
                 flex-direction: column;
                 padding: 15px 5%;
             }
-            
+            .system-name {
+                display: none;
+            }
             .header-right {
                 width: 100%;
                 justify-content: space-between;
                 margin-top: 10px;
             }
-            
             .search-container {
                 flex-grow: 1;
                 margin-right: 15px;
@@ -349,43 +227,21 @@
             .search-container input[type="text"] {
                 width: 100%; 
             }
-            
-            .drawer-menu {
-                width: 100%;
-                right: -100%; 
-            }
-
-            .blog-grid, .pricing-wrapper, .facilities-grid, .services-grid {
-                grid-template-columns: 1fr;
-                flex-direction: column;
-            }
-
-            .ib { display: inline; }
-            .pc-br { display: none; }
-
             .footer-content {
                 flex-direction: column;
                 text-align: center;
             }
-            
-            .form-table th, .form-table td, .notice-header-table th, .notice-header-table td, .bio-table th, .bio-table td {
-                display: block;
-                width: 100%;
-            }
-            .form-table th, .bio-table th, .notice-header-table th {
-                border-bottom: none;
-                padding-bottom: 5px;
-            }
-            .form-table td, .bio-table td, .notice-header-table td {
-                padding-top: 0;
-                padding-bottom: 20px;
-            }
         }
-        /* ユーザー様よりご提示いただいたCSSコード（ここまで） */
+        /* ユーザー様よりご提示いただいた共通CSSコード（ここまで） */
 
         /* =========================================
-           O-PORTAL トップページ専用のCSS（レイアウト補完）
+           O-PORTAL トップページ専用のCSS（ログイン後UI）
            ========================================= */
+        .portal-container {
+            margin-top: 60px;
+            margin-bottom: 100px;
+        }
+
         .page-title {
             font-size: 1.6rem;
             color: var(--sys-text);
@@ -394,10 +250,11 @@
             letter-spacing: 0.05em;
         }
 
-        /* ステータスバー（ゲスト表示とログインボタン） */
+        /* ステータスバー（ログイン済み表示） */
         .status-bar {
-            background-color: #1e293b;
+            background-color: #1a202c; 
             border: 1px solid var(--sys-border);
+            border-left: 4px solid var(--status-auth); 
             border-radius: 4px;
             padding: 15px 25px;
             margin-bottom: 40px;
@@ -421,28 +278,34 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background-color: #f59e0b; /* ゲスト用のオレンジ */
-            box-shadow: 0 0 8px #f59e0b;
-            animation: pulse 2s infinite;
+            background-color: var(--status-auth); 
+            box-shadow: 0 0 8px var(--status-auth);
         }
 
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.4;
         }
 
-        .status-user strong {
-            color: #f59e0b;
+        .user-name {
+            font-weight: 700;
+            color: var(--sys-accent);
+            font-size: 1.1rem;
             letter-spacing: 0.05em;
         }
+        
+        .user-role {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
+        }
 
-        .btn-login {
+        .btn-logout {
             background-color: transparent;
-            color: var(--sys-accent);
-            border: 1px solid var(--sys-accent);
-            padding: 8px 25px;
-            font-size: 0.95rem;
+            color: var(--sys-text-light);
+            border: 1px solid var(--sys-border);
+            padding: 6px 20px;
+            font-size: 0.85rem;
             font-weight: 700;
             border-radius: 2px;
             text-decoration: none;
@@ -450,9 +313,9 @@
             font-family: inherit;
         }
 
-        .btn-login:hover {
-            background-color: var(--sys-accent);
-            color: #000000;
+        .btn-logout:hover {
+            background-color: #334155;
+            color: #ffffff;
         }
 
         /* ポータルの説明ブロック */
@@ -499,6 +362,7 @@
             transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .link-card:hover {
@@ -519,46 +383,13 @@
             flex-grow: 1;
         }
 
-        /* アクセス制限カードの表現 */
-        .link-card.locked {
-            background-color: #1a1a1a;
-            border-color: #3f2020;
-            cursor: not-allowed;
-            opacity: 0.8;
-        }
-
-        .link-card.locked:hover {
-            transform: none;
-            border-color: #ef4444; /* アクセス拒否の赤 */
-            box-shadow: none;
-        }
-
-        .link-card.locked h3 {
-            color: #ef4444;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .link-card.locked h3::before {
-            content: "🔒";
-            font-size: 0.9rem;
-        }
-
-        .warning-text {
-            color: #ef4444;
-            font-weight: 700;
-            margin-top: 10px;
-            font-size: 0.85rem;
-        }
-
         /* スマホ時のステータスバー調整 */
         @media (max-width: 768px) {
             .status-bar {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .btn-login {
+            .btn-logout {
                 width: 100%;
                 text-align: center;
             }
@@ -570,7 +401,7 @@
 </head>
 <body>
 
-    <!-- ユーザー様よりご提示いただいたヘッダーHTMLをそのまま使用 -->
+    <!-- ヘッダー -->
     <header>
         <div class="header-inner">
             <div class="logo-area">
@@ -595,13 +426,17 @@
 
         <h1 class="page-title">O-PORTAL トップ</h1>
 
-        <!-- ステータスバー（ゲスト表示・ログイン） -->
+        <!-- ステータスバー（ログイン済みの表示：ID E0245 中野 理沙） -->
         <div class="status-bar">
             <div class="status-user">
                 <span class="status-indicator"></span> 
-                認証ステータス：<strong>GUEST（未認証）</strong>
+                <div class="user-details">
+                    <div class="user-name">中野 理沙 (ID: E0245)</div>
+                    <div class="user-role">カスタマーサポート部 / オペレーター</div>
+                </div>
             </div>
-            <a href="login.html" class="btn-login">システムにログイン</a>
+            <!-- ログアウトすると未ログインのポータルトップに戻る -->
+            <a href="o-portal.html" class="btn-logout">ログアウト</a>
         </div>
 
         <!-- ポータル概要 -->
@@ -609,10 +444,10 @@
             <h2>システム概要</h2>
             <p>
                 「O-PORTAL」は、株式会社オムニバス・アーカイブの全従業員が利用する統合情報プラットフォームです。<br>
-                社内規定、全社通達、システム稼働状況の確認、およびアーカイブデータベースへのセキュアなアクセスを統括・管理します。
+                社内規定、全社通達、システム稼働状況の確認、および各種業務システムへのアクセスを統括・管理します。
             </p>
             <p>
-                <strong>※警告：</strong> 現在、ゲスト権限でアクセスしているため、一部の情報へのアクセスは制限されています。すべての機能を利用するには、付与された社員IDを用いてシステムにログインしてください。
+                ※現在、ログイン済み（認証完了）です。付与された権限に基づいて各コンテンツへアクセス可能です。
             </p>
         </div>
 
@@ -626,7 +461,7 @@
 
             <a href="board.html" class="link-card">
                 <h3>社内掲示板（BBS）</h3>
-                <p>社員間の業務連絡およびナレッジの共有スペースです。※新規書き込みにはログインが必要です。</p>
+                <p>社員間の業務連絡およびナレッジの共有スペースです。</p>
             </a>
 
             <a href="manual.html" class="link-card">
@@ -634,7 +469,6 @@
                 <p>カスタマーサポート用のトークスクリプトや、日々の業務フローに関する手順書を参照します。</p>
             </a>
 
-            <!-- 「システム稼働状況」を「社内規定」に変更 -->
             <a href="rules.html" class="link-card">
                 <h3>社内規定</h3>
                 <p>全従業員が遵守すべき情報セキュリティポリシー、コンプライアンス基準、および特別ガイドライン等を参照します。</p>
@@ -644,6 +478,12 @@
                 <h3>社員ディレクトリ</h3>
                 <p>社内の組織図および全従業員の連絡先・配属部門を検索します。</p>
             </a>
+
+            <a href="incident.html" class="link-card">
+                <h3>インシデント管理システム</h3>
+                <p>システム障害、備品の紛失から顧客からのクレームまで、社内外で発生したあらゆるトラブル（インシデント）を登録・管理し、担当部署へ共有します。</p>
+            </a>
+
         </div>
 
     </main>
@@ -655,9 +495,9 @@
                 このサイトの内容はフィクションです。<br class="pc-br">
                 登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
             </p>
-            <!-- 指定のページ番号とレベル -->
+            <!-- ページ番号44、レベルLv.3に設定 -->
             <div class="footer-right">
-                &lt; 24/35 &gt; (Lv.1)
+                &lt; 45/35 &gt; (Lv.3)
             </div>
         </div>
     </footer>
