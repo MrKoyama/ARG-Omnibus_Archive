@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【極秘】未検閲・規制前画像データ保管庫 | OMNIBUS ARCHIVE 社内ポータル</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ユーザー様よりご提示いただいた共通CSSコード（ここから） */
+        /* =========================================
+           カラー変数（ダーク・無機質なシステムカラー）
+           ========================================= */
+        :root {
+            --sys-primary: #3b82f6; 
+            --sys-accent: #60a5fa;  
+            --sys-bg: #121212; 
+            --sys-white: #1e1e1e; 
+            --sys-text: #e2e8f0; 
+            --sys-text-light: #94a3b8; 
+            --sys-border: #334155; 
+            --sys-header-bg: #0f172a; 
+            --sys-alert: #ef4444; 
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--sys-text);
+            background-color: var(--sys-bg);
+            line-height: 1.6;
+            word-break: normal;
+            overflow-wrap: break-word;
+        }
+
+        /* =========================================
+           ヘッダー（ダーク・機能的）
+           ========================================= */
+        header {
+            background-color: var(--sys-header-bg);
+            border-bottom: 2px solid var(--sys-primary);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            max-width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--sys-primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-icon {
+            height: 36px; 
+            width: 36px;  
+            object-fit: contain;
+        }
+
+        .system-name {
+            font-size: 0.9rem;
+            color: var(--sys-text-light);
+            border-left: 1px solid var(--sys-border);
+            padding-left: 15px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* 検索欄（ダークUI対応） */
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 6px 12px;
+            background-color: #1e293b;
+            color: var(--sys-text);
+            border: 1px solid var(--sys-border);
+            border-radius: 2px 0 0 2px;
+            outline: none;
+            width: 250px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input[type="text"]::placeholder {
+            color: #64748b;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--sys-primary);
+        }
+
+        .search-container button {
+            padding: 6px 15px;
+            background-color: var(--sys-primary);
+            color: #ffffff;
+            border: 1px solid var(--sys-primary);
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #2563eb;
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #0f172a; 
+            color: #94a3b8;
+            padding: 20px 30px; 
+            margin-top: auto;
+            border-top: 1px solid var(--sys-border);
+            width: 100%;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+            color: #94a3b8;
+        }
+
+        /* =========================================
+           完全レスポンシブ・デッドスペース解消設定
+           ========================================= */
+        html {
+            font-size: clamp(14px, 1vw + 10px, 18px); 
+        }
+
+        .header-top, .header-inner, .footer-content {
+            width: 100%;
+            max-width: 95%; 
+            padding-left: 0;
+            padding-right: 0;
+            margin: 0 auto;
+        }
+
+        section, main, .article-container, .portal-container {
+            width: 90%; 
+            max-width: 1600px !important; 
+            margin-left: auto;
+            margin-right: auto;
+            flex-grow: 1; 
+        }
+
+        @media (max-width: 768px) {
+            section, main, .article-container, .portal-container {
+                width: 100%;
+                padding: 40px 5%;
+            }
+            .header-top, .header-inner {
+                flex-direction: column;
+                padding: 15px 5%;
+            }
+            .system-name {
+                display: none;
+            }
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+            .search-container {
+                flex-grow: 1;
+                margin-right: 15px;
+            }
+            .search-container input[type="text"] {
+                width: 100%; 
+            }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        /* ユーザー様よりご提示いただいた共通CSSコード（ここまで） */
+
+        /* =========================================
+           データベース・保管庫 専用UI
+           ========================================= */
+        .portal-container {
+            margin-top: 40px;
+            margin-bottom: 100px;
+        }
+
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--sys-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 1.6rem;
+            color: var(--sys-alert);
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title::before {
+            content: "🔒";
+            font-size: 1.4rem;
+        }
+
+        .page-desc {
+            font-size: 0.95rem;
+            color: var(--sys-text-light);
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--sys-border);
+            padding-bottom: 20px;
+        }
+
+        /* 画像リストのグリッドレイアウト */
+        .vault-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .vault-card {
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            border-top: 4px solid var(--sys-alert);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 画像エリア */
+        .vault-image-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            background-color: #000;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .vault-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .vault-image-container:hover img {
+            opacity: 1;
+        }
+
+        /* 画像右上の「RAW DATA」ラベル */
+        .raw-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--sys-alert);
+            color: #fff;
+            padding: 3px 8px;
+            font-size: 0.75rem;
+            font-family: 'Courier Prime', Courier, monospace;
+            font-weight: bold;
+            border-radius: 2px;
+        }
+
+        /* データ詳細情報エリア */
+        .vault-info {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-row {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .info-label {
+            width: 90px;
+            flex-shrink: 0;
+            color: var(--sys-text-light);
+            font-weight: bold;
+            font-family: 'Courier Prime', Courier, monospace;
+        }
+
+        .info-data {
+            color: var(--sys-text);
+            flex-grow: 1;
+        }
+
+        /* 検閲理由の特別テキスト */
+        .reason-text {
+            color: #fca5a5;
+            font-style: italic;
+        }
+
+        /* リンクのスタイル */
+        .target-url {
+            color: var(--sys-accent);
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            word-break: break-all;
+        }
+
+        .target-url:hover {
+            color: var(--sys-primary);
+            text-decoration-style: solid;
+        }
+
+        @media (max-width: 768px) {
+            .vault-grid {
+                grid-template-columns: 1fr;
+            }
+            .info-row {
+                flex-direction: column;
+            }
+            .info-label {
+                width: auto;
+                margin-bottom: 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-inner">
+            <div class="logo-area">
+                <a href="toppage.html" class="logo">
+                    <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                    OMNIBUS ARCHIVE
+                </a>
+                <div class="system-name">社内ポータルシステム（O-PORTAL）</div>
+            </div>
+            
+            <div class="header-right">
+                <form class="search-container" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="社内情報の検索..." required autocomplete="off">
+                    <button type="submit">検索</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="portal-container">
+
+        <div class="breadcrumb">
+            <a href="o-portal.html">O-PORTAL トップ</a> &gt; アーカイブデータベース &gt; 未検閲・規制前画像データ保管庫
+        </div>
+
+        <h1 class="page-title">【極秘】未検閲・規制前画像データ保管庫</h1>
+        <p class="page-desc">
+            当データベースは、一般公開用サイト（toppage.html 等）および一般社員向けポータルにおいて「黒塗り（検閲）」または「クリーンな画像への差し替え」が行われる前の、加工されていないオリジナル画像データ（RAW DATA）を保管しています。これらオリジナルデータの外部持ち出しは厳禁とします。
+        </p>
+
+        <!-- 画像保管リスト（グリッド） -->
+        <div class="vault-grid">
+            
+            <!-- データ1：表向きの代表者挨拶の真実 -->
+            <div class="vault-card">
+                <div class="vault-image-container">
+                    <!-- 【画像のご用意：九条誠のポートレート。冷徹で狂気を感じさせる無表情なスーツ姿の男性（founder.htmlで使用したものと同じ）】 -->
+                    <img src="images/raw_kujo_portrait.png" alt="九条誠 オリジナルポートレート">
+                    <span class="raw-badge">RAW DATA</span>
+                </div>
+                <div class="vault-info">
+                    <div class="info-row">
+                        <span class="info-label">File ID:</span>
+                        <span class="info-data mono">IMG_001_FOUNDER</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">URL:</span>
+                        <span class="info-data"><a href="ceo.html" class="target-url">/ceo.html (代表者の挨拶)</a></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">検閲理由:</span>
+                        <span class="info-data reason-text">当社の真の創業者である九条誠の存在は対外的に秘匿する必要があるため。公開用サイトでは、カモフラージュ用の役員（東雲慧）の画像に差し替え済み。</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- データ2：第三データセンターの真の姿 -->
+            <div class="vault-card">
+                <div class="vault-image-container">
+                    <!-- 【画像のご用意：無機質で重々しい、巨大な金庫室や軍事施設のようなデータセンターの画像。】 -->
+                    <img src="images/raw_datacenter_c.png" alt="第三データセンター 内部">
+                    <span class="raw-badge">RAW DATA</span>
+                </div>
+                <div class="vault-info">
+                    <div class="info-row">
+                        <span class="info-label">File ID:</span>
+                        <span class="info-data mono">IMG_024_NODE_C</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">URL:</span>
+                        <span class="info-data"><a href="status.html" class="target-url">/status.html (データセンター稼働状況)</a></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">検閲理由:</span>
+                        <span class="info-data reason-text">機密情報（Class-Aデータ等）の保管および、オムニバス・コアによる非人道的なデータ統合処理が行われている施設の存在を一般社員から隠蔽するため、名称を含めテキスト上で黒塗り処理を実行。</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- データ3：違法薬物・不倫の証拠（Class-B） -->
+            <div class="vault-card">
+                <div class="vault-image-container">
+                    <!-- 【画像のご用意：ぼやけたスマートフォンの画面に、裏取引や違法薬物を思わせるチャットのやり取りが映っている画像】 -->
+                    <img src="images/raw_class_b_evidence.png" alt="Class-B 抽出証拠画像">
+                    <span class="raw-badge">RAW DATA</span>
+                </div>
+                <div class="vault-info">
+                    <div class="info-row">
+                        <span class="info-label">File ID:</span>
+                        <span class="info-data mono">EVIDENCE_B105</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">URL:</span>
+                        <span class="info-data"><a href="report_case_b.html" class="target-url">/report_case_b.html (事例報告書 Case-B105)</a></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">検閲理由:</span>
+                        <span class="info-data reason-text">対象個人の致命的なコンプライアンス違反（違法薬物使用）の証拠であり、外部に公開された場合、当社の情報取得プロセスの違法性が問われるため。当該データは脅迫用パッケージとしてVaultへ隔離。</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- データ4：オムニバス・コアの真のアルゴリズム -->
+            <div class="vault-card">
+                <div class="vault-image-container">
+                    <!-- 【画像のご用意：大量の個人情報（顔写真、名前、思考データなど）がAIのコードによって人型に再構築されていくような、不気味なCG画像】 -->
+                    <img src="images/raw_omnibus_core_true.png" alt="オムニバス・コア 真のアルゴリズム">
+                    <span class="raw-badge">RAW DATA</span>
+                </div>
+                <div class="vault-info">
+                    <div class="info-row">
+                        <span class="info-label">File ID:</span>
+                        <span class="info-data mono">IMG_088_CORE_ALG</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">URL:</span>
+                        <span class="info-data"><a href="blog_01.html" class="target-url">/blog_01.html (公式ブログ：オムニバス・コアの実装)</a></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">検閲理由:</span>
+                        <span class="info-data reason-text">オムニバス・コアの真の目的が「失われたファイル復元」ではなく「収集したデータからの人間性の再構築（クローン生成）」であることを示唆しているため。ブログ上ではクリーンな概念図に差し替え済み。</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br class="pc-br">
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            <!-- ページ番号44、レベルLv.4に設定 -->
+            <div class="footer-right">
+                &lt; 44/35 &gt; (Lv.4)
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
