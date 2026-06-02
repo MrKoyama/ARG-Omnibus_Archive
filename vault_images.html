@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>【極秘】未検閲・規制前画像データ保管庫 | OMNIBUS ARCHIVE 社内ポータル</title>
+    <title>未検閲・規制前画像データ保管庫 | OMNIBUS ARCHIVE 社内ポータル</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +23,6 @@
             --sys-text-light: #94a3b8; 
             --sys-border: #334155; 
             --sys-header-bg: #0f172a; 
-            --sys-alert: #ef4444; 
         }
         
         * {
@@ -258,18 +257,10 @@
 
         .page-title {
             font-size: 1.6rem;
-            color: var(--sys-alert);
+            color: var(--sys-primary); 
             margin-bottom: 10px;
             font-weight: 700;
             letter-spacing: 0.05em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .page-title::before {
-            content: "🔒";
-            font-size: 1.4rem;
         }
 
         .page-desc {
@@ -280,17 +271,17 @@
             padding-bottom: 20px;
         }
 
-        /* 画像リストのグリッドレイアウト */
+        /* 画像リストのグリッドレイアウト（シンプル化） */
         .vault-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
         }
 
         .vault-card {
             background-color: var(--sys-white);
             border: 1px solid var(--sys-border);
-            border-top: 4px solid var(--sys-alert);
+            border-top: 3px solid var(--sys-primary); 
             border-radius: 4px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
@@ -314,12 +305,13 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.8;
-            transition: opacity 0.3s;
+            opacity: 0.85;
+            transition: opacity 0.3s, transform 0.3s;
         }
 
         .vault-image-container:hover img {
             opacity: 1;
+            transform: scale(1.05); /* ホバー時の軽いズーム */
         }
 
         /* 画像右上の「RAW DATA」ラベル */
@@ -327,7 +319,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background-color: var(--sys-alert);
+            background-color: var(--sys-primary); 
             color: #fff;
             padding: 3px 8px;
             font-size: 0.75rem;
@@ -336,63 +328,25 @@
             border-radius: 2px;
         }
 
-        /* データ詳細情報エリア */
+        /* シンプルな概要（出所）エリア */
         .vault-info {
             padding: 20px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            justify-content: center;
+            text-align: center;
         }
 
-        .info-row {
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .info-label {
-            width: 90px;
-            flex-shrink: 0;
-            color: var(--sys-text-light);
-            font-weight: bold;
-            font-family: 'Courier Prime', Courier, monospace;
-        }
-
-        .info-data {
+        .vault-source {
             color: var(--sys-text);
-            flex-grow: 1;
-        }
-
-        /* 検閲理由の特別テキスト */
-        .reason-text {
-            color: #fca5a5;
-            font-style: italic;
-        }
-
-        /* リンクのスタイル */
-        .target-url {
-            color: var(--sys-accent);
-            text-decoration: underline;
-            text-decoration-style: dotted;
-            word-break: break-all;
-        }
-
-        .target-url:hover {
-            color: var(--sys-primary);
-            text-decoration-style: solid;
+            font-size: 0.95rem;
+            font-weight: 700;
         }
 
         @media (max-width: 768px) {
             .vault-grid {
                 grid-template-columns: 1fr;
-            }
-            .info-row {
-                flex-direction: column;
-            }
-            .info-label {
-                width: auto;
-                margin-bottom: 3px;
             }
         }
     </style>
@@ -423,12 +377,12 @@
     <main class="portal-container">
 
         <div class="breadcrumb">
-            <a href="o-portal.html">O-PORTAL トップ</a> &gt; アーカイブデータベース &gt; 未検閲・規制前画像データ保管庫
+            <a href="o-portal.html">O-PORTAL トップ</a> &gt; 未検閲・規制前データ保管庫 &gt; 画像データ
         </div>
 
-        <h1 class="page-title">【極秘】未検閲・規制前画像データ保管庫</h1>
+        <h1 class="page-title">未検閲・規制前画像データ保管庫</h1>
         <p class="page-desc">
-            当データベースは、一般公開用サイト（toppage.html 等）および一般社員向けポータルにおいて「黒塗り（検閲）」または「クリーンな画像への差し替え」が行われる前の、加工されていないオリジナル画像データ（RAW DATA）を保管しています。これらオリジナルデータの外部持ち出しは厳禁とします。
+            当データベースは、一般公開用サイトおよび一般社員向けポータルにおいて「黒塗り（検閲）」または「クリーンな画像への差し替え」が行われる前の、加工されていないオリジナル画像データ（RAW DATA）を保管しています。これらオリジナルデータの外部持ち出しは厳禁とします。
         </p>
 
         <!-- 画像保管リスト（グリッド） -->
@@ -437,22 +391,12 @@
             <!-- データ1：表向きの代表者挨拶の真実 -->
             <div class="vault-card">
                 <div class="vault-image-container">
-                    <!-- 【画像のご用意：九条誠のポートレート。冷徹で狂気を感じさせる無表情なスーツ姿の男性（founder.htmlで使用したものと同じ）】 -->
-                    <img src="images/raw_kujo_portrait.png" alt="九条誠 オリジナルポートレート">
+                    <img src="images/raw_kujo_portrait.png" alt="RAW DATA: 創業者ポートレート">
                     <span class="raw-badge">RAW DATA</span>
                 </div>
                 <div class="vault-info">
-                    <div class="info-row">
-                        <span class="info-label">File ID:</span>
-                        <span class="info-data mono">IMG_001_FOUNDER</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">URL:</span>
-                        <span class="info-data"><a href="ceo.html" class="target-url">/ceo.html (代表者の挨拶)</a></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">検閲理由:</span>
-                        <span class="info-data reason-text">当社の真の創業者である九条誠の存在は対外的に秘匿する必要があるため。公開用サイトでは、カモフラージュ用の役員（東雲慧）の画像に差し替え済み。</span>
+                    <div class="vault-source">
+                        公式サイト「代表者の挨拶」ページの画像
                     </div>
                 </div>
             </div>
@@ -460,45 +404,25 @@
             <!-- データ2：第三データセンターの真の姿 -->
             <div class="vault-card">
                 <div class="vault-image-container">
-                    <!-- 【画像のご用意：無機質で重々しい、巨大な金庫室や軍事施設のようなデータセンターの画像。】 -->
-                    <img src="images/raw_datacenter_c.png" alt="第三データセンター 内部">
+                    <img src="images/raw_datacenter_c.png" alt="RAW DATA: データセンター内部">
                     <span class="raw-badge">RAW DATA</span>
                 </div>
                 <div class="vault-info">
-                    <div class="info-row">
-                        <span class="info-label">File ID:</span>
-                        <span class="info-data mono">IMG_024_NODE_C</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">URL:</span>
-                        <span class="info-data"><a href="status.html" class="target-url">/status.html (データセンター稼働状況)</a></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">検閲理由:</span>
-                        <span class="info-data reason-text">機密情報（Class-Aデータ等）の保管および、オムニバス・コアによる非人道的なデータ統合処理が行われている施設の存在を一般社員から隠蔽するため、名称を含めテキスト上で黒塗り処理を実行。</span>
+                    <div class="vault-source">
+                        社員用サイト「データセンター稼働状況」の画像
                     </div>
                 </div>
             </div>
 
-            <!-- データ3：違法薬物・不倫の証拠（Class-B） -->
+            <!-- データ3：違法薬物・不倫の証拠 -->
             <div class="vault-card">
                 <div class="vault-image-container">
-                    <!-- 【画像のご用意：ぼやけたスマートフォンの画面に、裏取引や違法薬物を思わせるチャットのやり取りが映っている画像】 -->
-                    <img src="images/raw_class_b_evidence.png" alt="Class-B 抽出証拠画像">
+                    <img src="images/raw_class_b_evidence.png" alt="RAW DATA: 抽出証拠画像">
                     <span class="raw-badge">RAW DATA</span>
                 </div>
                 <div class="vault-info">
-                    <div class="info-row">
-                        <span class="info-label">File ID:</span>
-                        <span class="info-data mono">EVIDENCE_B105</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">URL:</span>
-                        <span class="info-data"><a href="report_case_b.html" class="target-url">/report_case_b.html (事例報告書 Case-B105)</a></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">検閲理由:</span>
-                        <span class="info-data reason-text">対象個人の致命的なコンプライアンス違反（違法薬物使用）の証拠であり、外部に公開された場合、当社の情報取得プロセスの違法性が問われるため。当該データは脅迫用パッケージとしてVaultへ隔離。</span>
+                    <div class="vault-source">
+                        交渉用パッケージ「Case-B105」の添付画像
                     </div>
                 </div>
             </div>
@@ -506,22 +430,26 @@
             <!-- データ4：オムニバス・コアの真のアルゴリズム -->
             <div class="vault-card">
                 <div class="vault-image-container">
-                    <!-- 【画像のご用意：大量の個人情報（顔写真、名前、思考データなど）がAIのコードによって人型に再構築されていくような、不気味なCG画像】 -->
-                    <img src="images/raw_omnibus_core_true.png" alt="オムニバス・コア 真のアルゴリズム">
+                    <img src="images/raw_omnibus_core_true.png" alt="RAW DATA: オムニバス・コア アルゴリズム">
                     <span class="raw-badge">RAW DATA</span>
                 </div>
                 <div class="vault-info">
-                    <div class="info-row">
-                        <span class="info-label">File ID:</span>
-                        <span class="info-data mono">IMG_088_CORE_ALG</span>
+                    <div class="vault-source">
+                        公式ブログ「次世代アーカイブ技術の紹介」の画像
                     </div>
-                    <div class="info-row">
-                        <span class="info-label">URL:</span>
-                        <span class="info-data"><a href="blog_01.html" class="target-url">/blog_01.html (公式ブログ：オムニバス・コアの実装)</a></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">検閲理由:</span>
-                        <span class="info-data reason-text">オムニバス・コアの真の目的が「失われたファイル復元」ではなく「収集したデータからの人間性の再構築（クローン生成）」であることを示唆しているため。ブログ上ではクリーンな概念図に差し替え済み。</span>
+                </div>
+            </div>
+
+            <!-- データ5：カスタマーサポートの真実（今回追加） -->
+            <div class="vault-card">
+                <div class="vault-image-container">
+                    <!-- 【画像のご用意：一見普通のコールセンターだが、机の上に大量の顧客の個人情報ファイルや、脅迫めいたマニュアルが散乱している、またはスタッフの表情が異常に冷徹である等、不気味な未修正画像（blog_08_cs_desk - uncensored.png）を想定】 -->
+                    <img src="images/blog_08_cs_desk_uncensored.png" alt="RAW DATA: CS業務風景">
+                    <span class="raw-badge">RAW DATA</span>
+                </div>
+                <div class="vault-info">
+                    <div class="vault-source">
+                        カスタマーサポートの公式ブログの画像
                     </div>
                 </div>
             </div>
