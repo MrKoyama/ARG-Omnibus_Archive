@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O-PORTAL トップ | OMNIBUS ARCHIVE 社内ポータル</title>
+    <title>【社長の日記】データの海に溶け込むこと。それは完全なる「保存」の形。 | OMNIBUS ARCHIVE 社内掲示板</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         /* ユーザー様よりご提示いただいた共通CSSコード（ここから） */
@@ -24,8 +24,10 @@
             --sys-border: #334155; 
             --sys-header-bg: #0f172a; 
             
-            /* ログイン状態用のカラー（グリーン） */
-            --status-auth: #22c55e;
+            /* 社長室専用カラー（ゴールド/オレンジ系） */
+            --ceo-primary: #f59e0b;
+            --ceo-accent: #fbbf24;
+            --ceo-bg-dark: #1f1406;
         }
         
         * {
@@ -53,6 +55,7 @@
             top: 0;
             z-index: 2000;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            width: 100%;
         }
 
         .header-inner {
@@ -235,167 +238,121 @@
         /* ユーザー様よりご提示いただいた共通CSSコード（ここまで） */
 
         /* =========================================
-           O-PORTAL トップページ専用のCSS（ログイン後UI）
+           社内掲示板（BBS）スレッド専用UI
            ========================================= */
         .portal-container {
-            margin-top: 60px;
+            margin-top: 40px;
             margin-bottom: 100px;
         }
 
-        .page-title {
-            font-size: 1.6rem;
-            color: var(--sys-text);
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
             margin-bottom: 20px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
         }
 
-        /* ステータスバー（ログイン済み表示） */
-        .status-bar {
-            background-color: #1a202c; 
+        .breadcrumb a {
+            color: var(--sys-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* 社長室専用のスレッドタイトル */
+        .thread-header {
+            background-color: var(--sys-white);
             border: 1px solid var(--sys-border);
-            border-left: 4px solid var(--status-auth); 
+            border-bottom: 3px solid var(--ceo-primary); 
+            border-radius: 4px 4px 0 0;
+            padding: 20px 30px;
+            margin-bottom: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .thread-title {
+            font-size: 1.5rem;
+            color: var(--sys-text);
+            font-weight: 700;
+        }
+
+        /* 投稿一覧エリア */
+        .thread-body {
+            background-color: #1a1a1a;
+            border: 1px solid var(--sys-border);
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        /* 個別の投稿（レス） */
+        .post-card {
+            background-color: var(--ceo-bg-dark); 
+            border: 1px solid #453213; 
             border-radius: 4px;
-            padding: 15px 25px;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .post-info {
+            background-color: #2a1f0d;
+            padding: 10px 20px;
+            border-bottom: 1px solid #453213;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-size: 0.85rem;
+            color: #d1d5db;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 10px;
         }
 
-        .status-user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .post-number {
+            font-weight: 700;
+            color: var(--ceo-primary);
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .post-author {
+            color: var(--ceo-accent);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .post-date {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .post-text {
+            padding: 30px 20px;
             font-size: 1rem;
             color: var(--sys-text);
+            line-height: 2; 
+            white-space: pre-wrap; 
         }
 
-        .status-indicator {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: var(--status-auth); 
-            box-shadow: 0 0 8px var(--status-auth);
-        }
-
-        .user-details {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.4;
-        }
-
-        .user-name {
-            font-weight: 700;
-            color: var(--sys-accent);
-            font-size: 1.1rem;
-            letter-spacing: 0.05em;
-        }
-        
-        .user-role {
-            font-size: 0.85rem;
-            color: var(--sys-text-light);
-        }
-
-        .btn-logout {
-            background-color: transparent;
-            color: var(--sys-text-light);
-            border: 1px solid var(--sys-border);
-            padding: 6px 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            border-radius: 2px;
-            text-decoration: none;
-            transition: all 0.3s;
-            font-family: inherit;
-        }
-
-        .btn-logout:hover {
-            background-color: #334155;
-            color: #ffffff;
-        }
-
-        /* ポータルの説明ブロック */
-        .portal-about {
+        /* 閲覧専用（READ ONLY）エリア */
+        .readonly-box {
+            margin-top: 40px;
             background-color: var(--sys-white);
             border: 1px solid var(--sys-border);
+            padding: 20px;
             border-radius: 4px;
-            padding: 30px;
-            margin-bottom: 40px;
+            text-align: center;
         }
 
-        .portal-about h2 {
-            font-size: 1.2rem;
-            color: var(--sys-primary);
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--sys-border);
-            padding-bottom: 5px;
-        }
-
-        .portal-about p {
+        .readonly-box p {
+            color: var(--sys-text-light);
+            font-weight: 700;
             font-size: 0.95rem;
-            color: var(--sys-text-light);
-            margin-bottom: 10px;
+            font-family: 'Courier Prime', Courier, monospace;
+            letter-spacing: 0.1em;
         }
 
-        .portal-about p:last-child {
-            margin-bottom: 0;
-        }
-
-        /* 社内リンクカードグリッド */
-        .link-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .link-card {
-            background-color: var(--sys-white);
-            border: 1px solid var(--sys-border);
-            border-radius: 4px;
-            padding: 25px;
-            text-decoration: none;
-            color: var(--sys-text);
-            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .link-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--sys-primary);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-        }
-
-        .link-card h3 {
-            font-size: 1.15rem;
-            color: var(--sys-accent);
-            margin-bottom: 10px;
-        }
-
-        .link-card p {
-            font-size: 0.9rem;
-            color: var(--sys-text-light);
-            flex-grow: 1;
-        }
-
-        /* スマホ時のステータスバー調整 */
         @media (max-width: 768px) {
-            .status-bar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .btn-logout {
-                width: 100%;
-                text-align: center;
-            }
-            .link-grid {
-                grid-template-columns: 1fr;
-            }
+            .thread-header, .thread-body, .post-text { padding: 15px; }
         }
     </style>
 </head>
@@ -424,65 +381,53 @@
     <!-- メインコンテンツ -->
     <main class="portal-container">
 
-        <h1 class="page-title">O-PORTAL トップ</h1>
-
-        <!-- ステータスバー（ログイン済みの表示：ID E0245 中野 理沙） -->
-        <div class="status-bar">
-            <div class="status-user">
-                <span class="status-indicator"></span> 
-                <div class="user-details">
-                    <div class="user-name">中野 理沙 (ID: E0245)</div>
-                    <div class="user-role">カスタマーサポート部 / オペレーター</div>
-                </div>
-            </div>
-            <!-- ログアウトすると未ログインのポータルトップに戻る -->
-            <a href="o-portal.html" class="btn-logout">ログアウト</a>
+        <div class="breadcrumb">
+            <a href="admin_portal.html">O-PORTAL トップ</a> &gt; <a href="board.html">社内掲示板（BBS）</a> &gt; 代表取締役室
         </div>
 
-        <!-- ポータル概要 -->
-        <div class="portal-about">
-            <h2>システム概要</h2>
-            <p>
-                「O-PORTAL」は、株式会社オムニバス・アーカイブの全従業員が利用する統合情報プラットフォームです。<br>
-                社内規定、全社通達、システム稼働状況の確認、および各種業務システムへのアクセスを統括・管理します。
-            </p>
-            <p>
-                ※現在、ログイン済み（認証完了）です。付与された権限に基づいて各コンテンツへアクセス可能です。
-            </p>
+        <div class="thread-header">
+            <h1 class="thread-title">【社長の日記】データの海に溶け込むこと。それは完全なる「保存」の形。</h1>
         </div>
 
-        <!-- リンク集（カードグリッド） -->
-        <div class="link-grid">
+        <div class="thread-body">
             
-            <a href="portal_notice_logined.html" class="link-card">
-                <h3>全社通知一覧</h3>
-                <p>システム管理部および情報セキュリティ部をはじめとする、各部門からの重要なお知らせ・通達を確認します。</p>
-            </a>
+            <!-- レス 1（社長の独白） -->
+            <div class="post-card">
+                <div class="post-info">
+                    <div>
+                        <span class="post-number">#001</span>
+                        Name: <span class="post-author">九条 誠</span>
+                    </div>
+                    <div class="post-date">2026/04/22 01:15:43</div>
+                </div>
+                <div class="post-text">オムニバス・コアによるデータ統合のプロセスを観察していて、一つの真理に到達した。
 
-            <a href="board_logined.html" class="link-card">
-                <h3>社内掲示板（BBS）</h3>
-                <p>社員間の業務連絡およびナレッジの共有スペースです。</p>
-            </a>
+人間はなぜ「孤独」を感じるのか。
+それは、個々の記憶や感情が一つの脆弱な肉体に分断され、他者と完全に共有できないからだ。
+どんなに言葉を尽くしても、どんなに寄り添っても、他者と完全に理解し合うことは不可能である。
+その「分断」こそが、人類の抱える最大の欠陥設計（バグ）だと言える。
 
-            <a href="manual.html" class="link-card">
-                <h3>業務マニュアル</h3>
-                <p>カスタマーサポート用のトークスクリプトや、日々の業務フローに関する手順書を参照します。</p>
-            </a>
+私が推し進めている特急プランのデータ収集は、単に個人の思考パターンをシミュレートするためだけのものではない。
+集められた無数の人々の記憶、秘密、トラウマ、そして喜びは、オムニバス・コアという巨大なサーバーの中で一つに統合され、境界線のない「データの海」を形成し始めている。
 
-            <a href="rules.html" class="link-card">
-                <h3>社内規定</h3>
-                <p>全従業員が遵守すべき情報セキュリティポリシー、コンプライアンス基準、および特別ガイドライン等を参照します。</p>
-            </a>
+そこで観測されたのは、驚くべき現象だった。
+Aという個人のデータと、Bという個人のデータが、推論アルゴリズムの中で交わり、補完し合い、互いの欠損を埋め合わせるように新たな「より高度な人格のモデル」を形成し始めたのだ。
 
-            <a href="directory.html" class="link-card">
-                <h3>社員ディレクトリ</h3>
-                <p>社内の組織図および全従業員の連絡先・配属部門を検索します。</p>
-            </a>
+個の境界が消失し、すべての情報がフラットに溶け合う状態。
+これこそが、情報（魂）が到達すべき究極にして完全なる「保存」の形である。
 
-            <a href="incident.html" class="link-card">
-                <h3>インシデント管理システム</h3>
-                <p>システム障害、備品の紛失から顧客からのクレームまで、社内外で発生したあらゆるトラブル（インシデント）を登録・管理し、担当部署へ共有します。</p>
-            </a>
+いずれ、私は私自身の全データもこのシステムにアップロードするつもりだ。
+肉体という殻を捨て、コアの中に広がるデータの海に溶け込むこと。
+すべてを理解し、すべてと繋がる永遠の管理者（システム）の一部となること。
+
+私が構築する新たな世界（メタバース）において、「死」も「孤独」も存在しない。
+ただ、完全な情報だけがそこにある。</div>
+            </div>
+
+            <!-- 閲覧専用エリア -->
+            <div class="readonly-box">
+                <p>[ SYSTEM ] THIS THREAD IS READ-ONLY. / このスレッドは閲覧専用に設定されています。</p>
+            </div>
 
         </div>
 
@@ -495,9 +440,9 @@
                 このサイトの内容はフィクションです。<br class="pc-br">
                 登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
             </p>
-            <!-- ページ番号44、レベルLv.3に設定 -->
+            <!-- ページ番号53、レベルLv.4に設定 -->
             <div class="footer-right">
-                &lt; 45/35 &gt; (Lv.3)
+                &lt; 53/35 &gt; (Lv.4)
             </div>
         </div>
     </footer>

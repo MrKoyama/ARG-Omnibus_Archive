@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O-PORTAL トップ | OMNIBUS ARCHIVE 社内ポータル</title>
+    <title>【調査報告】関連会社運用規定の漏洩および一時退避措置 | OMNIBUS ARCHIVE 社内ポータル</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         /* ユーザー様よりご提示いただいた共通CSSコード（ここから） */
@@ -23,9 +23,7 @@
             --sys-text-light: #94a3b8; 
             --sys-border: #334155; 
             --sys-header-bg: #0f172a; 
-            
-            /* ログイン状態用のカラー（グリーン） */
-            --status-auth: #22c55e;
+            --sys-alert: #ef4444; 
         }
         
         * {
@@ -53,6 +51,7 @@
             top: 0;
             z-index: 2000;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            width: 100%;
         }
 
         .header-inner {
@@ -235,167 +234,154 @@
         /* ユーザー様よりご提示いただいた共通CSSコード（ここまで） */
 
         /* =========================================
-           O-PORTAL トップページ専用のCSS（ログイン後UI）
+           報告書（レポート）専用UI - 無機質・文書感
            ========================================= */
         .portal-container {
             margin-top: 60px;
             margin-bottom: 100px;
         }
 
-        .page-title {
-            font-size: 1.6rem;
-            color: var(--sys-text);
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
             margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--sys-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .report-card {
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border-radius: 0; 
+        }
+
+        /* 報告書ヘッダー */
+        .report-header {
+            border-bottom: 2px solid var(--sys-border);
+            background-color: #1a1a1a;
+            padding: 30px 40px;
+        }
+
+        .report-header-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            font-family: 'Courier Prime', Courier, monospace; 
+        }
+
+        .report-header-table th {
+            text-align: left;
+            width: 150px;
+            color: var(--sys-text-light);
+            padding: 4px 0;
+            font-weight: normal;
+        }
+
+        .report-header-table td {
+            color: var(--sys-text);
+            padding: 4px 0;
+            font-weight: normal;
+        }
+
+        .report-title {
+            font-size: 1.25rem;
+            color: var(--sys-text); 
+            margin-top: 25px;
             font-weight: 700;
             letter-spacing: 0.05em;
-        }
-
-        /* ステータスバー（ログイン済み表示） */
-        .status-bar {
-            background-color: #1a202c; 
-            border: 1px solid var(--sys-border);
-            border-left: 4px solid var(--status-auth); 
-            border-radius: 4px;
-            padding: 15px 25px;
-            margin-bottom: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .status-user {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 1rem;
+        }
+
+        .report-title::before {
+            content: "📄";
+            font-size: 1.2rem;
+        }
+
+        /* 報告書本文 */
+        .report-body {
+            padding: 40px;
+            font-size: 0.95rem; 
+            color: var(--sys-text);
+            line-height: 1.7;
+        }
+
+        .report-body p {
+            margin-bottom: 15px;
+        }
+
+        /* 事務的な見出し */
+        .report-body h2 {
+            font-size: 1.05rem;
+            color: var(--sys-text);
+            margin: 30px 0 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #444; 
+            font-weight: 700;
+        }
+
+        .report-body h2:first-child {
+            margin-top: 0;
+        }
+
+        .report-body ul {
+            margin-bottom: 15px;
+            margin-left: 20px;
             color: var(--sys-text);
         }
 
-        .status-indicator {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: var(--status-auth); 
-            box-shadow: 0 0 8px var(--status-auth);
+        .report-body li {
+            margin-bottom: 5px;
         }
 
-        .user-details {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.4;
+        .status-resolved {
+            color: #4ade80;
+            font-weight: bold;
         }
 
-        .user-name {
-            font-weight: 700;
-            color: var(--sys-accent);
-            font-size: 1.1rem;
-            letter-spacing: 0.05em;
-        }
-        
-        .user-role {
-            font-size: 0.85rem;
-            color: var(--sys-text-light);
-        }
-
-        .btn-logout {
-            background-color: transparent;
-            color: var(--sys-text-light);
-            border: 1px solid var(--sys-border);
-            padding: 6px 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            border-radius: 2px;
-            text-decoration: none;
-            transition: all 0.3s;
-            font-family: inherit;
+        /* 黒塗り（検閲）スタイル */
+        .redacted {
+            background-color: #000000;
+            color: transparent;
+            user-select: none;
+            padding: 0 8px;
+            display: inline-block;
+            vertical-align: middle;
+            pointer-events: none; 
         }
 
-        .btn-logout:hover {
-            background-color: #334155;
-            color: #ffffff;
-        }
-
-        /* ポータルの説明ブロック */
-        .portal-about {
-            background-color: var(--sys-white);
-            border: 1px solid var(--sys-border);
-            border-radius: 4px;
-            padding: 30px;
-            margin-bottom: 40px;
-        }
-
-        .portal-about h2 {
-            font-size: 1.2rem;
-            color: var(--sys-primary);
+        /* アラートボックス（事後対応） */
+        .action-box {
+            background-color: #1a1a1a;
+            border-left: 4px solid #f59e0b; /* 注意喚起のオレンジ */
+            padding: 15px 20px;
             margin-bottom: 15px;
-            border-bottom: 1px solid var(--sys-border);
-            padding-bottom: 5px;
+            margin-top: 30px;
         }
 
-        .portal-about p {
-            font-size: 0.95rem;
-            color: var(--sys-text-light);
+        .action-box h3 {
+            font-size: 1rem;
+            color: #f59e0b;
             margin-bottom: 10px;
         }
 
-        .portal-about p:last-child {
+        .action-box p {
+            font-size: 0.9rem;
             margin-bottom: 0;
         }
 
-        /* 社内リンクカードグリッド */
-        .link-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .link-card {
-            background-color: var(--sys-white);
-            border: 1px solid var(--sys-border);
-            border-radius: 4px;
-            padding: 25px;
-            text-decoration: none;
-            color: var(--sys-text);
-            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .link-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--sys-primary);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-        }
-
-        .link-card h3 {
-            font-size: 1.15rem;
-            color: var(--sys-accent);
-            margin-bottom: 10px;
-        }
-
-        .link-card p {
-            font-size: 0.9rem;
-            color: var(--sys-text-light);
-            flex-grow: 1;
-        }
-
-        /* スマホ時のステータスバー調整 */
         @media (max-width: 768px) {
-            .status-bar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .btn-logout {
-                width: 100%;
-                text-align: center;
-            }
-            .link-grid {
-                grid-template-columns: 1fr;
-            }
+            .report-header, .report-body { padding: 20px; }
+            .report-header-table th { width: 100px; }
         }
     </style>
 </head>
@@ -424,67 +410,69 @@
     <!-- メインコンテンツ -->
     <main class="portal-container">
 
-        <h1 class="page-title">O-PORTAL トップ</h1>
+        <div class="breadcrumb">
+            <a href="incident.html">インシデント管理システム</a> &gt; インシデント詳細 (INC-2604-102)
+        </div>
 
-        <!-- ステータスバー（ログイン済みの表示：ID E0245 中野 理沙） -->
-        <div class="status-bar">
-            <div class="status-user">
-                <span class="status-indicator"></span> 
-                <div class="user-details">
-                    <div class="user-name">中野 理沙 (ID: E0245)</div>
-                    <div class="user-role">カスタマーサポート部 / オペレーター</div>
-                </div>
+        <article class="report-card">
+            <!-- 報告書ヘッダー -->
+            <div class="report-header">
+                <table class="report-header-table">
+                    <tbody>
+                        <tr>
+                            <th>Incident ID</th>
+                            <td>INC-2604-102</td>
+                        </tr>
+                        <tr>
+                            <th>Date</th>
+                            <td>2026/04/18 11:30</td>
+                        </tr>
+                        <tr>
+                            <th>Reported By</th>
+                            <td>システム管理部 / 情報セキュリティ部</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td><span class="status-resolved">RESOLVED (解決済)</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h1 class="report-title">関連会社（テクノロジーズ社）の運用規定資料漏洩、および本社サーバーへの一時退避措置について</h1>
             </div>
-            <!-- ログアウトすると未ログインのポータルトップに戻る -->
-            <a href="o-portal.html" class="btn-logout">ログアウト</a>
-        </div>
 
-        <!-- ポータル概要 -->
-        <div class="portal-about">
-            <h2>システム概要</h2>
-            <p>
-                「O-PORTAL」は、株式会社オムニバス・アーカイブの全従業員が利用する統合情報プラットフォームです。<br>
-                社内規定、全社通達、システム稼働状況の確認、および各種業務システムへのアクセスを統括・管理します。
-            </p>
-            <p>
-                ※現在、ログイン済み（認証完了）です。付与された権限に基づいて各コンテンツへアクセス可能です。
-            </p>
-        </div>
+            <!-- 報告書本文 -->
+            <div class="report-body">
+                <h2>1. インシデントの概要</h2>
+                <p>
+                    2026年4月18日 未明、関連会社である「オムニバス・テクノロジーズ株式会社」の内部サーバーにおいて、不正なアクセス試行の痕跡が検知された。<br>
+                    情報セキュリティ部の初動調査により、同社の非公然部門である「データ執行班（D.E.T.）」の極秘業務マニュアル（運用プロトコル）の一部が、外部ネットワークへ流出する危険性が高い状態であったことが判明した。
+                </p>
 
-        <!-- リンク集（カードグリッド） -->
-        <div class="link-grid">
-            
-            <a href="portal_notice_logined.html" class="link-card">
-                <h3>全社通知一覧</h3>
-                <p>システム管理部および情報セキュリティ部をはじめとする、各部門からの重要なお知らせ・通達を確認します。</p>
-            </a>
+                <h2>2. 初期対応および一時退避措置</h2>
+                <p>
+                    D.E.T.の運用プロトコルには、特急プランで復旧したデータの非合法な利用（恐喝および資金化プロセス）に関する具体的な記述が含まれており、これが外部に流出すれば、オムニバス・アーカイブ（本社）の事業存続に関わる致命的なコンプライアンス違反となる。
+                </p>
+                <p>
+                    そのため、システム管理部はテクノロジーズ社の当該サーバーを物理的にシャットダウンし、ネットワークから完全に隔離した。同時に、証拠保全および今後の業務運用のために、該当のプロトコル資料を、より堅牢なセキュリティが敷かれている当社の本社サーバー（O-PORTALの隠しディレクトリ階層）へ一時的に退避（バックアップ）させた。
+                </p>
 
-            <a href="board_logined.html" class="link-card">
-                <h3>社内掲示板（BBS）</h3>
-                <p>社員間の業務連絡およびナレッジの共有スペースです。</p>
-            </a>
+                <h2>3. 本社への影響と今後の対策</h2>
+                <p>
+                    退避させた資料は「非公開・改変済ページ アーカイブインデックス」内に格納されており、通常業務における一般社員からのアクセスは完全に制限（Lv.4以上の権限を要求）されているため、本社内部での二次漏洩のリスクは極めて低い。
+                </p>
+                <p>
+                    しかしながら、本インシデントは関連会社におけるセキュリティ管理の甘さを露呈するものであり、現在、テクノロジーズ社内のネットワークインフラの再構築、および該当時間帯にアクセス権限を有していたスタッフへの厳しい監査（内部告発の可能性を含む調査）が進行中である。
+                </p>
 
-            <a href="manual.html" class="link-card">
-                <h3>業務マニュアル</h3>
-                <p>カスタマーサポート用のトークスクリプトや、日々の業務フローに関する手順書を参照します。</p>
-            </a>
+                <div class="action-box">
+                    <h3>4. 記録の取り扱いに関する通達</h3>
+                    <p>
+                        本インシデント対応は完了（RESOLVED）としたが、D.E.T.の運用プロトコルが当社のサーバー内に存在しているという事実自体が、本体と関連会社を繋ぐ「物理的な証拠」となり得るため、事態が完全に収束するまでの間、本報告書の閲覧および退避データの取り扱いには細心の注意を払うこと。
+                    </p>
+                </div>
 
-            <a href="rules.html" class="link-card">
-                <h3>社内規定</h3>
-                <p>全従業員が遵守すべき情報セキュリティポリシー、コンプライアンス基準、および特別ガイドライン等を参照します。</p>
-            </a>
-
-            <a href="directory.html" class="link-card">
-                <h3>社員ディレクトリ</h3>
-                <p>社内の組織図および全従業員の連絡先・配属部門を検索します。</p>
-            </a>
-
-            <a href="incident.html" class="link-card">
-                <h3>インシデント管理システム</h3>
-                <p>システム障害、備品の紛失から顧客からのクレームまで、社内外で発生したあらゆるトラブル（インシデント）を登録・管理し、担当部署へ共有します。</p>
-            </a>
-
-        </div>
+            </div>
+        </article>
 
     </main>
 
@@ -495,9 +483,9 @@
                 このサイトの内容はフィクションです。<br class="pc-br">
                 登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
             </p>
-            <!-- ページ番号44、レベルLv.3に設定 -->
+            <!-- ページ番号50、レベルLv.4に設定 -->
             <div class="footer-right">
-                &lt; 45/35 &gt; (Lv.3)
+                &lt; 50/35 &gt; (Lv.4)
             </div>
         </div>
     </footer>
