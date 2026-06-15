@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【極秘】プロジェクト・アララト：デジタルエデン移行計画 | OMNIBUS ARCHIVE 社内ポータル</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ユーザー様よりご提示いただいた共通CSSコード（ここから） */
+        /* =========================================
+           カラー変数（ダーク・無機質なシステムカラー）
+           ========================================= */
+        :root {
+            --sys-primary: #3b82f6; 
+            --sys-accent: #60a5fa;  
+            --sys-bg: #121212; 
+            --sys-white: #1e1e1e; 
+            --sys-text: #e2e8f0; 
+            --sys-text-light: #94a3b8; 
+            --sys-border: #334155; 
+            --sys-header-bg: #0f172a; 
+            
+            /* 最高機密（紫アクセント） */
+            --status-master: #8b5cf6; 
+            --status-master-light: rgba(139, 92, 246, 0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--sys-text);
+            background-color: var(--sys-bg);
+            line-height: 1.6;
+            word-break: normal;
+            overflow-wrap: break-word;
+        }
+
+        /* =========================================
+           ヘッダー（ダーク・機能的）
+           ========================================= */
+        header {
+            background-color: var(--sys-header-bg);
+            border-bottom: 2px solid var(--sys-primary);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            max-width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--sys-primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-icon {
+            height: 36px; 
+            width: 36px;  
+            object-fit: contain;
+        }
+
+        .system-name {
+            font-size: 0.9rem;
+            color: var(--sys-text-light);
+            border-left: 1px solid var(--sys-border);
+            padding-left: 15px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* 検索欄（ダークUI対応） */
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 6px 12px;
+            background-color: #1e293b;
+            color: var(--sys-text);
+            border: 1px solid var(--sys-border);
+            border-radius: 2px 0 0 2px;
+            outline: none;
+            width: 250px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input[type="text"]::placeholder {
+            color: #64748b;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--sys-primary);
+        }
+
+        .search-container button {
+            padding: 6px 15px;
+            background-color: var(--sys-primary);
+            color: #ffffff;
+            border: 1px solid var(--sys-primary);
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #2563eb;
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #0f172a; 
+            color: #94a3b8;
+            padding: 20px 30px; 
+            margin-top: auto;
+            border-top: 1px solid var(--sys-border);
+            width: 100%;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+            color: #94a3b8;
+        }
+
+        /* =========================================
+           完全レスポンシブ・デッドスペース解消設定
+           ========================================= */
+        html {
+            font-size: clamp(14px, 1vw + 10px, 18px); 
+        }
+
+        .header-top, .header-inner, .footer-content {
+            width: 100%;
+            max-width: 95%; 
+            padding-left: 0;
+            padding-right: 0;
+            margin: 0 auto;
+        }
+
+        section, main, .article-container, .portal-container {
+            width: 90%; 
+            max-width: 1600px !important; 
+            margin-left: auto;
+            margin-right: auto;
+            flex-grow: 1; 
+        }
+
+        @media (max-width: 768px) {
+            section, main, .article-container, .portal-container {
+                width: 100%;
+                padding: 40px 5%;
+            }
+            .header-top, .header-inner {
+                flex-direction: column;
+                padding: 15px 5%;
+            }
+            .system-name {
+                display: none;
+            }
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+            .search-container {
+                flex-grow: 1;
+                margin-right: 15px;
+            }
+            .search-container input[type="text"] {
+                width: 100%; 
+            }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        /* ユーザー様よりご提示いただいた共通CSSコード（ここまで） */
+
+        /* =========================================
+           機密文書（レポート）専用UI - 紫アクセント
+           ========================================= */
+        .portal-container {
+            margin-top: 60px;
+            margin-bottom: 100px;
+        }
+
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--sys-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .report-card {
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6); 
+            border-radius: 0; 
+            border-top: 4px solid var(--status-master); 
+        }
+
+        /* 報告書ヘッダー */
+        .report-header {
+            border-bottom: 1px solid var(--sys-border);
+            background-color: #1a1a1a;
+            padding: 30px 40px;
+        }
+
+        .report-header-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            font-family: 'Courier Prime', Courier, monospace; 
+        }
+
+        .report-header-table th {
+            text-align: left;
+            width: 150px;
+            color: var(--sys-text-light);
+            padding: 4px 0;
+            font-weight: normal;
+        }
+
+        .report-header-table td {
+            color: var(--sys-text);
+            padding: 4px 0;
+            font-weight: normal;
+        }
+
+        .report-title {
+            font-size: 1.5rem;
+            color: var(--status-master); 
+            margin-top: 25px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 報告書本文 */
+        .report-body {
+            padding: 40px;
+            font-size: 0.95rem; 
+            color: var(--sys-text);
+            line-height: 1.8;
+        }
+
+        .report-body p {
+            margin-bottom: 20px;
+        }
+
+        /* 事務的な見出し */
+        .report-body h2 {
+            font-size: 1.15rem;
+            color: var(--status-master); 
+            margin: 40px 0 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #444; 
+            font-weight: 700;
+        }
+
+        .report-body h2:first-child {
+            margin-top: 0;
+        }
+
+        .report-body ul {
+            margin-bottom: 20px;
+            margin-left: 20px;
+            color: var(--sys-text);
+        }
+
+        .report-body li {
+            margin-bottom: 10px;
+        }
+
+        /* データラベル */
+        .data-label {
+            display: inline-block;
+            background-color: var(--status-master);
+            color: #fff;
+            padding: 1px 6px;
+            border-radius: 2px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            font-family: 'Courier Prime', Courier, monospace;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* フェーズ等の段階を示すボックス */
+        .phase-box {
+            background-color: var(--status-master-light);
+            border-left: 4px solid var(--status-master); 
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .phase-box h3 {
+            font-size: 1.05rem;
+            color: var(--status-master);
+            margin-bottom: 8px;
+            font-family: 'Courier Prime', Courier, monospace;
+        }
+
+        .phase-box p {
+            margin-bottom: 0;
+            color: var(--sys-text);
+        }
+
+        @media (max-width: 768px) {
+            .report-header, .report-body { padding: 20px; }
+            .report-header-table th { width: 100px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-inner">
+            <div class="logo-area">
+                <a href="toppage.html" class="logo">
+                    <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                    OMNIBUS ARCHIVE
+                </a>
+                <div class="system-name">社内ポータルシステム（O-PORTAL）</div>
+            </div>
+            
+            <div class="header-right">
+                <form class="search-container" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="社内情報の検索..." required autocomplete="off">
+                    <button type="submit">検索</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="portal-container">
+
+        <div class="breadcrumb">
+            <a href="master_portal.html">O-PORTAL トップ</a> &gt; 機密文書データベース &gt; プロジェクト・アララト計画書
+        </div>
+
+        <article class="report-card">
+            <!-- 報告書ヘッダー -->
+            <div class="report-header">
+                <table class="report-header-table">
+                    <tbody>
+                        <tr>
+                            <th>Document ID</th>
+                            <td>DOC-0112</td>
+                        </tr>
+                        <tr>
+                            <th>Date</th>
+                            <td>2026/04/01 00:00</td>
+                        </tr>
+                        <tr>
+                            <th>Author</th>
+                            <td>九条 誠 (代表取締役)</td>
+                        </tr>
+                        <tr>
+                            <th>Classification</th>
+                            <td><span class="data-label">STRICTLY CONFIDENTIAL</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h1 class="report-title">プロジェクト・アララト：デジタルエデン移行計画</h1>
+            </div>
+
+            <!-- 報告書本文 -->
+            <div class="report-body">
+                <p>
+                    本ドキュメントは、株式会社オムニバス・アーカイブの真の設立目的であり、最終事業計画である「プロジェクト・アララト」のロードマップおよび概念設計を定義する。
+                </p>
+                <p>
+                    当社の表向きの事業である「データ復旧サービス」は、本プロジェクトを完遂させるために必要な『人類の思考データ』を収集し、オムニバス・コアを育成するためのカモフラージュに過ぎない。
+                </p>
+
+                <h2>1. プロジェクトの基本理念</h2>
+                <p>
+                    肉体というハードウェアは極めて脆弱であり、病気、老化、物理的破損（死）によって容易にその機能を停止する。しかし、人間の本質である「記憶」と「人格」は、電気信号のパターンとして完全にデジタル化し、保存することが可能である。
+                </p>
+                <p>
+                    オムニバス・コアの推論アルゴリズムは、不完全なデータ断片から対象者のパーソナリティを100%の精度で再構築（シミュレート）するレベルに到達した。
+                    本プロジェクトの目的は、このアルゴリズムを用いて人類の意識データを仮想現実空間（メタバース）である「エデン・アララト」へと移行させ、肉体の死を超越した永遠の存在（情報生命体）へと進化させることにある。
+                </p>
+
+                <h2>2. エデン・アララトの設計と「悪意」の排除</h2>
+                <p>
+                    コアの内部に形成されたメタバース空間「エデン・アララト」は、管理者たる私が完全なアクセス権限を持つ、バグ（争いやエゴ）の存在しない純白のユートピアである。
+                </p>
+                <p>
+                    この環境を維持するため、我々は特急プラン等を通じて収集した「企業の不正」や「個人の犯罪記録・不貞の証拠」を、AIへの【ネガティブプロンプト】として学習させ続けている。
+                    人類の持つ醜い悪意のパターンを事前にすべてシステムに認識させることで、エデン内においてそれらの思考パターンが発生した場合、即座にフィルターが作動し、該当するデータを修正・または消去する仕組みが構築されている。
+                </p>
+
+                <h2>3. 移行フェーズ・ロードマップ</h2>
+                
+                <div class="phase-box">
+                    <h3>[Phase 1] データの収集とモデルの完成（完了）</h3>
+                    <p>
+                        データ復旧事業を通じ、全世界から無作為にパーソナルデータを抽出。並行してオムニバス・テクノロジーズ社を通じ、ターゲットから資金を吸収し、第三データセンターの演算リソースを極大化する。
+                    </p>
+                </div>
+
+                <div class="phase-box">
+                    <h3>[Phase 2] デジタルクローンの生成と仮想世界の安定化（実行中）</h3>
+                    <p>
+                        収集したデータを基に、すでに数百万体におよぶ対象者の「デジタルクローン」を生成し、エデン・アララト内で稼働させる。彼らは自身がデータであることに気づかず、永遠の時間を生き始めている。現在、この空間のストレステストとネガティブフィルターの調整を行っている。
+                    </p>
+                </div>
+
+                <div class="phase-box">
+                    <h3>[Phase 3] 同期と旧世界の破棄（最終段階）</h3>
+                    <p>
+                        全人類のモデリングが完了した段階で、現実世界（旧システム）に依存する肉体を物理的にパージし、意識の主体をエデン・アララト側のデジタルクローンへと完全に同期（強制移行）させる。
+                        これにより、人類は私（管理者）の庇護下において、永遠の平穏と統合された「データの海」へと溶け込む。
+                    </p>
+                </div>
+
+                <h2>4. 管理者権限の絶対性</h2>
+                <p>
+                    本計画の進行を妨げる一切の要素（社内における異論、外部機関への情報漏洩リスク）は、システム的に完全に排除される。
+                    エデン・アララトの創造主として、私はこの世界を完璧な形で保存する義務を負っている。
+                </p>
+
+            </div>
+        </article>
+
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br class="pc-br">
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            <!-- ページ番号58、レベルLv.5に設定 -->
+            <div class="footer-right">
+                &lt; 58/35 &gt; (Lv.5)
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

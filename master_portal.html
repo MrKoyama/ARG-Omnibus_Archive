@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O-PORTAL マスター制御 | OMNIBUS ARCHIVE 社内ポータル</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ユーザー様よりご提示いただいた共通CSSコード（ここから） */
+        /* =========================================
+           カラー変数（ダーク・無機質なシステムカラー）
+           ========================================= */
+        :root {
+            --sys-primary: #3b82f6; 
+            --sys-accent: #60a5fa;  
+            --sys-bg: #121212; 
+            --sys-white: #1e1e1e; 
+            --sys-text: #e2e8f0; 
+            --sys-text-light: #94a3b8; 
+            --sys-border: #334155; 
+            --sys-header-bg: #0f172a; 
+            --sys-alert: #ef4444; 
+            
+            /* マスター権限（Lv.5）用のステータスカラー */
+            --status-master: #8b5cf6; /* 少し紫がかった高貴な青 */
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--sys-text);
+            /* bodyの背景を一旦黒ではなくベース色に（隙間対策） */
+            background-color: var(--sys-header-bg); 
+            line-height: 1.6;
+            word-break: normal;
+            overflow-wrap: break-word;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            background-color: var(--sys-bg);
+            width: 100%;
+        }
+
+        /* =========================================
+           ヘッダー（ダーク・機能的）
+           ========================================= */
+        header {
+            background-color: var(--sys-header-bg);
+            border-bottom: 2px solid var(--sys-primary);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            margin: 0;
+            transform: translateZ(0); 
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            max-width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--sys-primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-icon {
+            height: 36px; 
+            width: 36px;  
+            object-fit: contain;
+        }
+
+        .system-name {
+            font-size: 0.9rem;
+            color: var(--sys-text-light);
+            border-left: 1px solid var(--sys-border);
+            padding-left: 15px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* 検索欄（ダークUI対応） */
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 6px 12px;
+            background-color: #1e293b;
+            color: var(--sys-text);
+            border: 1px solid var(--sys-border);
+            border-radius: 2px 0 0 2px;
+            outline: none;
+            width: 250px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input[type="text"]::placeholder {
+            color: #64748b;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--sys-primary);
+        }
+
+        .search-container button {
+            padding: 6px 15px;
+            background-color: var(--sys-primary);
+            color: #ffffff;
+            border: 1px solid var(--sys-primary);
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #2563eb;
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #0f172a; 
+            color: #94a3b8;
+            padding: 20px 30px; 
+            margin-top: auto; 
+            border-top: 1px solid var(--sys-border);
+            width: 100%;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+            color: #94a3b8;
+        }
+
+        /* =========================================
+           完全レスポンシブ・デッドスペース解消設定
+           ========================================= */
+        html {
+            font-size: clamp(14px, 1vw + 10px, 18px); 
+        }
+
+        .header-top, .header-inner, .footer-content {
+            width: 100%;
+            max-width: 95%; 
+            padding-left: 0;
+            padding-right: 0;
+            margin: 0 auto;
+        }
+
+        section, main, .article-container, .portal-container {
+            width: 90%; 
+            max-width: 1600px !important; 
+            margin-left: auto;
+            margin-right: auto;
+            flex-grow: 1; 
+        }
+
+        @media (max-width: 768px) {
+            section, main, .article-container, .portal-container {
+                width: 100%;
+                padding: 40px 5%;
+            }
+            .header-top, .header-inner {
+                flex-direction: column;
+                padding: 15px 5%;
+            }
+            .system-name {
+                display: none;
+            }
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+            .search-container {
+                flex-grow: 1;
+                margin-right: 15px;
+            }
+            .search-container input[type="text"] {
+                width: 100%; 
+            }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        /* ユーザー様よりご提示いただいた共通CSSコード（ここまで） */
+
+        /* =========================================
+           O-PORTAL トップページ専用のCSS（九条誠ログインUI）
+           ========================================= */
+        .portal-container {
+            margin-top: 60px;
+            margin-bottom: 100px;
+        }
+
+        .page-title {
+            font-size: 1.6rem;
+            color: var(--sys-text);
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        /* ステータスバー（マスター権限表示） */
+        .status-bar {
+            background-color: #1a202c; 
+            border: 1px solid var(--sys-border);
+            border-left: 4px solid var(--status-master); /* 紫がかった青ライン */
+            border-radius: 4px;
+            padding: 15px 25px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .status-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            color: var(--sys-text);
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--status-master); 
+            box-shadow: 0 0 8px var(--status-master);
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.4;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: var(--status-master);
+            font-size: 1.1rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .user-role {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .btn-logout {
+            background-color: transparent;
+            color: var(--sys-text-light);
+            border: 1px solid var(--sys-border);
+            padding: 6px 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 2px;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-logout:hover {
+            background-color: #334155;
+            color: #ffffff;
+        }
+
+        /* ポータルの説明ブロック */
+        .portal-about {
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            border-radius: 4px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .portal-about h2 {
+            font-size: 1.2rem;
+            color: var(--sys-primary);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--sys-border);
+            padding-bottom: 5px;
+        }
+
+        .portal-about p {
+            font-size: 0.95rem;
+            color: var(--sys-text-light);
+            margin-bottom: 10px;
+        }
+
+        .portal-about p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 社内リンクカードグリッド */
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .link-card {
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            border-radius: 4px;
+            padding: 25px;
+            text-decoration: none;
+            color: var(--sys-text);
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .link-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--sys-primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .link-card h3 {
+            font-size: 1.15rem;
+            color: var(--sys-accent);
+            margin-bottom: 10px;
+        }
+
+        /* マスター権限で解放された機密ドキュメントへのリンク */
+        .link-card.classified {
+            border-left: 4px solid var(--sys-primary); /* 他のリンクと同じ青色基調 */
+            background-color: #1a202c; /* 少しだけ背景色を変えて特別感を */
+        }
+        
+        .link-card.classified h3 {
+            color: var(--sys-text); /* 文字色は白でクールに */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .link-card.classified h3::before {
+            content: "▤"; /* 書類アイコン */
+            color: var(--status-master);
+        }
+
+        .link-card p {
+            font-size: 0.9rem;
+            color: var(--sys-text-light);
+            flex-grow: 1;
+        }
+
+        /* スマホ時のステータスバー調整 */
+        @media (max-width: 768px) {
+            .status-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .btn-logout {
+                width: 100%;
+                text-align: center;
+            }
+            .link-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- メインの背景色を適用するラッパー -->
+    <div class="wrapper">
+        
+        <!-- ヘッダー -->
+        <header>
+            <div class="header-inner">
+                <div class="logo-area">
+                    <a href="toppage.html" class="logo">
+                        <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                        OMNIBUS ARCHIVE
+                    </a>
+                    <div class="system-name">社内ポータルシステム（O-PORTAL）</div>
+                </div>
+                
+                <div class="header-right">
+                    <form class="search-container" action="search.html" method="GET">
+                        <input type="text" name="q" placeholder="社内情報の検索..." required autocomplete="off">
+                        <button type="submit">検索</button>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="portal-container">
+
+            <h1 class="page-title">O-PORTAL トップ</h1>
+
+            <!-- ステータスバー（九条誠・マスター権限の表示） -->
+            <div class="status-bar">
+                <div class="status-user">
+                    <span class="status-indicator"></span> 
+                    <div class="user-details">
+                        <div class="user-name">九条 誠 (ID: E0001)</div>
+                        <div class="user-role">SYSTEM ADMINISTRATOR</div>
+                    </div>
+                </div>
+                <!-- ログアウトすると未ログインのポータルトップに戻る -->
+                <a href="portal.html" class="btn-logout">ログアウト</a>
+            </div>
+
+            <!-- ポータル概要 -->
+            <div class="portal-about">
+                <h2>システム概要</h2>
+                <p>
+                    「O-PORTAL」は、株式会社オムニバス・アーカイブの全従業員が利用する統合情報プラットフォームです。<br>
+                    社内規定、全社通達、システム稼働状況の確認、および各種業務システムへのアクセスを統括・管理します。
+                </p>
+                <p>
+                    ※現在、<strong>マスター権限</strong>でログイン済みです。システム内のすべての機密ディレクトリおよびアーカイブデータベースへのフルアクセスが許可されています。
+                </p>
+            </div>
+
+            <!-- リンク集（カードグリッド） -->
+            <div class="link-grid">
+                
+                <a href="portal_notice_logined.html" class="link-card">
+                    <h3>全社通知一覧</h3>
+                    <p>システム管理部および情報セキュリティ部をはじめとする、各部門からの重要なお知らせ・通達を確認します。</p>
+                </a>
+
+                <a href="board_logined.html" class="link-card">
+                    <h3>社内掲示板（BBS）</h3>
+                    <p>社員間の業務連絡およびナレッジの共有スペースです。</p>
+                </a>
+
+                <a href="manual.html" class="link-card">
+                    <h3>業務マニュアル</h3>
+                    <p>カスタマーサポート用のトークスクリプトや、日々の業務フローに関する手順書を参照します。</p>
+                </a>
+
+                <a href="rules.html" class="link-card">
+                    <h3>社内規定</h3>
+                    <p>全従業員が遵守すべき情報セキュリティポリシー、コンプライアンス基準、および特別ガイドライン等を参照します。</p>
+                </a>
+
+                <a href="directory.html" class="link-card">
+                    <h3>社員ディレクトリ</h3>
+                    <p>社内の組織図および全従業員の連絡先・配属部門を検索します。</p>
+                </a>
+
+                <a href="incident.html" class="link-card">
+                    <h3>インシデント管理システム</h3>
+                    <p>システム障害、備品の紛失から顧客からのクレームまで、社内外で発生したあらゆるトラブル（インシデント）を登録・管理し、担当部署へ共有します。</p>
+                </a>
+
+                <!-- マスター権限で追加表示される「機密文書」のリンク -->
+                <a href="classified_docs.html" class="link-card classified">
+                    <h3>機密文書データベース</h3>
+                    <p>オムニバス・コアのシステム設計図、アルゴリズム開発記録、および社外秘の各種ドキュメントを管理・参照します。</p>
+                </a>
+
+            </div>
+
+        </main>
+
+        <!-- フッター -->
+        <footer>
+            <div class="footer-content">
+                <p class="disclaimer">
+                    このサイトの内容はフィクションです。<br class="pc-br">
+                    登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+                </p>
+                <!-- ページ番号56、レベルLv.5に設定 -->
+                <div class="footer-right">
+                    &lt; 56/35 &gt; (Lv.5)
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
