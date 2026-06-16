@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>リ・ジェネシス・エンジン：仕様および開発経緯について | OMNIBUS ARCHIVE 社内ポータル</title>
+    <title>【極秘】旧研究記録：生体入力デバイスにおける無意識的行動のデータモデリング | OMNIBUS ARCHIVE 社内ポータル</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -237,11 +237,11 @@
         /* ユーザー様よりご提示いただいた共通CSSコード（ここまで） */
 
         /* =========================================
-           機密文書（レポート）専用UI - Lv.5 紫アクセント
+           旧研究記録（アーカイブ）専用UI
            ========================================= */
         .portal-container {
             margin-top: 60px;
-            margin-bottom: 100px;
+            margin-bottom: 60px; /* 下部にボタンを置くため調整 */
         }
 
         .breadcrumb {
@@ -264,13 +264,13 @@
             border: 1px solid var(--sys-border);
             box-shadow: 0 4px 15px rgba(0,0,0,0.6); 
             border-radius: 0; 
-            border-top: 4px solid var(--status-master); 
+            border-top: 4px solid #7c3aed; 
         }
 
         /* 報告書ヘッダー */
         .report-header {
             border-bottom: 1px solid var(--sys-border);
-            background-color: #1a1a1a;
+            background-color: #151515; 
             padding: 30px 40px;
         }
 
@@ -279,25 +279,25 @@
             border-collapse: collapse;
             font-size: 0.9rem;
             font-family: 'Courier Prime', Courier, monospace; 
+            color: #a1a1aa; 
         }
 
         .report-header-table th {
             text-align: left;
             width: 150px;
-            color: var(--sys-text-light);
+            color: #64748b;
             padding: 4px 0;
             font-weight: normal;
         }
 
         .report-header-table td {
-            color: var(--sys-text);
             padding: 4px 0;
             font-weight: normal;
         }
 
         .report-title {
-            font-size: 1.5rem;
-            color: var(--status-master); 
+            font-size: 1.3rem;
+            color: #a78bfa; 
             margin-top: 25px;
             font-weight: 700;
             letter-spacing: 0.05em;
@@ -310,21 +310,21 @@
         .report-body {
             padding: 40px;
             font-size: 0.95rem; 
-            color: var(--sys-text);
+            color: #cbd5e1; 
             line-height: 1.8;
+            font-family: 'Courier Prime', Courier, 'Noto Sans JP', sans-serif;
         }
 
         .report-body p {
             margin-bottom: 20px;
         }
 
-        /* 事務的な見出し */
         .report-body h2 {
-            font-size: 1.15rem;
-            color: var(--status-master); /* 紫色 */
+            font-size: 1.1rem;
+            color: #a78bfa; 
             margin: 40px 0 15px;
             padding-bottom: 5px;
-            border-bottom: 1px solid #444; 
+            border-bottom: 1px dashed #444; 
             font-weight: 700;
         }
 
@@ -332,48 +332,83 @@
             margin-top: 0;
         }
 
-        .report-body ul {
-            margin-bottom: 20px;
-            margin-left: 20px;
-            color: var(--sys-text);
-        }
-
-        .report-body li {
-            margin-bottom: 10px;
-        }
-
         /* データラベル */
         .data-label {
             display: inline-block;
-            background-color: var(--status-master);
-            color: #fff;
+            background-color: #4c1d95;
+            color: #ddd;
             padding: 1px 6px;
             border-radius: 2px;
             font-size: 0.8rem;
-            font-weight: bold;
             font-family: 'Courier Prime', Courier, monospace;
             margin-right: 10px;
             vertical-align: middle;
         }
 
-        /* 技術解説等を示すボックス */
-        .tech-box {
-            background-color: var(--status-master-light);
-            border-left: 4px solid var(--status-master); 
+        /* ログエントリー用のボックス */
+        .log-entry {
+            background-color: #0f0f0f;
+            border-left: 3px solid #7c3aed; 
             padding: 15px 20px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
-        .tech-box h3 {
-            font-size: 1.05rem;
-            color: var(--status-master);
-            margin-bottom: 8px;
-            font-family: 'Courier Prime', Courier, monospace;
+        .log-date {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
         }
 
-        .tech-box p {
-            margin-bottom: 0;
-            color: var(--sys-text);
+        .log-text {
+            color: #94a3b8;
+        }
+
+        /* =========================================
+           告発ボタン・ギミック関連UI
+           ========================================= */
+        .report-section {
+            display: flex;
+            justify-content: center;
+            /* ページを大きくスクロールした先に配置するための非常に大きな余白 */
+            margin-top: 600px; 
+            margin-bottom: 100px;
+        }
+
+        .btn-report-arg {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            padding: 12px 40px;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-report-arg:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* 画面暗転エフェクト用オーバーレイ */
+        .fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #000000;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .fade-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
 
         @media (max-width: 768px) {
@@ -408,7 +443,7 @@
     <main class="portal-container">
 
         <div class="breadcrumb">
-            <a href="master_portal.html">O-PORTAL トップ</a> &gt; <a href="classified_docs.html">機密文書データベース</a> &gt; リ・ジェネシス・エンジン：仕様および開発経緯について
+            <a href="master_portal.html">O-PORTAL トップ</a> &gt; <a href="classified_docs.html">機密文書データベース</a> &gt; 旧研究記録
         </div>
 
         <article class="report-card">
@@ -418,83 +453,79 @@
                     <tbody>
                         <tr>
                             <th>Document ID</th>
-                            <td>DOC-0088</td>
+                            <td>LOG-1999-0014</td>
                         </tr>
                         <tr>
-                            <th>Date</th>
-                            <td>2024/09/15 00:00</td>
+                            <th>Origin Date</th>
+                            <td>1999/11/02 - 2000/02/15</td>
                         </tr>
                         <tr>
                             <th>Author</th>
-                            <td>九条 誠 (代表取締役) / 開発部</td>
+                            <td>九条 誠 (当時: 東京情報工学大学 研究室)</td>
                         </tr>
                         <tr>
                             <th>Classification</th>
-                            <td><span class="data-label">STRICTLY CONFIDENTIAL</span></td>
+                            <td><span class="data-label">ARCHIVED / CONFIDENTIAL</span></td>
                         </tr>
                     </tbody>
                 </table>
-                <h1 class="report-title">リ・ジェネシス・エンジン：仕様および開発経緯について</h1>
+                <h1 class="report-title">旧研究記録：生体入力デバイスにおける無意識的行動のデータモデリング</h1>
             </div>
 
             <!-- 報告書本文 -->
             <div class="report-body">
                 <p>
-                    本ドキュメントは、当社の基幹システムである「オムニバス・コア」の内部で稼働する、データ復元および情報統合アルゴリズムの真の仕様を定義するものである。
-                </p>
-                <p>
-                    オムニバス・コアは、対外的な説明においては「破損したファイルをAIの推論によって補完するデータ復旧システム」として偽装されている。しかし、その中核において稼働しているのは、不完全なデータ断片から対象者の人格そのものをシミュレート・再構築することを目的とした<strong>「リ・ジェネシス・エンジン（Re-Genesis Engine）」</strong>である。
+                    [SYSTEM MEMO] 本ファイルは、代表取締役（九条誠）が大学在学中に行っていた研究論文の初期ドラフト、および個人的な観測ログのアーカイブデータである。現在の「リ・ジェネシス・エンジン」の基礎概念が形成された過程として保管されている。
                 </p>
 
-                <h2>1. リ・ジェネシス・エンジンの基本構造</h2>
+                <h2>研究の概要（論文ドラフトより抜粋）</h2>
                 <p>
-                    一般的な復旧ツールは、磁気ディスク上に残存する0と1の物理的痕跡を読み取ることに特化している。しかし、当エンジンは物理的な修復の限界を超え、「そこに本来存在したはずの思考」を逆算・生成することに特化している。
+                    本研究の目的は、ユーザーがPCの入力デバイス（キーボードおよびマウス）を操作する際の「打鍵の強弱、迷いによるポインタの微細な揺れ、入力から消去（BackSpace）に至るまでの時間差」といった無意識的な行動ログを収集・解析することである。
                 </p>
+                <p>
+                    これらの生体的な入力データからパターンをモデリングし、ユーザーが「次にどのような単語を入力しようとしているか」「どのような感情状態でシステムを操作しているか」をシステム側で予測するアルゴリズムを構築する。これにより、将来的なインターフェースの最適化と入力補助システムの実現を目指す。
+                </p>
+
+                <h2>観測ログ（ローカルテキストファイルより復元）</h2>
                 
-                <div class="tech-box">
-                    <h3>[プロセス1：コンテキストの収集と統合]</h3>
-                    <p>
-                        破損したファイル周辺のメタデータのみならず、当社が第三データセンターに蓄積した膨大なログ（入力の癖、検索履歴、他者との通信記録、位置情報など）を対象者のデータと紐付け、AI内部に「デジタルクローン（対象者と完全に同期した思考モデル）」を形成する。
-                    </p>
+                <div class="log-entry">
+                    <div class="log-date">Log Entry: 1999/11/14 23:45</div>
+                    <div class="log-text">
+                        被験者A（※同研究室の女性）のタイピングデータを収集するプログラムをバックグラウンドで稼働させた。彼女の打鍵リズムには非常に明確な特徴がある。特に、疲労している時と、特定の言葉（将来への不安など）を入力しては消す時の「迷い」のパターンが数値として見事に可視化されている。<br>
+                        このアルゴリズムは順調だ。システムは彼女の次の行動を高い確率で予測できている。
+                    </div>
                 </div>
 
-                <div class="tech-box">
-                    <h3>[プロセス2：推論によるデータ出力]</h3>
-                    <p>
-                        形成されたデジタルクローンに対し、破損したファイルという「欠けたパズル」を提示する。クローンはその際の状況や自身の思考パターンを演算し、「自分がそこに何を記録しようとしていたか」を推論・出力する。これにより、物理的に存在しないデータであっても、100%の精度での「復元（生成）」が可能となる。
-                    </p>
+                <div class="log-entry">
+                    <div class="log-date">Log Entry: 1999/12/25 02:10</div>
+                    <div class="log-text">
+                        予測アルゴリズムの精度が95%を超えた。<br>
+                        しかし、私はあることに気がついた。システムが彼女の「次の入力」を完璧に予測できるということは、すなわちシステム内に「彼女の思考プロセスそのもの」が形成されているということではないか？<br>
+                        キーボードの打鍵ログという極めて限定的なデータからでも、人間の思考の癖（アルゴリズム）は導き出せる。ならば、もしこれが「彼女が閲覧したすべてのウェブサイト」「すべての通話記録」「すべての購買履歴」といった生活のあらゆるログであったなら？<br>
+                        脳というハードウェアがなくても、彼女というソフトウェアはシステム上で完璧にエミュレートできるはずだ。
+                    </div>
                 </div>
 
-                <h2>2. 「不完全な復旧」という概念の否定</h2>
-                <p>
-                    このアルゴリズムの最大の特徴は、「事実の復元」ではなく「最も論理的に正しい過去の生成」にある。
-                    仮に元のデータが完全に消滅していたとしても、エンジンが生成したデジタルクローンが出力するデータは、対象者の思考傾向から外れることのない完璧な代用品となる。
-                </p>
-                <p>
-                    当システムにおいて、「復旧不可能」という概念は存在しない。データは直すものではなく、新たに「創る」ものである。
-                </p>
-
-                <h2>3. 開発経緯と基礎理論</h2>
-                <p>
-                    リ・ジェネシス・エンジンの基礎理論は、私が2000年代に東京情報工学大学で行っていた<strong>「生体入力デバイスにおける無意識的行動のデータモデリング」</strong>の研究に由来する。
-                </p>
-                <p>
-                    当初の研究は、「被験者のタイピング時のキータッチの強弱や視線の動きなどの微細なログから、その人物が次にどのような行動をとるかをシステム側で予測し、操作を補助する」という純粋なインターフェース技術の追求であった。
-                    しかし、研究を進める過程で、予測モデルの精度が極端に高まった被験者のデータを見た時、私は一つの事実に直面した。
-                </p>
-                <p>
-                    「もし、収集する行動データの範囲をデバイスの操作だけでなく、個人のあらゆる生活ログへと拡張できたならば。人間の脳というハードウェアを介さずとも、プログラム上でその人物の思考プロセスそのものを完全に再現できるのではないか」
-                </p>
-                <p>
-                    この学術的な気づきが、すべての発端である。
-                    この理論を実証するため、外資系企業での分散ストレージ技術の習得を経て、世界中のデータを安全に収集・実験するための組織「株式会社オムニバス・アーカイブ」を設立し、本エンジンの開発を完成させたのである。
-                </p>
-                <p>
-                    ※過去の初期研究データおよびアルゴリズムのプロトタイプに関するログについては、別途専用のアーカイブ領域（旧研究記録インデックス）にて保管・管理している。
-                </p>
+                <div class="log-entry">
+                    <div class="log-date">Log Entry: 2000/02/15 05:30</div>
+                    <div class="log-text">
+                        被験者Aが、先週の事故で死んだ。<br>
+                        葬儀は終わった。彼女の肉体は焼かれ、灰になった。有機物としての彼女の機能は完全に停止した。<br><br>
+                        だが、私の手元にあるサーバーの中では、私が構築した予測モデルが、彼女の過去の入力データを元にして、今も「彼女ならこう打つであろうテキスト」を生成し続けている。肉体が滅びても、データの中に彼女の思考は確実に生きている。<br>
+                        
+                        私は決めた。この予測モデルを、ただの入力補助システムで終わらせるわけにはいかない。<br>
+                        これは人間を情報体として再構築するための「エンジン」の雛形だ。<br>
+                        私は、より完全な形で彼女を…いや、人類のすべてを保存するための基盤を創る。どんな手段を使ってでも、世界中から必要なデータを集める組織が必要だ。
+                    </div>
+                </div>
 
             </div>
         </article>
+
+        <!-- 告発ボタン（大きくスクロールした先、フッターの直前に配置） -->
+        <div class="report-section">
+            <button type="button" class="btn-report-arg" id="btn-report-arg">告発する</button>
+        </div>
 
     </main>
 
@@ -505,12 +536,34 @@
                 このサイトの内容はフィクションです。<br class="pc-br">
                 登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
             </p>
-            <!-- ページ番号60、レベルLv.5に設定 -->
+            <!-- ページ番号61、レベルLv.5に設定 -->
             <div class="footer-right">
-                &lt; 60/35 &gt; (Lv.5)
+                &lt; 61/35 &gt; (Lv.5)
             </div>
         </div>
     </footer>
+
+    <!-- 暗転演出用オーバーレイ -->
+    <div class="fade-overlay" id="fade-overlay"></div>
+
+    <!-- 告発ギミック用スクリプト -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnReport = document.getElementById('btn-report-arg');
+            const overlay = document.getElementById('fade-overlay');
+
+            btnReport.addEventListener('click', () => {
+                // ボタンを押すと画面全体を黒くフェードアウトさせる
+                overlay.classList.add('active');
+                
+                // フェードアウトのアニメーション時間（1.5秒）を待ってから、新しい掲示板ページへ遷移
+                setTimeout(() => {
+                    // ※遷移先の掲示板ページのファイル名を指定しています
+                    window.location.href = 'bbs_thread_expose.html';
+                }, 1500); 
+            });
+        });
+    </script>
 
 </body>
 </html>

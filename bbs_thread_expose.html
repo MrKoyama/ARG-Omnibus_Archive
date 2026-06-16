@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【朗報】データ復旧のオムニバスアーカイブ、ついに倒産ｗｗｗ - 痛いニュース速報（仮）</title>
+    
+    <!-- 掲示板風の読みやすいフォント -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           リセットと基本設定
+           ========================================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "MS PGothic", "Hiragino Kaku Gothic ProN", Arial, sans-serif; /* 2ch風のフォント指定 */
+            color: #333333;
+            background-color: #e6e6e6; /* まとめサイトによくある薄いグレー背景 */
+            line-height: 1.6;
+        }
+
+        a {
+            color: #0000ee;
+            text-decoration: underline;
+        }
+
+        /* 画面フェードイン演出（前のページからの繋がり） */
+        body {
+            animation: fadeInPage 1.5s ease-in-out forwards;
+        }
+        @keyframes fadeInPage {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* =========================================
+           ヘッダー（まとめブログ風）
+           ========================================= */
+        header {
+            background-color: #3b5998; /* クラシックなブログヘッダーの青 */
+            color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 4px solid #1a2950;
+        }
+
+        .blog-title {
+            font-size: 2rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: #ffffff;
+            letter-spacing: 2px;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        .blog-desc {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            color: #d1d5db;
+        }
+
+        /* =========================================
+           メインコンテンツ（スレッドまとめ）
+           ========================================= */
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .thread-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #cc0000; /* 目立つ赤文字 */
+            margin-bottom: 10px;
+            line-height: 1.4;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        .thread-meta {
+            font-size: 0.85rem;
+            color: #666666;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #cccccc;
+            padding-bottom: 10px;
+        }
+
+        /* レス（書き込み）のスタイル */
+        .res-container {
+            margin-bottom: 25px;
+        }
+
+        .res-header {
+            font-size: 0.95rem;
+            color: #000000;
+            margin-bottom: 5px;
+            background-color: #f0f0f0;
+            padding: 3px 8px;
+            border-left: 3px solid #3b5998;
+        }
+
+        .res-num {
+            font-weight: bold;
+        }
+
+        .res-name {
+            color: #008000; /* 名前は緑 */
+            font-weight: bold;
+        }
+
+        .res-date {
+            color: #666666;
+            font-size: 0.85rem;
+        }
+
+        .res-id {
+            color: #888888;
+            font-size: 0.85rem;
+        }
+
+        .res-body {
+            font-size: 1rem;
+            padding: 10px 15px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            white-space: pre-wrap; /* 掲示板特有の改行を再現 */
+        }
+
+        /* 安価（アンカー）のスタイル */
+        .anchor {
+            color: #0000ee;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* 引用（ニュース文など）のスタイル */
+        .quote-box {
+            border: 1px solid #cccccc;
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 0.95rem;
+            color: #555555;
+            border-left: 5px solid #cccccc;
+        }
+
+        /* =========================================
+           フッター（ARGギミックを含む）
+           ========================================= */
+        footer {
+            background-color: #222222;
+            color: #aaaaaa;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* ご指定のARGメタ情報クラス（色は掲示板に合わせて少し調整） */
+        .footer-arg-meta {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #888888; 
+            letter-spacing: 0.05em;
+            margin-top: 10px;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            .thread-title {
+                font-size: 1.3rem;
+            }
+            .res-body {
+                font-size: 0.95rem;
+            }
+            .res-header {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー（まとめブログ風） -->
+    <header>
+        <a href="#" class="blog-title">痛いニュース速報（仮）</a>
+        <div class="blog-desc">ネットの気になる話題をサクッとまとめます</div>
+    </header>
+
+    <!-- メインコンテンツ（スレッドまとめ） -->
+    <div class="container">
+        
+        <h1 class="thread-title">【朗報】データ復旧大手のオムニバス・アーカイブ、悪事がバレてついに倒産ｗｗｗ</h1>
+        <div class="thread-meta">
+            カテゴリ：社会・事件 | 投稿日：2026/06/15 | コメント(142)
+        </div>
+
+        <!-- レス1：スレ立て（ニュース引用） -->
+        <div class="res-container">
+            <div class="res-header">
+                <span class="res-num">1</span> ：<span class="res-name">名無しさん＠お腹いっぱい。</span> ：<span class="res-date">2026/06/15(月) 08:30:12.44</span> <span class="res-id">ID:A1b2C3d4</span>
+            </div>
+            <div class="res-body">先月の内部告発からあっという間だったな
+
+<div class="quote-box"><strong>顧客データ恐喝のオムニバス・アーカイブ社、破産手続きへ　社長は依然行方不明</strong>
+
+顧客から預かった復旧データを不正に抽出し、企業や個人を脅迫していた疑いで捜査を受けていた株式会社オムニバス・アーカイブ（東京都千代田区）が、東京地裁に自己破産を申請し、手続き開始の決定を受けたことが分かった。負債総額は約50億円とみられる。
+
+同社は先月、匿名の内部告発によって関連会社への「汚れ仕事」の委託や、違法なデータ収集の実態が明るみに出ていた。警察の家宅捜索が入る直前に、創業者であり代表取締役の九条誠容疑者は逃亡しており、現在も行方が分かっていない。</div>
+ざまぁｗｗｗｗｗ</div>
+        </div>
+
+        <!-- レス2 -->
+        <div class="res-container">
+            <div class="res-header">
+                <span class="res-num">15</span> ：<span class="res-name">名無しさん＠お腹いっぱい。</span> ：<span class="res-date">2026/06/15(月) 08:45:22.10</span> <span class="res-id">ID:X9y8Z7w6</span>
+            </div>
+            <div class="res-body">内部告発した社員GJすぎるだろ
+どんだけ真っ黒な会社だったんだよ</div>
+        </div>
+
+        <!-- レス3 -->
+        <div class="res-container">
+            <div class="res-header">
+                <span class="res-num">32</span> ：<span class="res-name">名無しさん＠お腹いっぱい。</span> ：<span class="res-date">2026/06/15(月) 09:12:05.88</span> <span class="res-id">ID:P0o9I8u7</span>
+            </div>
+            <div class="res-body"><span class="anchor">&gt;&gt;1</span>
+でも社長逃げてるじゃん
+データも全部消去されてたんやろ？結局金だけ持って高飛びかよ</div>
+        </div>
+
+        <!-- レス4 -->
+        <div class="res-container">
+            <div class="res-header">
+                <span class="res-num">47</span> ：<span class="res-name">名無しさん＠お腹いっぱい。</span> ：<span class="res-date">2026/06/15(月) 09:30:44.15</span> <span class="res-id">ID:M1n2B3v4</span>
+            </div>
+            <div class="res-body">なあ、なんか最近おかしくないか？</div>
+        </div>
+
+        <!-- レス5 -->
+        <div class="res-container">
+            <div class="res-header">
+                <span class="res-num">50</span> ：<span class="res-name">名無しさん＠お腹いっぱい。</span> ：<span class="res-date">2026/06/15(月) 09:35:10.02</span> <span class="res-id">ID:Q1w2E3r4</span>
+            </div>
+            <div class="res-body"><span class="anchor">&gt;&gt;47</span>
+何が？</div>
+        </div>
+
+        <!-- レス6（不穏な書き込み） -->
+        <div class="res-container">
+            <div class="res-header">
+                <span class="res-num">55</span> ：<span class="res-name">名無しさん＠お腹いっぱい。</span> ：<span class="res-date">2026/06/15(月) 09:42:55.77</span> <span class="res-id">ID:M1n2B3v4</span>
+            </div>
+            <div class="res-body">俺、去年ここの特急プラン使ったんだよ。水没したスマホの復旧で。
+そのスマホに入ってたの、3年前に死んだ彼女とのLINEの履歴とか写真だったんだけど。
+
+昨日、その死んだはずの彼女のTwitter（X）アカウントが、急に動き出したんだよ。
+しかも bot とか乗っ取りとかじゃなくて、完全に生前の彼女と同じ口調で、昨日のテレビの感想とか呟いてる。
+マジで意味がわからなくて怖いんだけど、これ俺だけ？</div>
+        </div>
+
+        <!-- レス7 -->
+        <div class="res-container">
+            <div class="res-header">
+                <span class="res-num">61</span> ：<span class="res-name">名無しさん＠お腹いっぱい。</span> ：<span class="res-date">2026/06/15(月) 09:50:11.30</span> <span class="res-id">ID:K5j4H3g2</span>
+            </div>
+            <div class="res-body"><span class="anchor">&gt;&gt;55</span>
+え、マジで？
+てか俺も似たようなことあったわ。
+オムニバスに預けて結局「復旧不可」で返ってきた親父のPCデータ、なぜか最近クラウド上に親父の趣味だったブログが新しく立ち上がってて、毎日更新されてる。
+文章の癖とか完全に親父そのもの。気味悪すぎる。</div>
+        </div>
+
+        <!-- レス8 -->
+        <div class="res-container">
+            <div class="res-header">
+                <span class="res-num">78</span> ：<span class="res-name">名無しさん＠お腹いっぱい。</span> ：<span class="res-date">2026/06/15(月) 10:15:22.41</span> <span class="res-id">ID:T8y7U6i5</span>
+            </div>
+            <div class="res-body">おいちょっと待て
+最近海外で話題になってる「Genesis Archive」って会社知ってるか？
+なんか「故人のデータをアップロードすると、AIがその人の人格を再現してメタバース空間で永遠に生き続けさせます」みたいなイカれたサービス始めたとこ。
+
+そこのロゴ、倒産したオムニバス・アーカイブのロゴとデザインそっくりだぞ。</div>
+        </div>
+
+        <!-- レス9 -->
+        <div class="res-container">
+            <div class="res-header">
+                <span class="res-num">82</span> ：<span class="res-name">名無しさん＠お腹いっぱい。</span> ：<span class="res-date">2026/06/15(月) 10:22:05.99</span> <span class="res-id">ID:A1b2C3d4</span>
+            </div>
+            <div class="res-body"><span class="anchor">&gt;&gt;78</span>
+は？
+じゃあ社長は捕まってないし、むしろ盗んだデータ使って海外で新しくヤバいこと始めてるってこと？
+警察何やってんだよ</div>
+        </div>
+
+        <!-- レス10（結末を暗示するレス） -->
+        <div class="res-container">
+            <div class="res-header">
+                <span class="res-num">95</span> ：<span class="res-name">名無しさん＠お腹いっぱい。</span> ：<span class="res-date">2026/06/15(月) 10:45:33.12</span> <span class="res-id">ID:Z0x9C8v7</span>
+            </div>
+            <div class="res-body">告発した奴は「これで全て終わった」と思ってるんだろうけど、全然終わってないじゃん。
+会社を潰したところで、アイツらの作った「システム」はもう世界のどこかで勝手に動き始めてるんだろ。
+
+死んだ人間のデータが、ネットの海で勝手に生き続けてる。
+俺たち、とんでもない箱を開けちまったんじゃないか？</div>
+        </div>
+
+    </div>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br>
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            
+            <!-- ご指示のARGメタ情報・レベル表記（デザイン指定通り） -->
+            <div class="footer-arg-meta">
+                &lt; 101/35 &gt; (Lv.5) &lt; END-B 火のないところに煙は立たない &gt;
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
