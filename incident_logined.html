@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>インシデント管理システム | OMNIBUS ARCHIVE 社内ポータル</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ユーザー様よりご提示いただいた共通CSSコード（ここから） */
+        /* =========================================
+           カラー変数（ダーク・無機質なシステムカラー）
+           ========================================= */
+        :root {
+            --sys-primary: #3b82f6; 
+            --sys-accent: #60a5fa;  
+            --sys-bg: #121212; 
+            --sys-white: #1e1e1e; 
+            --sys-text: #e2e8f0; 
+            --sys-text-light: #94a3b8; 
+            --sys-border: #334155; 
+            --sys-header-bg: #0f172a; 
+            --sys-alert: #ef4444; 
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--sys-text);
+            background-color: var(--sys-bg);
+            line-height: 1.6;
+            word-break: normal;
+            overflow-wrap: break-word;
+        }
+
+        /* =========================================
+           ヘッダー（ダーク・機能的）
+           ========================================= */
+        header {
+            background-color: var(--sys-header-bg);
+            border-bottom: 2px solid var(--sys-primary);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            max-width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--sys-primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-icon {
+            height: 36px; 
+            width: 36px;  
+            object-fit: contain;
+        }
+
+        .system-name {
+            font-size: 0.9rem;
+            color: var(--sys-text-light);
+            border-left: 1px solid var(--sys-border);
+            padding-left: 15px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* 検索欄（ダークUI対応） */
+        .search-container {
+            display: flex;
+        }
+
+        .search-container input[type="text"] {
+            padding: 6px 12px;
+            background-color: #1e293b;
+            color: var(--sys-text);
+            border: 1px solid var(--sys-border);
+            border-radius: 2px 0 0 2px;
+            outline: none;
+            width: 250px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .search-container input[type="text"]::placeholder {
+            color: #64748b;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: var(--sys-primary);
+        }
+
+        .search-container button {
+            padding: 6px 15px;
+            background-color: var(--sys-primary);
+            color: #ffffff;
+            border: 1px solid var(--sys-primary);
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #2563eb;
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #0f172a; 
+            color: #94a3b8;
+            padding: 20px 30px; 
+            margin-top: auto;
+            border-top: 1px solid var(--sys-border);
+            width: 100%;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+            color: #94a3b8;
+        }
+
+        /* =========================================
+           完全レスポンシブ・デッドスペース解消設定
+           ========================================= */
+        html {
+            font-size: clamp(14px, 1vw + 10px, 18px); 
+        }
+
+        .header-top, .header-inner, .footer-content {
+            width: 100%;
+            max-width: 95%; 
+            padding-left: 0;
+            padding-right: 0;
+            margin: 0 auto;
+        }
+
+        section, main, .article-container, .portal-container {
+            width: 90%; 
+            max-width: 1600px !important; 
+            margin-left: auto;
+            margin-right: auto;
+            flex-grow: 1; 
+        }
+
+        @media (max-width: 768px) {
+            section, main, .article-container, .portal-container {
+                width: 100%;
+                padding: 40px 5%;
+            }
+            .header-top, .header-inner {
+                flex-direction: column;
+                padding: 15px 5%;
+            }
+            .system-name {
+                display: none;
+            }
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+            .search-container {
+                flex-grow: 1;
+                margin-right: 15px;
+            }
+            .search-container input[type="text"] {
+                width: 100%; 
+            }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        /* ユーザー様よりご提示いただいた共通CSSコード（ここまで） */
+
+        /* =========================================
+           システムディレクトリ（リスト）専用UI
+           ========================================= */
+        .portal-container {
+            margin-top: 40px;
+            margin-bottom: 100px;
+        }
+
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--sys-text-light);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--sys-primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 1.6rem;
+            color: var(--sys-text);
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-desc {
+            font-size: 0.95rem;
+            color: var(--sys-text-light);
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--sys-border);
+            padding-bottom: 20px;
+        }
+
+        /* リンク一覧テーブル */
+        .directory-card {
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            border-top: 3px solid var(--sys-primary);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .directory-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .directory-table th, .directory-table td {
+            padding: 15px 25px;
+            border-bottom: 1px solid #2a2a2a;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .directory-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .directory-table th {
+            background-color: #252525;
+            color: var(--sys-text-light);
+            font-weight: bold;
+            letter-spacing: 0.05em;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        /* 列の幅指定 */
+        .col-id { width: 150px; color: var(--sys-text-light); font-family: 'Courier Prime', Courier, monospace; }
+        .col-status { width: 120px; text-align: center; }
+        .col-title { width: auto; font-weight: bold; }
+
+        /* ステータスバッジ（日本語化） */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 2px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            width: 90px;
+            text-align: center;
+        }
+        
+        /* 対応完了・解決済（緑） */
+        .status-resolved {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+            border: 1px solid #22c55e;
+        }
+
+        /* 保留中（グレー） */
+        .status-pending {
+            background-color: transparent;
+            color: #64748b;
+            border: 1px solid #475569;
+        }
+
+        /* 各行のスタイル（リンクの生死） */
+        .thread-row {
+            transition: background-color 0.2s;
+        }
+
+        .row-active:hover {
+            background-color: #2a313d;
+        }
+
+        .row-dead .col-title {
+            color: #64748b;
+            font-weight: normal;
+        }
+
+        /* カテゴリのテキスト */
+        .category-text {
+            display: block;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 5px;
+            font-weight: normal;
+        }
+        
+        .row-active .category-text {
+            color: var(--sys-text-light);
+        }
+
+        /* リンク設定 */
+        .thread-link {
+            color: var(--sys-accent);
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-underline-offset: 3px;
+            display: block;
+        }
+
+        .thread-link:hover {
+            color: var(--sys-primary);
+            text-decoration-style: solid;
+        }
+
+        /* 重大・異常インシデント（紫ベースの装飾） */
+        .row-secret .col-title .thread-link {
+            color: #c4b5fd;
+        }
+        
+        .row-secret .col-title .thread-link:hover {
+            color: #8b5cf6;
+        }
+
+        @media (max-width: 768px) {
+            .directory-table th { display: none; }
+            .directory-table td {
+                display: block;
+                width: 100%;
+                padding: 8px 15px;
+                border-bottom: none;
+            }
+            .directory-table tr {
+                display: block;
+                border-bottom: 1px solid var(--sys-border);
+                padding: 15px 0;
+            }
+            .col-id { display: inline-block; width: auto; font-size: 0.8rem; margin-bottom: 5px; }
+            .col-status { text-align: left; margin-bottom: 10px; display: inline-block; margin-left: 10px; }
+            .col-title { width: 100%; font-size: 1.1rem; padding-bottom: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-inner">
+            <div class="logo-area">
+                <a href="toppage.html" class="logo">
+                    <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                    OMNIBUS ARCHIVE
+                </a>
+                <div class="system-name">社内ポータルシステム（O-PORTAL）</div>
+            </div>
+            
+            <div class="header-right">
+                <form class="search-container" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="社内情報の検索..." required autocomplete="off">
+                    <button type="submit">検索</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="portal-container">
+
+        <div class="breadcrumb">
+            <a href="admin_portal.html">O-PORTAL トップ</a> &gt; インシデント管理システム
+        </div>
+
+        <h1 class="page-title">インシデント管理システム</h1>
+        <p class="page-desc">
+            システム障害、備品の紛失、顧客からのクレームなど、社内外で発生したあらゆるトラブル（インシデント）の報告書を一覧表示します。解決済みのインシデントは順次アーカイブされ、閲覧が制限されます。
+        </p>
+
+        <!-- リンク一覧テーブル（絞り込み機能削除済） -->
+        <div class="directory-card">
+            <table class="directory-table">
+                <thead>
+                    <tr>
+                        <th class="col-id">インシデントID</th>
+                        <th class="col-status">状態</th>
+                        <th class="col-title">件名 / カテゴリ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <!-- リンク切れダミーデータ（解決済みのクレーム） -->
+                    <tr class="thread-row row-dead">
+                        <td class="col-id">INC-2605-012</td>
+                        <td class="col-status"><span class="status-badge status-resolved">解決済</span></td>
+                        <td class="col-title">
+                            納品用HDDの配送遅延に関するクレーム対応報告
+                            <span class="category-text">[カテゴリ：顧客クレーム]</span>
+                        </td>
+                    </tr>
+
+                    <!-- 有効なリンク 1：特急プランデータの社内流出 -->
+                    <tr class="thread-row row-active">
+                        <td class="col-id">INC-2603-088</td>
+                        <td class="col-status"><span class="status-badge status-resolved">解決済</span></td>
+                        <td class="col-title">
+                            <a href="incident_data_leak.html" class="thread-link">特急プラン復旧データ（機密情報）の社内ネットワーク流出に関する調査報告</a>
+                            <span class="category-text">[カテゴリ：情報漏洩・セキュリティ]</span>
+                        </td>
+                    </tr>
+
+                    <!-- リンク切れダミーデータ（備品紛失） -->
+                    <tr class="thread-row row-dead">
+                        <td class="col-id">INC-2603-045</td>
+                        <td class="col-status"><span class="status-badge status-resolved">解決済</span></td>
+                        <td class="col-title">
+                            開発部におけるテスト用SSD（1TB）の紛失報告
+                            <span class="category-text">[カテゴリ：その他]</span>
+                        </td>
+                    </tr>
+
+                    <!-- 新規追加リンク 2：研究部門のインシデント報告書 -->
+                    <tr class="thread-row row-active">
+                        <td class="col-id">INC-2512-004</td>
+                        <td class="col-status"><span class="status-badge status-resolved">解決済</span></td>
+                        <td class="col-title">
+                            <a href="incident_core_test.html" class="thread-link">【極秘】オムニバス・コア推論エンジン稼働テスト中の予期せぬデータ生成について</a>
+                            <span class="category-text">[カテゴリ：システム障害・異常動作]</span>
+                        </td>
+                    </tr>
+
+                    <!-- 有効なリンク 3：関連会社資料の漏洩と一時退避 -->
+                    <tr class="thread-row row-active">
+                        <td class="col-id">INC-2604-102</td>
+                        <td class="col-status"><span class="status-badge status-resolved">解決済</span></td>
+                        <td class="col-title">
+                            <a href="incident_subsidiary.html" class="thread-link">関連会社（テクノロジーズ社）の運用規定資料漏洩、および本社サーバーへの一時退避措置について</a>
+                            <span class="category-text">[カテゴリ：情報漏洩・セキュリティ]</span>
+                        </td>
+                    </tr>
+
+                    <!-- リンク切れダミーデータ（システム障害） -->
+                    <tr class="thread-row row-dead">
+                        <td class="col-id">INC-2602-005</td>
+                        <td class="col-status"><span class="status-badge status-resolved">対応完了</span></td>
+                        <td class="col-title">
+                            O-PORTAL 経費精算システムにおけるアクセスエラーの復旧完了
+                            <span class="category-text">[カテゴリ：システム障害]</span>
+                        </td>
+                    </tr>
+
+                    <!-- リンク切れダミーデータ（未決のその他案件） -->
+                    <tr class="thread-row row-dead">
+                        <td class="col-id">INC-2601-118</td>
+                        <td class="col-status"><span class="status-badge status-pending">保留中</span></td>
+                        <td class="col-title">
+                            本社ビル35階 サーバー室前監視カメラの断続的なノイズ発生
+                            <span class="category-text">[カテゴリ：システム障害]</span>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br class="pc-br">
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            <!-- ページ番号48、レベルLv.4に設定 -->
+            <div class="footer-right">
+                &lt; 62/70 &gt; (Lv.5)
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

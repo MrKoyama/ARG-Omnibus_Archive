@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM CONSOLE | OMNIBUS ARCHIVE 社内ポータル</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           カラー変数（ダーク・無機質なシステムカラー）
+           ========================================= */
+        :root {
+            --sys-primary: #3b82f6; 
+            --sys-accent: #60a5fa;  
+            --sys-bg: #121212; 
+            --sys-white: #1e1e1e; 
+            --sys-text: #e2e8f0; 
+            --sys-text-light: #94a3b8; 
+            --sys-border: #334155; 
+            --sys-header-bg: #0f172a; 
+            --sys-alert: #ef4444; 
+            --sys-success: #22c55e;
+            
+            --console-bg: #050505;
+            --console-text: #d1d5db;
+            --console-typed: #ffffff;
+            --console-untyped: #4b5563;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--sys-text);
+            background-color: var(--sys-bg);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden; /* 横スクロール防止 */
+        }
+
+        /* 画面フラッシュ用エフェクト（ミスタイプ時） */
+        body.flash-error {
+            animation: errorFlash 0.3s ease-out;
+        }
+        @keyframes errorFlash {
+            0% { background-color: #450a0a; }
+            100% { background-color: var(--sys-bg); }
+        }
+
+        /* =========================================
+           ヘッダー（ダーク・機能的）
+           ========================================= */
+        header {
+            background-color: var(--sys-header-bg);
+            border-bottom: 2px solid var(--sys-primary);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            max-width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--sys-primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-icon {
+            height: 36px; 
+            width: 36px;  
+            object-fit: contain;
+        }
+
+        .system-name {
+            font-size: 0.9rem;
+            color: var(--sys-text-light);
+            border-left: 1px solid var(--sys-border);
+            padding-left: 15px;
+            font-weight: 500;
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #0f172a; 
+            color: #94a3b8;
+            padding: 20px 30px; 
+            margin-top: auto;
+            border-top: 1px solid var(--sys-border);
+            width: 100%;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        .footer-right {
+            font-size: 1rem; 
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 0.05em;
+            white-space: nowrap; 
+            color: #94a3b8;
+        }
+
+        /* =========================================
+           レスポンシブ・デッドスペース解消
+           ========================================= */
+        html { font-size: clamp(14px, 1vw + 10px, 18px); }
+
+        .header-top, .header-inner, .footer-content {
+            width: 100%;
+            max-width: 95%; 
+            padding-left: 0;
+            padding-right: 0;
+            margin: 0 auto;
+        }
+
+        .portal-container {
+            width: 95%; 
+            max-width: 1400px; 
+            margin: 40px auto 100px;
+            flex-grow: 1; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (max-width: 768px) {
+            .header-inner { flex-direction: column; padding: 15px 5%; }
+            .system-name { display: none; }
+            .portal-container { width: 100%; padding: 0 5%; margin-top: 20px; }
+            .footer-content { flex-direction: column; text-align: center; }
+        }
+
+        /* =========================================
+           UIパネル（タイマー・プログレスバー）
+           ========================================= */
+        .hud-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* タイマー表示 */
+        .timer-box {
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            padding: 15px 25px;
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .timer-label {
+            font-size: 0.85rem;
+            color: var(--sys-alert);
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            margin-bottom: 5px;
+        }
+
+        .timer-display {
+            font-family: 'Courier Prime', Courier, monospace;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--sys-text);
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        }
+
+        /* プログレスバー */
+        .progress-box {
+            flex-grow: 1;
+            max-width: 600px;
+            background-color: var(--sys-white);
+            border: 1px solid var(--sys-border);
+            padding: 15px 25px;
+            border-radius: 4px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-family: 'Courier Prime', Courier, monospace;
+            font-size: 0.9rem;
+        }
+
+        .progress-title { color: var(--sys-text-light); }
+        .progress-percent { color: var(--sys-success); font-weight: bold; }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 12px;
+            background-color: #334155;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--sys-success);
+            width: 0%; /* JSで制御 */
+            transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 0 10px var(--sys-success);
+        }
+
+        /* =========================================
+           コンソール（タイピングエリア）
+           ========================================= */
+        .console-wrapper {
+            background-color: var(--console-bg);
+            border: 1px solid #334155;
+            border-top: 4px solid var(--sys-primary);
+            border-radius: 4px;
+            flex-grow: 1;
+            padding: 30px;
+            font-family: 'Courier Prime', Courier, monospace;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 過去のログ表示エリア */
+        .log-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+
+        .log-line {
+            margin-bottom: 8px;
+            font-size: 1rem;
+            color: #94a3b8;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+
+        .log-line.system { color: #facc15; } /* 黄色（システムメッセージ） */
+        .log-line.error { color: var(--sys-alert); font-weight: bold; }
+        .log-line.success { color: var(--sys-success); }
+        .log-line.user { color: var(--console-text); }
+
+        /* タイピング入力行 */
+        .input-area {
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem; /* 打ち込みやすく大きく */
+            margin-top: auto;
+        }
+
+        .prompt {
+            color: var(--sys-success);
+            margin-right: 15px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* タイピングの文字色制御 */
+        .typing-text {
+            position: relative;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .char-typed {
+            color: var(--console-typed);
+            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+
+        .char-untyped {
+            color: var(--console-untyped);
+        }
+
+        .char-current {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid var(--console-typed);
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: transparent; background-color: transparent; }
+            50% { border-color: var(--console-typed); background-color: rgba(255, 255, 255, 0.2); }
+        }
+
+        /* 非表示にしておく実際の入力欄（スマホキーボード喚起用） */
+        #hidden-input {
+            position: absolute;
+            opacity: 0;
+            top: -1000px;
+        }
+
+        /* 画面クリックでフォーカスを促すオーバーレイ */
+        .focus-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .focus-overlay.hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .hud-panel { flex-direction: column-reverse; align-items: stretch; }
+            .timer-display { font-size: 2rem; }
+            .input-area { font-size: 1rem; align-items: flex-start; flex-direction: column; }
+            .prompt { margin-bottom: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-inner">
+            <div class="logo-area">
+                <span class="logo">
+                    <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                    OMNIBUS ARCHIVE
+                </span>
+                <div class="system-name">社内ポータルシステム（O-PORTAL）</div>
+            </div>
+            <!-- この画面では検索窓は不要なため非表示にしてもよいですが、要件通り実装として残します（機能はしません） -->
+            <div class="header-right">
+                <div class="search-container">
+                    <input type="text" placeholder="社内情報の検索..." disabled>
+                    <button type="button" disabled>検索</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="portal-container">
+
+        <!-- UIパネル（タイマーと進捗） -->
+        <div class="hud-panel">
+            <div class="progress-box">
+                <div class="progress-header">
+                    <span class="progress-title">SYSTEM PURGE PROGRESS</span>
+                    <span class="progress-percent" id="progress-text">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progress-bar"></div>
+                </div>
+            </div>
+
+            <div class="timer-box">
+                <div class="timer-label">REMAINING TIME</div>
+                <div class="timer-display" id="timer-display">05:00:00</div>
+            </div>
+        </div>
+
+        <!-- コンソール画面 -->
+        <div class="console-wrapper" id="console-wrapper">
+            
+            <!-- 画面をクリックしてフォーカスさせるためのオーバーレイ -->
+            <div class="focus-overlay" id="focus-overlay">
+                画面をクリックしてキーボード入力を開始してください
+            </div>
+
+            <!-- スマホのキーボードを出すための隠しインプット -->
+            <input type="text" id="hidden-input" autocomplete="off" spellcheck="false" autocorrect="off">
+
+            <!-- ログ表示エリア -->
+            <div class="log-area" id="log-area">
+                <!-- JSでログが追加されていく -->
+            </div>
+
+            <!-- 入力エリア -->
+            <div class="input-area" id="input-area">
+                <span class="prompt">root@ararat-vault:~#</span>
+                <div class="typing-text" id="typing-display">
+                    <!-- JSで文字の span が生成される -->
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br>
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            <div class="footer-right">
+                &lt; 66/35 &gt; (Lv.5)
+            </div>
+        </div>
+    </footer>
+
+    <!-- タイピングギミック用スクリプト -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 状態管理 ---
+            let isTimerRunning = false;
+            let timeRemaining = 5 * 60 * 1000; // 5分（ミリ秒）
+            let timerInterval;
+
+            let currentStage = -1; // -1: チュートリアル, 0〜4: 本番コマンド
+            let currentString = ""; // 現在打つべきお題の文字列
+            let typedIndex = 0;     // どこまで正しく打ったか
+
+            // 進捗バーのばらつき設定（0〜5のステージ完了時）
+            const progressSteps = [0, 18, 35, 55, 72, 100]; 
+
+            // --- DOM要素 ---
+            const logArea = document.getElementById('log-area');
+            const typingDisplay = document.getElementById('typing-display');
+            const hiddenInput = document.getElementById('hidden-input');
+            const focusOverlay = document.getElementById('focus-overlay');
+            const consoleWrapper = document.getElementById('console-wrapper');
+            const timerDisplay = document.getElementById('timer-display');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const inputArea = document.getElementById('input-area'); // 入力行全体
+
+            // --- コマンド（お題）リスト ---
+            // チュートリアル
+            const cmdTutorial = "initiate_backup_delete";
+            // 本番コマンド5種（記号入り・小文字のみ・30〜40字程度）
+            const cmdList = [
+                "rm -rf /storage/site-a/backup_node_01",
+                "execute purge_protocol --target=site-b",
+                "override_auth -l 5 -cmd drop_class_c",
+                "truncate table portal_users --force",
+                "shutdown_core_engine --purge_ararat"
+            ];
+
+            // ログにテキストを出力する関数
+            const addLog = (text, type = 'system') => {
+                const p = document.createElement('div');
+                p.className = `log-line ${type}`;
+                p.textContent = text;
+                logArea.appendChild(p);
+                // 一番下へスクロール
+                logArea.scrollTop = logArea.scrollHeight;
+            };
+
+            // 画面をお題文字列で描画する関数
+            const renderTypingText = () => {
+                typingDisplay.innerHTML = '';
+                for (let i = 0; i < currentString.length; i++) {
+                    const span = document.createElement('span');
+                    span.textContent = currentString[i];
+                    
+                    if (i < typedIndex) {
+                        span.className = 'char-typed';
+                    } else if (i === typedIndex) {
+                        span.className = 'char-current';
+                    } else {
+                        span.className = 'char-untyped';
+                    }
+                    typingDisplay.appendChild(span);
+                }
+            };
+
+            // 次のステージへ進む処理
+            const nextStage = () => {
+                typedIndex = 0;
+                hiddenInput.value = '';
+
+                if (currentStage === -1) {
+                    // チュートリアル終了 → タイマースタート、第1問へ
+                    startTimer();
+                    currentStage++;
+                    currentString = cmdList[currentStage];
+                    addLog(`> TUTORIAL COMPLETE.`, 'success');
+                    addLog(`> WARNING: DATA PURGE SEQUENCE INITIATED.`, 'error');
+                } else {
+                    // 本番クリア時
+                    addLog(`> EXECUTED: ${currentString}`, 'user');
+                    addLog(`> DATA NODE PURGED.`, 'success');
+                    
+                    currentStage++;
+                    
+                    // プログレスバーの更新
+                    const prog = progressSteps[currentStage];
+                    progressBar.style.width = `${prog}%`;
+                    progressText.textContent = `${prog}%`;
+
+                    if (currentStage >= cmdList.length) {
+                        // 全てクリア（成功）
+                        gameClear();
+                        return;
+                    }
+                    // 次のお題をセット
+                    currentString = cmdList[currentStage];
+                }
+                renderTypingText();
+            };
+
+            // 入力ミス（リセット）処理
+            const handleMissType = () => {
+                // 画面を赤くフラッシュ
+                document.body.classList.remove('flash-error');
+                void document.body.offsetWidth; // リフロー強制
+                document.body.classList.add('flash-error');
+                
+                // 進行度をゼロに戻し、入力欄を空に
+                typedIndex = 0;
+                hiddenInput.value = '';
+                renderTypingText();
+            };
+
+            // --- タイマー処理 ---
+            const formatTime = (ms) => {
+                if (ms < 0) ms = 0;
+                const totalSec = Math.floor(ms / 1000);
+                const m = Math.floor(totalSec / 60);
+                const s = totalSec % 60;
+                const ms_part = Math.floor((ms % 1000) / 10);
+                return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}:${String(ms_part).padStart(2, '0')}`;
+            };
+
+            const startTimer = () => {
+                if (isTimerRunning) return;
+                isTimerRunning = true;
+                const endTime = Date.now() + timeRemaining;
+
+                timerInterval = setInterval(() => {
+                    timeRemaining = endTime - Date.now();
+                    if (timeRemaining <= 0) {
+                        clearInterval(timerInterval);
+                        timerDisplay.textContent = "00:00:00";
+                        gameOver();
+                    } else {
+                        timerDisplay.textContent = formatTime(timeRemaining);
+                    }
+                }, 10);
+            };
+
+            // --- 終了処理（失敗・成功） ---
+            const gameOver = () => {
+                // 入力欄を強制非表示
+                inputArea.style.display = 'none';
+                hiddenInput.blur();
+                
+                // 失敗用の赤い警告ログを大量出力
+                let count = 0;
+                const errorStream = setInterval(() => {
+                    addLog(`[FATAL ERROR] UNAUTHORIZED ACCESS DETECTED. SYSTEM LOCKDOWN INITIATED.`, 'error');
+                    count++;
+                    if (count > 20) {
+                        clearInterval(errorStream);
+                        addLog(`> CONNECTION TERMINATED.`, 'system');
+                        setTimeout(() => {
+                            // バッドエンド（エンドB等）への遷移
+                            window.location.href = 'end_bad_arrest.html';
+                        }, 2000);
+                    }
+                }, 100);
+            };
+
+            const gameClear = () => {
+                // 入力欄を強制非表示
+                inputArea.style.display = 'none';
+                hiddenInput.blur();
+                clearInterval(timerInterval); // タイマー停止
+                
+                // 成功用の緑の削除ログを大量出力
+                let count = 0;
+                const deleteItems = ["/ararat_seed", "/core_config", "/user_data", "/system_log", "/backup_nodes"];
+                
+                const successStream = setInterval(() => {
+                    const item = deleteItems[count % deleteItems.length];
+                    addLog(`[DELETED] ${item} ... OK`, 'success');
+                    count++;
+                    if (count > 20) {
+                        clearInterval(successStream);
+                        addLog(`> ALL DATA PERMANENTLY ERASED. SYSTEM SHUTDOWN.`, 'system');
+                        setTimeout(() => {
+                            // トゥルーエンド（エンドC等）への遷移
+                            window.location.href = 'end_true_forget.html';
+                        }, 2500);
+                    }
+                }, 150);
+            };
+
+            // --- キーボード入力イベント ---
+            hiddenInput.addEventListener('input', (e) => {
+                // ゲーム終了後は無視
+                if (currentStage >= cmdList.length || (isTimerRunning && timeRemaining <= 0)) return;
+
+                const val = hiddenInput.value;
+                // バックスペースなどで減った場合はリセット（戻れない仕様）
+                if (val.length < typedIndex) {
+                    handleMissType();
+                    return;
+                }
+
+                // 最後の入力文字を取得
+                const inputChar = val.slice(-1);
+                const targetChar = currentString[typedIndex];
+
+                if (inputChar === targetChar) {
+                    // 正解
+                    typedIndex++;
+                    renderTypingText();
+
+                    // 文字列の最後まで打てたらクリア判定へ（Enterキーは待たない仕様に変更）
+                    if (typedIndex === currentString.length) {
+                        nextStage();
+                    }
+                } else {
+                    // 不正解
+                    handleMissType();
+                }
+            });
+
+            // 画面クリックでフォーカスを当てる（スマホ・PC両対応）
+            focusOverlay.addEventListener('click', () => {
+                focusOverlay.classList.add('hidden');
+                hiddenInput.focus();
+                
+                // チュートリアルの初期化
+                if (currentStage === -1) {
+                    currentString = cmdTutorial;
+                    addLog(`> サーバーへの接続を確立しました。`);
+                    addLog(`> バックアップデータを削除する場合は、以下のコマンドを入力してください。`);
+                    renderTypingText();
+                }
+            });
+
+            // コンソール領域をクリックしても常にフォーカスを戻す
+            consoleWrapper.addEventListener('click', () => {
+                if (focusOverlay.classList.contains('hidden')) {
+                    hiddenInput.focus();
+                }
+            });
+
+        });
+    </script>
+
+</body>
+</html>
