@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
+        /* ユーザー様よりご提示いただいた共通CSSコード（ここから） */
         /* =========================================
            カラー変数（ダーク・無機質なシステムカラー）
            ========================================= */
@@ -25,10 +26,10 @@
             --sys-alert: #ef4444; 
             --sys-success: #22c55e;
             
+            /* コンソール専用カラー */
             --console-bg: #050505;
-            --console-text: #d1d5db;
-            --console-typed: #ffffff;
-            --console-untyped: #4b5563;
+            --console-typed: #60a5fa; /* 入力済みの文字色（ブルー） */
+            --console-untyped: #4b5563; /* 未入力の文字色（暗いグレー） */
         }
         
         * {
@@ -45,7 +46,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            overflow-x: hidden; /* 横スクロール防止 */
+            overflow-x: hidden; 
         }
 
         /* 画面フラッシュ用エフェクト（ミスタイプ時） */
@@ -187,7 +188,6 @@
             gap: 20px;
         }
 
-        /* タイマー表示 */
         .timer-box {
             background-color: var(--sys-white);
             border: 1px solid var(--sys-border);
@@ -213,7 +213,6 @@
             text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
         }
 
-        /* プログレスバー */
         .progress-box {
             flex-grow: 1;
             max-width: 600px;
@@ -246,7 +245,7 @@
         .progress-bar-fill {
             height: 100%;
             background-color: var(--sys-success);
-            width: 0%; /* JSで制御 */
+            width: 0%; 
             transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             box-shadow: 0 0 10px var(--sys-success);
         }
@@ -269,7 +268,6 @@
             overflow: hidden;
         }
 
-        /* 過去のログ表示エリア */
         .log-area {
             flex-grow: 1;
             overflow-y: auto;
@@ -285,16 +283,15 @@
             word-break: break-all;
         }
 
-        .log-line.system { color: #facc15; } /* 黄色（システムメッセージ） */
+        .log-line.system { color: #facc15; }
         .log-line.error { color: var(--sys-alert); font-weight: bold; }
         .log-line.success { color: var(--sys-success); }
-        .log-line.user { color: var(--console-text); }
+        .log-line.user { color: #fff; }
 
-        /* タイピング入力行 */
         .input-area {
             display: flex;
             align-items: center;
-            font-size: 1.3rem; /* 打ち込みやすく大きく */
+            font-size: 1.4rem; 
             margin-top: auto;
         }
 
@@ -305,7 +302,7 @@
             white-space: nowrap;
         }
 
-        /* タイピングの文字色制御 */
+        /* タイピングテキストの装飾 */
         .typing-text {
             position: relative;
             white-space: pre-wrap;
@@ -314,32 +311,35 @@
 
         .char-typed {
             color: var(--console-typed);
-            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+            text-shadow: 0 0 5px rgba(96, 165, 250, 0.5);
         }
 
         .char-untyped {
             color: var(--console-untyped);
         }
 
+        /* 今入力すべき文字（ブロックカーソル風に反転表示） */
         .char-current {
-            background-color: rgba(255, 255, 255, 0.2);
-            border-bottom: 2px solid var(--console-typed);
-            animation: blink 1s step-end infinite;
+            background-color: #ffffff;
+            color: #000000;
+            display: inline-block;
+            /* ブロックらしさを出すための余白調整 */
+            padding: 0 2px;
+            margin: 0 -2px;
+            animation: cursorBlink 1s step-end infinite;
         }
 
-        @keyframes blink {
-            0%, 100% { border-color: transparent; background-color: transparent; }
-            50% { border-color: var(--console-typed); background-color: rgba(255, 255, 255, 0.2); }
+        @keyframes cursorBlink {
+            0%, 100% { background-color: #ffffff; color: #000000; }
+            50% { background-color: transparent; color: var(--console-untyped); }
         }
 
-        /* 非表示にしておく実際の入力欄（スマホキーボード喚起用） */
         #hidden-input {
             position: absolute;
             opacity: 0;
             top: -1000px;
         }
 
-        /* 画面クリックでフォーカスを促すオーバーレイ */
         .focus-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -360,7 +360,7 @@
         @media (max-width: 768px) {
             .hud-panel { flex-direction: column-reverse; align-items: stretch; }
             .timer-display { font-size: 2rem; }
-            .input-area { font-size: 1rem; align-items: flex-start; flex-direction: column; }
+            .input-area { font-size: 1.1rem; align-items: flex-start; flex-direction: column; }
             .prompt { margin-bottom: 5px; }
         }
     </style>
@@ -377,13 +377,7 @@
                 </span>
                 <div class="system-name">社内ポータルシステム（O-PORTAL）</div>
             </div>
-            <!-- この画面では検索窓は不要なため非表示にしてもよいですが、要件通り実装として残します（機能はしません） -->
-            <div class="header-right">
-                <div class="search-container">
-                    <input type="text" placeholder="社内情報の検索..." disabled>
-                    <button type="button" disabled>検索</button>
-                </div>
-            </div>
+            <!-- 検索欄は要件により削除 -->
         </div>
     </header>
 
@@ -404,27 +398,23 @@
 
             <div class="timer-box">
                 <div class="timer-label">REMAINING TIME</div>
-                <div class="timer-display" id="timer-display">05:00:00</div>
+                <div class="timer-display" id="timer-display">03:00:00</div>
             </div>
         </div>
 
         <!-- コンソール画面 -->
         <div class="console-wrapper" id="console-wrapper">
             
-            <!-- 画面をクリックしてフォーカスさせるためのオーバーレイ -->
             <div class="focus-overlay" id="focus-overlay">
                 画面をクリックしてキーボード入力を開始してください
             </div>
 
-            <!-- スマホのキーボードを出すための隠しインプット -->
             <input type="text" id="hidden-input" autocomplete="off" spellcheck="false" autocorrect="off">
 
-            <!-- ログ表示エリア -->
             <div class="log-area" id="log-area">
                 <!-- JSでログが追加されていく -->
             </div>
 
-            <!-- 入力エリア -->
             <div class="input-area" id="input-area">
                 <span class="prompt">root@ararat-vault:~#</span>
                 <div class="typing-text" id="typing-display">
@@ -453,19 +443,16 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- 状態管理 ---
             let isTimerRunning = false;
-            let timeRemaining = 5 * 60 * 1000; // 5分（ミリ秒）
+            let timeRemaining = 3 * 60 * 1000; 
             let timerInterval;
 
-            let currentStage = -1; // -1: チュートリアル, 0〜4: 本番コマンド
-            let currentString = ""; // 現在打つべきお題の文字列
-            let typedIndex = 0;     // どこまで正しく打ったか
+            let currentStage = -1; 
+            let currentString = ""; 
+            let typedIndex = 0;     
 
-            // 進捗バーのばらつき設定（0〜5のステージ完了時）
             const progressSteps = [0, 18, 35, 55, 72, 100]; 
 
-            // --- DOM要素 ---
             const logArea = document.getElementById('log-area');
             const typingDisplay = document.getElementById('typing-display');
             const hiddenInput = document.getElementById('hidden-input');
@@ -474,12 +461,10 @@
             const timerDisplay = document.getElementById('timer-display');
             const progressBar = document.getElementById('progress-bar');
             const progressText = document.getElementById('progress-text');
-            const inputArea = document.getElementById('input-area'); // 入力行全体
+            const inputArea = document.getElementById('input-area'); 
 
-            // --- コマンド（お題）リスト ---
-            // チュートリアル
-            const cmdTutorial = "initiate_backup_delete";
-            // 本番コマンド5種（記号入り・小文字のみ・30〜40字程度）
+            // コマンドリスト
+            const cmdTutorial = "backup_delete";
             const cmdList = [
                 "rm -rf /storage/site-a/backup_node_01",
                 "execute purge_protocol --target=site-b",
@@ -488,17 +473,14 @@
                 "shutdown_core_engine --purge_ararat"
             ];
 
-            // ログにテキストを出力する関数
             const addLog = (text, type = 'system') => {
                 const p = document.createElement('div');
                 p.className = `log-line ${type}`;
                 p.textContent = text;
                 logArea.appendChild(p);
-                // 一番下へスクロール
                 logArea.scrollTop = logArea.scrollHeight;
             };
 
-            // 画面をお題文字列で描画する関数
             const renderTypingText = () => {
                 typingDisplay.innerHTML = '';
                 for (let i = 0; i < currentString.length; i++) {
@@ -516,55 +498,45 @@
                 }
             };
 
-            // 次のステージへ進む処理
             const nextStage = () => {
                 typedIndex = 0;
                 hiddenInput.value = '';
 
                 if (currentStage === -1) {
-                    // チュートリアル終了 → タイマースタート、第1問へ
                     startTimer();
                     currentStage++;
                     currentString = cmdList[currentStage];
                     addLog(`> TUTORIAL COMPLETE.`, 'success');
                     addLog(`> WARNING: DATA PURGE SEQUENCE INITIATED.`, 'error');
                 } else {
-                    // 本番クリア時
                     addLog(`> EXECUTED: ${currentString}`, 'user');
                     addLog(`> DATA NODE PURGED.`, 'success');
                     
                     currentStage++;
                     
-                    // プログレスバーの更新
                     const prog = progressSteps[currentStage];
                     progressBar.style.width = `${prog}%`;
                     progressText.textContent = `${prog}%`;
 
                     if (currentStage >= cmdList.length) {
-                        // 全てクリア（成功）
                         gameClear();
                         return;
                     }
-                    // 次のお題をセット
                     currentString = cmdList[currentStage];
                 }
                 renderTypingText();
             };
 
-            // 入力ミス（リセット）処理
             const handleMissType = () => {
-                // 画面を赤くフラッシュ
                 document.body.classList.remove('flash-error');
-                void document.body.offsetWidth; // リフロー強制
+                void document.body.offsetWidth; 
                 document.body.classList.add('flash-error');
                 
-                // 進行度をゼロに戻し、入力欄を空に
                 typedIndex = 0;
                 hiddenInput.value = '';
                 renderTypingText();
             };
 
-            // --- タイマー処理 ---
             const formatTime = (ms) => {
                 if (ms < 0) ms = 0;
                 const totalSec = Math.floor(ms / 1000);
@@ -591,13 +563,10 @@
                 }, 10);
             };
 
-            // --- 終了処理（失敗・成功） ---
             const gameOver = () => {
-                // 入力欄を強制非表示
                 inputArea.style.display = 'none';
                 hiddenInput.blur();
                 
-                // 失敗用の赤い警告ログを大量出力
                 let count = 0;
                 const errorStream = setInterval(() => {
                     addLog(`[FATAL ERROR] UNAUTHORIZED ACCESS DETECTED. SYSTEM LOCKDOWN INITIATED.`, 'error');
@@ -606,7 +575,6 @@
                         clearInterval(errorStream);
                         addLog(`> CONNECTION TERMINATED.`, 'system');
                         setTimeout(() => {
-                            // バッドエンド（エンドB等）への遷移
                             window.location.href = 'end_bad_arrest.html';
                         }, 2000);
                     }
@@ -614,12 +582,10 @@
             };
 
             const gameClear = () => {
-                // 入力欄を強制非表示
                 inputArea.style.display = 'none';
                 hiddenInput.blur();
-                clearInterval(timerInterval); // タイマー停止
+                clearInterval(timerInterval); 
                 
-                // 成功用の緑の削除ログを大量出力
                 let count = 0;
                 const deleteItems = ["/ararat_seed", "/core_config", "/user_data", "/system_log", "/backup_nodes"];
                 
@@ -631,50 +597,40 @@
                         clearInterval(successStream);
                         addLog(`> ALL DATA PERMANENTLY ERASED. SYSTEM SHUTDOWN.`, 'system');
                         setTimeout(() => {
-                            // トゥルーエンド（エンドC等）への遷移
                             window.location.href = 'end_true_forget.html';
                         }, 2500);
                     }
                 }, 150);
             };
 
-            // --- キーボード入力イベント ---
             hiddenInput.addEventListener('input', (e) => {
-                // ゲーム終了後は無視
                 if (currentStage >= cmdList.length || (isTimerRunning && timeRemaining <= 0)) return;
 
                 const val = hiddenInput.value;
-                // バックスペースなどで減った場合はリセット（戻れない仕様）
                 if (val.length < typedIndex) {
                     handleMissType();
                     return;
                 }
 
-                // 最後の入力文字を取得
                 const inputChar = val.slice(-1);
                 const targetChar = currentString[typedIndex];
 
                 if (inputChar === targetChar) {
-                    // 正解
                     typedIndex++;
                     renderTypingText();
 
-                    // 文字列の最後まで打てたらクリア判定へ（Enterキーは待たない仕様に変更）
                     if (typedIndex === currentString.length) {
                         nextStage();
                     }
                 } else {
-                    // 不正解
                     handleMissType();
                 }
             });
 
-            // 画面クリックでフォーカスを当てる（スマホ・PC両対応）
             focusOverlay.addEventListener('click', () => {
                 focusOverlay.classList.add('hidden');
                 hiddenInput.focus();
                 
-                // チュートリアルの初期化
                 if (currentStage === -1) {
                     currentString = cmdTutorial;
                     addLog(`> サーバーへの接続を確立しました。`);
@@ -683,7 +639,6 @@
                 }
             });
 
-            // コンソール領域をクリックしても常にフォーカスを戻す
             consoleWrapper.addEventListener('click', () => {
                 if (focusOverlay.classList.contains('hidden')) {
                     hiddenInput.focus();
