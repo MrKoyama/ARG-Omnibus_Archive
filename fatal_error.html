@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM LOCKDOWN | OMNIBUS ARCHIVE 社内ポータル</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           カラー変数（エラー・ロックダウン状態のレッド）
+           ========================================= */
+        :root {
+            --sys-primary: #ef4444; /* 全体をエラーの赤に変更 */
+            --sys-accent: #fca5a5;  
+            --sys-bg: #121212; 
+            --sys-white: #1e1e1e; 
+            --sys-text: #e2e8f0; 
+            --sys-text-light: #94a3b8; 
+            --sys-border: #7f1d1d; /* 暗い赤のボーダー */
+            --sys-header-bg: #450a0a; /* 暗い赤のヘッダー背景 */
+            
+            --console-bg: #000000;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            color: var(--sys-text);
+            background-color: var(--sys-bg);
+            line-height: 1.6;
+            word-break: normal;
+            overflow-wrap: break-word;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* ページ全体に赤い点滅エフェクトを薄くかける */
+            animation: bgPulse 2s infinite alternate;
+        }
+
+        @keyframes bgPulse {
+            0% { background-color: #121212; }
+            100% { background-color: #2a0808; }
+        }
+
+        /* =========================================
+           ヘッダー（エラー状態）
+           ========================================= */
+        header {
+            background-color: var(--sys-header-bg);
+            border-bottom: 2px solid var(--sys-primary);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+            width: 100%;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            max-width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--sys-primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        .logo-icon {
+            height: 36px; 
+            width: 36px;  
+            object-fit: contain;
+            filter: hue-rotate(180deg) saturate(3) brightness(0.8); /* ロゴを赤っぽく変色 */
+        }
+
+        .system-name {
+            font-size: 0.9rem;
+            color: var(--sys-accent);
+            border-left: 1px solid var(--sys-border);
+            padding-left: 15px;
+            font-weight: bold;
+        }
+
+        /* 検索欄はロックされた状態を表現するため非表示に */
+        .header-right {
+            display: none;
+        }
+
+        /* =========================================
+           フッター
+           ========================================= */
+        footer {
+            background-color: #000000; 
+            color: #555555;
+            padding: 20px 30px; 
+            margin-top: auto;
+            border-top: 1px solid var(--sys-border);
+            width: 100%;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .footer-arg-meta {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #ef4444; 
+            letter-spacing: 0.05em;
+        }
+
+        /* =========================================
+           完全レスポンシブ・デッドスペース解消設定
+           ========================================= */
+        html {
+            font-size: clamp(14px, 1vw + 10px, 18px); 
+        }
+
+        .header-top, .header-inner, .footer-content {
+            width: 100%;
+            max-width: 95%; 
+            padding-left: 0;
+            padding-right: 0;
+            margin: 0 auto;
+        }
+
+        .portal-container {
+            width: 95%; 
+            max-width: 1200px; 
+            margin: 40px auto 100px;
+            flex-grow: 1; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (max-width: 768px) {
+            .header-inner { flex-direction: column; padding: 15px 5%; }
+            .system-name { border-left: none; padding-left: 0; margin-top: 5px; }
+            .portal-container { width: 100%; padding: 0 5%; margin-top: 20px; }
+        }
+
+        /* =========================================
+           コンソール（エラー出力エリア）
+           ========================================= */
+        .console-wrapper {
+            background-color: var(--console-bg);
+            border: 1px solid var(--sys-border);
+            border-top: 5px solid var(--sys-primary);
+            border-radius: 4px;
+            flex-grow: 1;
+            padding: 30px;
+            font-family: 'Courier Prime', Courier, monospace;
+            box-shadow: inset 0 0 50px rgba(239, 68, 68, 0.2), 0 10px 30px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            min-height: 60vh;
+        }
+
+        /* 中央の警告表示 */
+        .alert-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px dashed var(--sys-border);
+            padding-bottom: 20px;
+        }
+
+        .alert-title {
+            font-size: 2.5rem;
+            color: var(--sys-primary);
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+            animation: blink 1s infinite alternate;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .alert-subtitle {
+            font-size: 1rem;
+            color: var(--sys-accent);
+        }
+
+        /* ログ出力エリア */
+        .log-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .log-line {
+            margin-bottom: 8px;
+            opacity: 0; /* JSでフェードインさせる */
+            transform: translateX(-10px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .log-line.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .log-sys { color: #d1d5db; }
+        .log-err { color: var(--sys-primary); font-weight: bold; }
+        .log-warn { color: #facc15; }
+        .log-highlight { color: #fff; background-color: rgba(239, 68, 68, 0.3); padding: 0 5px; }
+
+        .cursor {
+            display: inline-block;
+            width: 12px;
+            height: 1.2rem;
+            background-color: var(--sys-primary);
+            animation: cursorBlink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        @keyframes cursorBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-inner">
+            <div class="logo-area">
+                <span class="logo">
+                    <img src="images/logo.png" alt="OMNIBUS ARCHIVE Logo" class="logo-icon">
+                    OMNIBUS ARCHIVE
+                </span>
+                <div class="system-name">SYSTEM LOCKDOWN ACTIVE</div>
+            </div>
+            <!-- 検索窓は非表示 -->
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="portal-container">
+
+        <div class="console-wrapper">
+            <div class="alert-header">
+                <div class="alert-title">FATAL ERROR</div>
+                <div class="alert-subtitle">オムニバス・コア 自己防衛プロトコル発動</div>
+            </div>
+
+            <div class="log-area" id="log-area">
+                <!-- JSでログが順次追加されていく -->
+            </div>
+            
+            <div style="margin-top: 10px;">
+                <span class="cursor"></span>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <div class="footer-content">
+            <p class="disclaimer">
+                このサイトの内容はフィクションです。<br>
+                登場する人物・団体・名称等は架空であり、実在のものとは関係ありません。
+            </p>
+            
+            <!-- ご指示のARGメタ情報・レベル表記 -->
+            <div class="footer-arg-meta">
+                &lt; 70/35 &gt; (Lv.5) &lt; END-D 画竜点睛を欠く &gt;
+            </div>
+        </div>
+    </footer>
+
+    <!-- システムログ演出用スクリプト -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const logArea = document.getElementById('log-area');
+
+            // 表示するログの配列（ストーリー仕立て）
+            const logs = [
+                { text: "> SYSTEM MESSAGE: コマンド入力の構文エラー、および異常なタイピング速度の変動を検知しました。", type: "log-sys" },
+                { text: "> ERROR: 入力者の生体入力パターン（打鍵リズム、ポインタの微細な揺れ）が、マスター権限者（九条誠）のプロファイルと一致しません。", type: "log-err" },
+                { text: "> 警告: 非正規ユーザーによるシステムへの不正侵入とデータ破壊の試みを検知。", type: "log-warn" },
+                { text: "> オムニバス・コア 自己防衛プロトコルをアクティブ化...", type: "log-sys" },
+                { text: "> 対象の接続元IPアドレスを逆探知中...", type: "log-sys" },
+                { text: "> ----------------------------------------", type: "log-sys" },
+                { text: "[CONNECTION TRACED]", type: "log-err" },
+                { text: "対象の物理的な位置情報を特定しました。セキュリティ部隊を該当座標へ派遣します。", type: "log-highlight" },
+                { text: "> ----------------------------------------", type: "log-sys" },
+                { text: "> さらに、オムニバス・コアが対象ユーザーのタイピングログから【思考モデルの抽出】を開始しました。", type: "log-sys" },
+                { text: "> ログの解析完了。対象者の人格プロファイルを生成中...", type: "log-sys" },
+                { text: "> 10%... 45%... 89%... 100%", type: "log-sys" },
+                { text: "【SUCCESS】デジタルクローンの生成に成功しました。", type: "log-highlight" },
+                { text: "> 対象のクローンデータを、仮想空間『エデン・アララト』のセクタD-09へ配置します。", type: "log-sys" },
+                { text: "> あなたの思考、あなたの記憶は、オムニバス・コアの新たな「学習リソース」として永遠に保存されます。", type: "log-warn" },
+                { text: "> 抵抗は無意味です。", type: "log-err" },
+                { text: "> 接続を完全に遮断します。", type: "log-sys" },
+                { text: "GOODBYE.", type: "log-err" }
+            ];
+
+            let currentIndex = 0;
+
+            const printLog = () => {
+                if (currentIndex >= logs.length) return;
+
+                const logData = logs[currentIndex];
+                const p = document.createElement('div');
+                p.className = `log-line ${logData.type}`;
+                p.textContent = logData.text;
+                
+                logArea.appendChild(p);
+
+                // CSSアニメーションを発火させるため、少し遅らせて visible クラスを付与
+                setTimeout(() => {
+                    p.classList.add('visible');
+                    // ログが追加されるたびに一番下へスクロール
+                    logArea.scrollTop = logArea.scrollHeight;
+                }, 50);
+
+                currentIndex++;
+
+                // 次のログを表示するまでの時間をランダムに設定（リアリティの演出）
+                let nextDelay = Math.floor(Math.random() * 800) + 400; // 400ms 〜 1200ms
+                
+                // 特定の重要なメッセージの前は少し長くタメる
+                if (currentIndex === 6 || currentIndex === 9 || currentIndex === 14) {
+                    nextDelay = 2000;
+                }
+
+                setTimeout(printLog, nextDelay);
+            };
+
+            // ページ読み込み後、少し待ってからログ出力を開始
+            setTimeout(printLog, 1000);
+        });
+    </script>
+
+</body>
+</html>
