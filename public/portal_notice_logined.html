@@ -179,13 +179,39 @@
             color: #94a3b8;
         }
 
-        /* =========================================
-           完全レスポンシブ・デッドスペース解消設定
+/* =========================================
+           完全レスポンシブ・デッドスペース解消設定（フッター最下部固定版）
            ========================================= */
         html {
+            /* html要素自体にも高さを100%持たせ、背景色を塗ることで隙間を防ぐ */
+            height: 100%;
+            background-color: var(--sys-bg);
             font-size: clamp(14px, 1vw + 10px, 18px); 
         }
 
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* メインコンテンツをゴムのように伸ばして、フッターを下へ押し下げる */
+        section, main, .article-container, .portal-container {
+            flex: 1 0 auto; /* flex-grow: 1, shrink: 0, basis: auto */
+            width: 90%; 
+            max-width: 1600px !important; 
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* フッターが潰れないようにし、一番下へ固定する */
+        footer {
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+
+        /* ヘッダーとフッターの幅設定 */
         .header-top, .header-inner, .footer-content {
             width: 100%;
             max-width: 95%; 
@@ -194,12 +220,41 @@
             margin: 0 auto;
         }
 
-        section, main, .article-container, .portal-container {
-            width: 90%; 
-            max-width: 1600px !important; 
-            margin-left: auto;
-            margin-right: auto;
-            flex-grow: 1; 
+        /* 長文が横に広がりすぎて読みにくくなるのを防ぐための処置 */
+        .policy-container, .article-body, .form-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 画像のレスポンシブ化 */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* 要素のフレックスボックス調整（折り返し許可） */
+        .hero, .message-content, .company-profile-wrapper, .review-card {
+            flex-wrap: wrap; 
+        }
+
+        /* タブレット・スマホ向けのブレイクポイント */
+        @media (max-width: 992px) {
+            .hero, .message-content, .company-profile-wrapper, .review-card {
+                flex-direction: column !important;
+            }
+            .hero-text, .message-text, .profile-quote {
+                text-align: center;
+            }
+            .hero-image, .message-image, .company-table-container, .company-side-images, .review-images {
+                width: 100%;
+                max-width: 100%;
+            }
+            .company-side-images {
+                flex-direction: row; 
+            }
+            .company-side-images img {
+                width: calc(50% - 10px);
+            }
         }
 
         @media (max-width: 768px) {
