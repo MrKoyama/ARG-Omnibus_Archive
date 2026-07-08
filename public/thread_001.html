@@ -657,18 +657,20 @@
 各自でPCに保存し、外部への持ち出しは厳禁とします。
 
 <!-- ダウンロードギミック -->
-<a href="training_material.pdf" download class="attachment-file">
+<!-- ダウンロードギミック -->
+<a href="#" id="downloadLink" class="attachment-file">
     <div class="attachment-icon">📎</div>
     <div class="attachment-details">
         <span class="attachment-name">社内研修資料（倫理・コンプライアンス編）.pdf</span>
         <span class="attachment-meta">4.5 MB / 最終更新: 2026.04.01</span>
     </div>
-</a></div>
+</a>
             </div>
 
             <!-- ゲスト権限による書込制限表示 -->
             <div class="reply-box">
                 <p>【書込制限】このスレッドへの書き込みは許可されていません。</p>
+                <p>【アクセス制限】このファイルの保存は許可されていません。</p>
             </div>
 
         </div>
@@ -688,6 +690,14 @@
             </div>
         </div>
     </footer>
+
+    <script>
+// ダウンロードボタンを押した時の処理
+document.getElementById('downloadLink').addEventListener('click', function(e) {
+    e.preventDefault(); // 本来のリンクジャンプを防ぐ
+    document.getElementById('errorModal').style.display = 'block'; // エラー画面を表示
+});
+</script>
 
 </body>
 </html>
